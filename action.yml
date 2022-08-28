@@ -1,0 +1,39 @@
+name: 'port-github-action'
+description: 'Official Port.io GitHub Action'
+author: 'port-labs <port-labs@getport.io>'
+inputs:
+  baseUrl:
+    required: true
+    description: 'Port.io API base URL'
+    default: 'https://api.getport.io'
+  clientId:
+    required: true
+    description: 'Client ID'
+  clientSecret:
+    required: true
+    description: 'Client secret'
+  identifier:
+    required: false
+    description: 'The identifier of the entity'
+  title:
+    required: false
+    description: 'The display name of the entity'
+  blueprint:
+    required: true
+    description: 'The name of the Blueprint that the entity is based on'
+  properties:
+    required: true
+    description: 'The metadata of the entity'
+    default: '{}'
+  team:
+    required: false
+    description: 'The team belonging of the entity'
+  relations:
+    required: false
+    description: 'The related entities of the entity'
+outputs:
+  identifier:
+    description: 'The identifier of the created entity'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
