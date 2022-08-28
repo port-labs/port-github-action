@@ -33,7 +33,7 @@
     "@types/jest": "^27.0.2",
     "@types/node": "^18.7.13",
     "@vercel/ncc": "^0.34.0",
-    "eslint": "8.22.0",
+    "eslint": "8.23.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-config-prettier": "^8.4.0",
