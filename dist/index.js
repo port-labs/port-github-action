@@ -138,9 +138,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+const axios_1 = __importDefault(__nccwpck_require__(6545));
 const deleteEntity_1 = __importDefault(__nccwpck_require__(15));
 const getToken_1 = __importDefault(__nccwpck_require__(2262));
 const upsertEntity_1 = __importDefault(__nccwpck_require__(4575));
+const USER_AGENT = 'github-action/v1.0';
+const axget = axios_1.default.get;
+const axpost = axios_1.default.post;
+const axput = axios_1.default.put;
+const axdelete = axios_1.default.delete;
+axios_1.default.get = async (url, config) => axget(url, { ...config, headers: { ...config?.headers, 'User-Agent': USER_AGENT } });
+axios_1.default.post = async (url, data, config) => axpost(url, data, { ...config, headers: { ...config?.headers, 'User-Agent': USER_AGENT } });
+axios_1.default.put = async (url, data, config) => axput(url, data, { ...config, headers: { ...config?.headers, 'User-Agent': USER_AGENT } });
+axios_1.default.delete = async (url, config) => axdelete(url, { ...config, headers: { ...config?.headers, 'User-Agent': USER_AGENT } });
 exports["default"] = {
     getToken: getToken_1.default,
     upsertEntity: upsertEntity_1.default,
