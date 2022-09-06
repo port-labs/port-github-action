@@ -115,7 +115,7 @@ const axios_1 = __importDefault(__nccwpck_require__(6545));
 const getToken = async (baseUrl, clientId, clientSecret) => {
     try {
         core.info(`Trying to obtain Port access token`);
-        const { data } = await axios_1.default.get(`${baseUrl}/v1/auth/access_token?client_id=${clientId}&client_secret=${clientSecret}`);
+        const { data } = await axios_1.default.post(`${baseUrl}/v1/auth/access_token`, { clientId, clientSecret });
         return data.accessToken;
     }
     catch (e) {
