@@ -19,6 +19,7 @@ See [action.yml](action.yml) for inputs and outputs.
   with:
     clientId: ${{ secrets.CLIENT_ID }}
     clientSecret: ${{ secrets.CLIENT_SECRET }}
+    operation: UPSERT
     identifier: port-github-action
     title: Port Github Action
     blueprint: PortIntegration

@@ -55,7 +55,7 @@ const axios_1 = __importDefault(__nccwpck_require__(6545));
 const deleteEntity = async (baseUrl, accessToken, blueprint, identifier) => {
     const url = `${baseUrl}/v1/blueprints/${blueprint}/entities/${identifier}`;
     try {
-        core.info(`Performing delete request to "${url}"`);
+        core.info(`Performing DELETE request to URL: ${url}`);
         const config = {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -115,7 +115,7 @@ const axios_1 = __importDefault(__nccwpck_require__(6545));
 const getEntity = async (baseUrl, accessToken, entity) => {
     const url = `${baseUrl}/v1/blueprints/${entity.blueprint}/entities/${entity.identifier}`;
     try {
-        core.info(`Performing get request to "${url}"`);
+        core.info(`Performing GET request to URL: ${url}`);
         const config = {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -260,7 +260,7 @@ const axios_1 = __importDefault(__nccwpck_require__(6545));
 const upsertEntity = async (baseUrl, accessToken, entity) => {
     const url = `${baseUrl}/v1/blueprints/${entity.blueprint}/entities?upsert=true`;
     try {
-        core.info(`Performing post request to "${url}"`);
+        core.info(`Performing POST request to URL: ${url}, with body: ${JSON.stringify(entity)}`);
         const config = {
             headers: {
                 Authorization: `Bearer ${accessToken}`,

@@ -6,7 +6,7 @@ import { Entity, EntityToGet } from '../../types';
 const getEntity = async (baseUrl: string, accessToken: string, entity: EntityToGet): Promise<Entity> => {
 	const url = `${baseUrl}/v1/blueprints/${entity.blueprint}/entities/${entity.identifier}`;
 	try {
-		core.info(`Performing get request to "${url}"`);
+		core.info(`Performing GET request to URL: ${url}`);
 
 		const config = {
 			headers: {
