@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import deleteEntity from './deleteEntity';
+import getEntity from './getEntity';
 import getToken from './getToken';
 import upsertEntity from './upsertEntity';
 
@@ -23,4 +24,5 @@ export default {
 	getToken,
 	upsertEntity,
 	deleteEntity,
+	getEntity,
 };

@@ -78,6 +78,67 @@ exports["default"] = deleteEntity;
 
 /***/ }),
 
+/***/ 7298:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core = __importStar(__nccwpck_require__(2186));
+const axios_1 = __importDefault(__nccwpck_require__(6545));
+const getEntity = async (baseUrl, accessToken, entity) => {
+    const url = `${baseUrl}/v1/blueprints/${entity.blueprint}/entities/${entity.identifier}`;
+    try {
+        core.info(`Performing get request to "${url}"`);
+        const config = {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        };
+        const response = await axios_1.default.get(url, config);
+        return response.data.entity;
+    }
+    catch (e) {
+        const statusCode = e?.response?.status || e?.code;
+        const error = e?.response?.data?.message || e.message;
+        const log = statusCode >= 400 && statusCode < 500 ? core.warning : core.error;
+        if (log) {
+            log(`Failed to get entity with error "${error}" (${statusCode})`);
+        }
+        throw e;
+    }
+};
+exports["default"] = getEntity;
+
+
+/***/ }),
+
 /***/ 2262:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -140,6 +201,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const axios_1 = __importDefault(__nccwpck_require__(6545));
 const deleteEntity_1 = __importDefault(__nccwpck_require__(15));
+const getEntity_1 = __importDefault(__nccwpck_require__(7298));
 const getToken_1 = __importDefault(__nccwpck_require__(2262));
 const upsertEntity_1 = __importDefault(__nccwpck_require__(4575));
 const USER_AGENT = 'github-action/v1.0';
@@ -155,6 +217,7 @@ exports["default"] = {
     getToken: getToken_1.default,
     upsertEntity: upsertEntity_1.default,
     deleteEntity: deleteEntity_1.default,
+    getEntity: getEntity_1.default,
 };
 
 
@@ -272,11 +335,12 @@ const getInput = () => ({
     clientSecret: core.getInput('clientSecret', {
         required: true,
     }),
+    operation: core.getInput('operation', { required: true }).toLowerCase(),
     identifier: core.getInput('identifier', { required: false }),
     title: core.getInput('title', { required: false }),
     blueprint: core.getInput('blueprint', { required: true }),
     properties: core.getMultilineInput('properties', {
-        required: true,
+        required: false,
     }),
     team: core.getInput('team', { required: false }),
     relations: core.getMultilineInput('relations', {
@@ -298,30 +362,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const getInput_1 = __importDefault(__nccwpck_require__(301));
-const parseInput_1 = __importDefault(__nccwpck_require__(5485));
 exports["default"] = {
     getInput: getInput_1.default,
-    parseInput: parseInput_1.default,
 };
-
-
-/***/ }),
-
-/***/ 5485:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const parseInput = (input) => ({
-    ...(input.identifier && { identifier: input.identifier }),
-    ...(input.title && { title: input.title }),
-    blueprint: input.blueprint,
-    properties: input.properties.length ? JSON.parse(input.properties.join('')) : {},
-    ...(input.team && { team: input.team }),
-    relations: input.relations?.length ? JSON.parse(input.relations.join('')) : {},
-});
-exports["default"] = parseInput;
 
 
 /***/ }),
@@ -359,23 +402,135 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
-const clients_1 = __importDefault(__nccwpck_require__(1954));
 const inputs_1 = __importDefault(__nccwpck_require__(4629));
+const OperationFactory_1 = __importDefault(__nccwpck_require__(3368));
 async function run() {
     try {
         const input = inputs_1.default.getInput();
-        const entity = inputs_1.default.parseInput(input);
-        core.info(`Entity: ${JSON.stringify(entity)}`);
-        const accessToken = await clients_1.default.port.getToken(input.baseUrl, input.clientId, input.clientSecret);
-        const entityRes = await clients_1.default.port.upsertEntity(input.baseUrl, accessToken, entity);
-        core.setOutput('identifier', entityRes.identifier);
+        const output = await new OperationFactory_1.default().createOperation(input).execute();
+        Object.entries(output).forEach(([key, value]) => core.setOutput(key, value));
     }
     catch (error) {
-        if (error instanceof Error)
+        if (error?.message)
             core.setFailed(error.message);
     }
 }
 exports["default"] = run;
+
+
+/***/ }),
+
+/***/ 4271:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const assert_1 = __importDefault(__nccwpck_require__(9491));
+const clients_1 = __importDefault(__nccwpck_require__(1954));
+class EntityGetterOperation {
+    constructor(input) {
+        this.input = input;
+        this.parseInput = () => {
+            (0, assert_1.default)(this.input.identifier, 'GET Operation - identifier is missing from input');
+            return { blueprint: this.input.blueprint, identifier: this.input.identifier };
+        };
+        this.execute = async () => {
+            const entityToGet = this.parseInput();
+            const accessToken = await clients_1.default.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
+            return {
+                entity: await clients_1.default.port.getEntity(this.input.baseUrl, accessToken, entityToGet),
+            };
+        };
+        this.input = input;
+    }
+}
+exports["default"] = EntityGetterOperation;
+
+
+/***/ }),
+
+/***/ 5990:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const clients_1 = __importDefault(__nccwpck_require__(1954));
+class EntityUpserterOperation {
+    constructor(input) {
+        this.input = input;
+        this.parseInput = () => ({
+            ...(this.input.identifier && { identifier: this.input.identifier }),
+            ...(this.input.title && { title: this.input.title }),
+            blueprint: this.input.blueprint,
+            properties: this.input.properties?.length ? JSON.parse(this.input.properties.join('')) : {},
+            ...(this.input.team && { team: this.input.team }),
+            relations: this.input.relations?.length ? JSON.parse(this.input.relations.join('')) : {},
+        });
+        this.execute = async () => {
+            const entityToUpsert = this.parseInput();
+            const accessToken = await clients_1.default.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
+            const entityRes = await clients_1.default.port.upsertEntity(this.input.baseUrl, accessToken, entityToUpsert);
+            return {
+                identifier: entityRes.identifier,
+            };
+        };
+        this.input = input;
+    }
+}
+exports["default"] = EntityUpserterOperation;
+
+
+/***/ }),
+
+/***/ 3368:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const types_1 = __nccwpck_require__(8164);
+const EntityGetterOperation_1 = __importDefault(__nccwpck_require__(4271));
+const EntityUpserterOperation_1 = __importDefault(__nccwpck_require__(5990));
+class OperationFactory {
+    createOperation(input) {
+        switch (input.operation) {
+            case types_1.OperationType.Get:
+                return new EntityGetterOperation_1.default(input);
+            case types_1.OperationType.Upsert:
+                return new EntityUpserterOperation_1.default(input);
+            default:
+                throw new Error('Operation not supported, must be one of GET, UPSERT');
+        }
+    }
+}
+exports["default"] = OperationFactory;
+
+
+/***/ }),
+
+/***/ 8164:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.OperationType = void 0;
+var OperationType;
+(function (OperationType) {
+    OperationType["Upsert"] = "upsert";
+    OperationType["Get"] = "get";
+})(OperationType = exports.OperationType || (exports.OperationType = {}));
 
 
 /***/ }),
