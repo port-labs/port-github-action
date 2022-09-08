@@ -35,14 +35,10 @@ describe('Get Integration Tests', () => {
 
 		expect(outputMock).toHaveBeenCalledWith('entity', {
 			blueprint: 'gh-action-test-bp2',
-			createdAt: expect.any(String),
-			createdBy: expect.any(String),
 			identifier: 'e_nrw9dSY4yAYl9A8U',
 			properties: { str: 'foo' },
 			relations: {},
 			title: 'GH Action 2 Test Identity',
-			updatedAt: expect.any(String),
-			updatedBy: expect.any(String),
 		});
 		expect(failedMock).toHaveBeenCalledTimes(0);
 	});

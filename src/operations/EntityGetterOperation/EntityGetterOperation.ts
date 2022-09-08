@@ -2,7 +2,7 @@ import assert from 'assert';
 
 import clients from '../../clients';
 import { IOperation } from '../../interfaces';
-import { ActionInput, EntityToGet } from '../../types';
+import { ActionInput, Entity, EntityToGet } from '../../types';
 
 export default class EntityGetterOperation implements IOperation {
 	constructor(private input: ActionInput) {
@@ -18,8 +18,17 @@ export default class EntityGetterOperation implements IOperation {
 		const entityToGet: EntityToGet = this.parseInput();
 		const accessToken = await clients.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
 
+		const entity: Entity = await clients.port.getEntity(this.input.baseUrl, accessToken, entityToGet);
+
 		return {
-			entity: await clients.port.getEntity(this.input.baseUrl, accessToken, entityToGet),
+			entity: {
+				identifier: entity.identifier,
+				...(entity.title && { title: entity.title }),
+				blueprint: entity.blueprint,
+				properties: entity.properties,
+				...(entity.team && { team: entity.team }),
+				...(entity.relations && { relations: entity.relations }),
+			},
 		};
 	};
 }
