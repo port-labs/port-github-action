@@ -31,7 +31,7 @@
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
     "@tsconfig/node16": "^1.0.3",
     "@types/jest": "^29.0.0",
-    "@types/node": "^18.7.14",
+    "@types/node": "^18.7.18",
     "@vercel/ncc": "^0.34.0",
     "eslint": "8.22.0",
     "eslint-config-airbnb-base": "^15.0.0",
