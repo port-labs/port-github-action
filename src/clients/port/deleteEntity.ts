@@ -4,7 +4,7 @@ import axios from 'axios';
 const deleteEntity = async (baseUrl: string, accessToken: string, blueprint: string, identifier: string): Promise<void> => {
 	const url = `${baseUrl}/v1/blueprints/${blueprint}/entities/${identifier}`;
 	try {
-		core.info(`Performing delete request to "${url}"`);
+		core.info(`Performing DELETE request to URL: ${url}`);
 
 		const config = {
 			headers: {

@@ -12,6 +12,10 @@ inputs:
   clientSecret:
     required: true
     description: 'Client secret'
+  operation:
+    required: true
+    description: 'One of the following operations: GET, UPSERT'
+    default: 'UPSERT'
   identifier:
     required: false
     description: 'The identifier of the entity'
@@ -22,7 +26,7 @@ inputs:
     required: true
     description: 'The name of the Blueprint that the entity is based on'
   properties:
-    required: true
+    required: false
     description: 'The metadata of the entity'
     default: '{}'
   team:
@@ -34,6 +38,8 @@ inputs:
 outputs:
   identifier:
     description: 'The identifier of the created entity'
+  entity:
+    description: 'The full JSON string entity'
 runs:
   using: 'node16'
   main: 'dist/index.js'

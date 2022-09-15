@@ -4,7 +4,7 @@ import clients from '../clients';
 import main from '../main';
 import { TestInputs, clearInputs, getBaseInput, getInput, setInputs } from './utils/utils';
 
-describe('Main Integration Tests', () => {
+describe('Upsert Integration Tests', () => {
 	let outputMock: jest.SpyInstance;
 	let failedMock: jest.SpyInstance;
 	let input: TestInputs = {};
@@ -36,6 +36,7 @@ describe('Main Integration Tests', () => {
 		input = {
 			...getBaseInput(),
 			...{
+				operation: 'UPSERT',
 				title: 'GH Action Test Identity',
 				blueprint: 'gh-action-test-bp',
 				properties: '{"text": "test", "number": 1, "boolean": true, "array": [1, 2], "object": {"foo": "bar"}}',
@@ -54,6 +55,9 @@ describe('Main Integration Tests', () => {
 	test('Should fail get input - missing required param blueprint', async () => {
 		input = {
 			...getBaseInput(),
+			...{
+				operation: 'UPSERT',
+			},
 		};
 
 		setInputs(input);
@@ -68,6 +72,7 @@ describe('Main Integration Tests', () => {
 		input = {
 			...getBaseInput(),
 			...{
+				operation: 'UPSERT',
 				blueprint: 'gh-action-test-bp',
 				properties: '{"foo": "a", "bar": 1',
 			},
@@ -85,6 +90,7 @@ describe('Main Integration Tests', () => {
 		input = {
 			...getBaseInput(),
 			...{
+				operation: 'UPSERT',
 				baseUrl: 'http://invalidUrl',
 				blueprint: 'gh-action-test-bp',
 				properties: '{}',
@@ -103,6 +109,7 @@ describe('Main Integration Tests', () => {
 		input = {
 			...getBaseInput(),
 			...{
+				operation: 'UPSERT',
 				blueprint: 'gh-action-test-bp',
 				properties: '{}',
 				relations: '{"invalidRelation": "dummyTarget"}',
@@ -115,5 +122,22 @@ describe('Main Integration Tests', () => {
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
 		expect(failedMock).toHaveBeenCalledWith('Request failed with status code 404');
+	});
+
+	test('Should fail upsert entity - operation is wrong', async () => {
+		input = {
+			...getBaseInput(),
+			...{
+				operation: 'UPSERTT',
+				blueprint: 'gh-action-test-bp',
+			},
+		};
+
+		setInputs(input);
+
+		await main();
+
+		expect(outputMock).toHaveBeenCalledTimes(0);
+		expect(failedMock).toHaveBeenCalledWith('Operation not supported, must be one of GET, UPSERT');
 	});
 });

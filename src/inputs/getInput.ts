@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 
-import { ActionInput } from '../types';
+import { ActionInput, OperationType } from '../types';
 
 const getInput = (): ActionInput => ({
 	baseUrl: core.getInput('baseUrl', { required: true }),
@@ -8,11 +8,12 @@ const getInput = (): ActionInput => ({
 	clientSecret: core.getInput('clientSecret', {
 		required: true,
 	}),
+	operation: core.getInput('operation', { required: true }).toLowerCase() as OperationType,
 	identifier: core.getInput('identifier', { required: false }),
 	title: core.getInput('title', { required: false }),
 	blueprint: core.getInput('blueprint', { required: true }),
 	properties: core.getMultilineInput('properties', {
-		required: true,
+		required: false,
 	}),
 	team: core.getInput('team', { required: false }),
 	relations: core.getMultilineInput('relations', {
