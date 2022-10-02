@@ -38,7 +38,7 @@ export type EntityToGet = {
 export enum OperationType {
 	Upsert = 'upsert',
 	Get = 'get',
-	Search = 'Search',
+	Search = 'search',
 }
 
 export type ActionInput = {

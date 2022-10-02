@@ -14,7 +14,7 @@ export default class OperationFactory {
 			case OperationType.Search:
 				return new EntitiesSearchOperation(input);
 			default:
-				throw new Error('Operation not supported, must be one of GET, UPSERT');
+				throw new Error('Operation not supported, must be one of GET, UPSERT, SEARCH');
 		}
 	}
 }
