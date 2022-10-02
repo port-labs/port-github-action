@@ -402,8 +402,11 @@ const getInput = () => ({
     operation: core.getInput('operation', { required: true }).toLowerCase(),
     identifier: core.getInput('identifier', { required: false }),
     title: core.getInput('title', { required: false }),
-    blueprint: core.getInput('blueprint', { required: true }),
+    blueprint: core.getInput('blueprint', { required: false }),
     properties: core.getMultilineInput('properties', {
+        required: false,
+    }),
+    query: core.getMultilineInput('query', {
         required: false,
     }),
     team: core.getInput('team', { required: false }),

@@ -65,7 +65,7 @@ describe('Upsert Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith('Input required and not supplied: blueprint');
+		expect(failedMock).toHaveBeenCalledWith('UPSERT Operation - blueprint is missing from input');
 	});
 
 	test('Should fail parse input - invalid properties json', async () => {
