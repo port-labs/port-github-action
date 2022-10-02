@@ -138,6 +138,6 @@ describe('Upsert Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith('Operation not supported, must be one of GET, UPSERT');
+		expect(failedMock).toHaveBeenCalledWith('Operation not supported, must be one of GET, UPSERT, SEARCH');
 	});
 });

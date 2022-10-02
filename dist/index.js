@@ -500,7 +500,7 @@ class EntitiesSearchOperation {
         this.input = input;
         this.parseInput = () => {
             (0, assert_1.default)(this.input.query, 'Search Operation - query is missing from input');
-            const searchBodySchema = this.input.properties?.length ? JSON.parse(this.input.properties.join('')) : {};
+            const searchBodySchema = this.input.query?.length ? JSON.parse(this.input.query.join('')) : {};
             return searchBodySchema;
         };
         this.execute = async () => {
@@ -618,7 +618,7 @@ class OperationFactory {
             case types_1.OperationType.Search:
                 return new EntitiesSearchOperation_1.default(input);
             default:
-                throw new Error('Operation not supported, must be one of GET, UPSERT');
+                throw new Error('Operation not supported, must be one of GET, UPSERT, SEARCH');
         }
     }
 }
@@ -638,7 +638,7 @@ var OperationType;
 (function (OperationType) {
     OperationType["Upsert"] = "upsert";
     OperationType["Get"] = "get";
-    OperationType["Search"] = "Search";
+    OperationType["Search"] = "search";
 })(OperationType = exports.OperationType || (exports.OperationType = {}));
 
 
