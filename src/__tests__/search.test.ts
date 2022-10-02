@@ -25,7 +25,7 @@ describe('Search Integration Tests', () => {
 			...{
 				operation: 'SEARCH',
 				query:
-					'{ "rules": [{ "operator": "=", "value": "e_nrw9dSY4yAYl9A8U", "property": "$identifier"}], "combinator": "and" }',
+					'{ "rules": [{ "operator": "=", "value": "not_exists_entity", "property": "$identifier"}], "combinator": "and" }',
 			},
 		};
 
@@ -33,7 +33,7 @@ describe('Search Integration Tests', () => {
 
 		await main();
 
-		expect(outputMock).toBeGreaterThan(0);
+		expect(outputMock).toHaveBeenCalledWith('entities', []);
 		expect(failedMock).toHaveBeenCalledTimes(0);
 	});
 
