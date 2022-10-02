@@ -10,7 +10,7 @@ export default class EntitiesSearchOperation implements IOperation {
 	}
 
 	private parseInput = (): SearchBody => {
-		assert.notDeepEqual(this.input.query, [], 'Search Operation - query is missing from input');
+		assert.notDeepEqual(this.input.query, [], 'SEARCH Operation - query is missing from input');
 
 		const searchBodySchema = this.input.query?.length ? JSON.parse(this.input.query.join('')) : {};
 
