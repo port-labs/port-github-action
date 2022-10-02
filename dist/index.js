@@ -533,6 +533,7 @@ class EntityGetterOperation {
         this.input = input;
         this.parseInput = () => {
             (0, assert_1.default)(this.input.identifier, 'GET Operation - identifier is missing from input');
+            (0, assert_1.default)(this.input.blueprint, 'GET Operation - blueprint is missing from input');
             return { blueprint: this.input.blueprint, identifier: this.input.identifier };
         };
         this.execute = async () => {
@@ -567,18 +568,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+const assert_1 = __importDefault(__nccwpck_require__(9491));
 const clients_1 = __importDefault(__nccwpck_require__(1954));
 class EntityUpserterOperation {
     constructor(input) {
         this.input = input;
-        this.parseInput = () => ({
-            ...(this.input.identifier && { identifier: this.input.identifier }),
-            ...(this.input.title && { title: this.input.title }),
-            blueprint: this.input.blueprint,
-            properties: this.input.properties?.length ? JSON.parse(this.input.properties.join('')) : {},
-            ...(this.input.team && { team: this.input.team }),
-            relations: this.input.relations?.length ? JSON.parse(this.input.relations.join('')) : {},
-        });
+        this.parseInput = () => {
+            (0, assert_1.default)(this.input.blueprint, 'UPSERT Operation - blueprint is missing from input');
+            return {
+                ...(this.input.identifier && { identifier: this.input.identifier }),
+                ...(this.input.title && { title: this.input.title }),
+                blueprint: this.input?.blueprint,
+                properties: this.input.properties?.length ? JSON.parse(this.input.properties.join('')) : {},
+                ...(this.input.team && { team: this.input.team }),
+                relations: this.input.relations?.length ? JSON.parse(this.input.relations.join('')) : {},
+            };
+        };
         this.execute = async () => {
             const entityToUpsert = this.parseInput();
             const accessToken = await clients_1.default.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);

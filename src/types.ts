@@ -49,7 +49,7 @@ export type ActionInput = {
 	query?: string[];
 	identifier?: string;
 	title?: string;
-	blueprint: string;
+	blueprint?: string;
 	properties?: string[];
 	team?: string;
 	relations?: string[];

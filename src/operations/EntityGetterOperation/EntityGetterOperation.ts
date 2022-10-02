@@ -11,6 +11,7 @@ export default class EntityGetterOperation implements IOperation {
 
 	private parseInput = (): EntityToGet => {
 		assert(this.input.identifier, 'GET Operation - identifier is missing from input');
+		assert(this.input.blueprint, 'GET Operation - blueprint is missing from input');
 		return { blueprint: this.input.blueprint, identifier: this.input.identifier };
 	};
 

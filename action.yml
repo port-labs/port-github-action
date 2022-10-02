@@ -16,6 +16,9 @@ inputs:
     required: true
     description: 'One of the following operations: GET, UPSERT, SEARCH'
     default: 'UPSERT'
+  query: 
+    required: false
+    description: 'Query to be used for SEARCH operation'
   identifier:
     required: false
     description: 'The identifier of the entity'
@@ -23,7 +26,7 @@ inputs:
     required: false
     description: 'The display name of the entity'
   blueprint:
-    required: true
+    required: false
     description: 'The name of the Blueprint that the entity is based on'
   properties:
     required: false
