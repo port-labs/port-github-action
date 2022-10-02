@@ -502,8 +502,7 @@ class EntitiesSearchOperation {
     constructor(input) {
         this.input = input;
         this.parseInput = () => {
-            console.log('this.input.query', this.input.query);
-            (0, assert_1.default)(this.input.query, 'Search Operation - query is missing from input');
+            assert_1.default.notDeepEqual(this.input.query, [], 'SEARCH Operation - query is missing from input');
             const searchBodySchema = this.input.query?.length ? JSON.parse(this.input.query.join('')) : {};
             return searchBodySchema;
         };
