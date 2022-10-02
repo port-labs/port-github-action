@@ -19,7 +19,6 @@ inputs:
   query: 
     required: false
     description: 'Query to be used for SEARCH operation'
-    default: '{ "rules": [], "combinator": "and" }'
   identifier:
     required: false
     description: 'The identifier of the entity'
