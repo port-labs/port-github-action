@@ -19,7 +19,7 @@ describe('Search Integration Tests', () => {
 		input = {};
 	});
 
-	test('Should get entities successfully', async () => {
+	test('Should search entities successfully', async () => {
 		input = {
 			...getBaseInput(),
 			...{
@@ -37,7 +37,7 @@ describe('Search Integration Tests', () => {
 		expect(failedMock).toHaveBeenCalledTimes(0);
 	});
 
-	test('Should fail get input - missing required param query', async () => {
+	test('Should succeed search input - without paramaters using default value', async () => {
 		input = {
 			...getBaseInput(),
 			...{
@@ -49,7 +49,7 @@ describe('Search Integration Tests', () => {
 
 		await main();
 
+		expect(outputMock).toHaveBeenCalledWith('entities', []);
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith('SEARCH Operation - query is missing from input');
 	});
 });
