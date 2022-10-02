@@ -2,7 +2,7 @@ import assert from 'assert';
 
 import clients from '../../clients';
 import { IOperation } from '../../interfaces';
-import { ActionInput, Entity, EntityToGet, SearchBody } from '../../types';
+import { ActionInput, Entity, SearchBody } from '../../types';
 
 export default class EntitiesSearchOperation implements IOperation {
 	constructor(private input: ActionInput) {
@@ -12,7 +12,7 @@ export default class EntitiesSearchOperation implements IOperation {
 	private parseInput = (): SearchBody => {
 		assert(this.input.query, 'Search Operation - query is missing from input');
 
-		const searchBodySchema = this.input.properties?.length ? JSON.parse(this.input.properties.join('')) : {};
+		const searchBodySchema = this.input.query?.length ? JSON.parse(this.input.query.join('')) : {};
 
 		return searchBodySchema;
 	};

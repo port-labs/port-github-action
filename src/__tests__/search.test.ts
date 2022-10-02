@@ -3,7 +3,7 @@ import * as core from '@actions/core';
 import main from '../main';
 import { TestInputs, clearInputs, getBaseInput, setInputs } from './utils/utils';
 
-describe('Get Integration Tests', () => {
+describe('Search Integration Tests', () => {
 	let outputMock: jest.SpyInstance;
 	let failedMock: jest.SpyInstance;
 	let input: TestInputs = {};
@@ -19,7 +19,7 @@ describe('Get Integration Tests', () => {
 		input = {};
 	});
 
-	test('Should get entity successfully', async () => {
+	test('Should get entities successfully', async () => {
 		input = {
 			...getBaseInput(),
 			...{
@@ -45,7 +45,7 @@ describe('Get Integration Tests', () => {
 		expect(failedMock).toHaveBeenCalledTimes(0);
 	});
 
-	test('Should fail get input - missing required param identifier', async () => {
+	test('Should fail get input - missing required param query', async () => {
 		input = {
 			...getBaseInput(),
 			...{
