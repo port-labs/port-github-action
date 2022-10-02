@@ -14,7 +14,7 @@ inputs:
     description: 'Client secret'
   operation:
     required: true
-    description: 'One of the following operations: GET, UPSERT'
+    description: 'One of the following operations: GET, UPSERT, SEARCH'
     default: 'UPSERT'
   identifier:
     required: false
