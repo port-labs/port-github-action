@@ -43,6 +43,8 @@ outputs:
     description: 'The identifier of the created entity'
   entity:
     description: 'The full JSON string entity'
+  entities:
+    description: 'When using SEARCH operation, this is entities array output'
 runs:
   using: 'node16'
   main: 'dist/index.js'
