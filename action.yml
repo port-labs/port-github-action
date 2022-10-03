@@ -14,8 +14,11 @@ inputs:
     description: 'Client secret'
   operation:
     required: true
-    description: 'One of the following operations: GET, UPSERT'
+    description: 'One of the following operations: GET, UPSERT, SEARCH'
     default: 'UPSERT'
+  query: 
+    required: false
+    description: 'Query to be used for SEARCH operation'
   identifier:
     required: false
     description: 'The identifier of the entity'
@@ -23,7 +26,7 @@ inputs:
     required: false
     description: 'The display name of the entity'
   blueprint:
-    required: true
+    required: false
     description: 'The name of the Blueprint that the entity is based on'
   properties:
     required: false
@@ -40,6 +43,8 @@ outputs:
     description: 'The identifier of the created entity'
   entity:
     description: 'The full JSON string entity'
+  entities:
+    description: 'When using SEARCH operation, this is entities array output'
 runs:
   using: 'node16'
   main: 'dist/index.js'

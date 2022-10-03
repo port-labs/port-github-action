@@ -203,22 +203,86 @@ const axios_1 = __importDefault(__nccwpck_require__(6545));
 const deleteEntity_1 = __importDefault(__nccwpck_require__(15));
 const getEntity_1 = __importDefault(__nccwpck_require__(7298));
 const getToken_1 = __importDefault(__nccwpck_require__(2262));
+const searchEntities_1 = __importDefault(__nccwpck_require__(8284));
 const upsertEntity_1 = __importDefault(__nccwpck_require__(4575));
 const USER_AGENT = 'github-action/v1.0';
 const axget = axios_1.default.get;
 const axpost = axios_1.default.post;
 const axput = axios_1.default.put;
 const axdelete = axios_1.default.delete;
-axios_1.default.get = async (url, config) => axget(url, { ...config, headers: { ...config?.headers, 'User-Agent': USER_AGENT } });
-axios_1.default.post = async (url, data, config) => axpost(url, data, { ...config, headers: { ...config?.headers, 'User-Agent': USER_AGENT } });
-axios_1.default.put = async (url, data, config) => axput(url, data, { ...config, headers: { ...config?.headers, 'User-Agent': USER_AGENT } });
-axios_1.default.delete = async (url, config) => axdelete(url, { ...config, headers: { ...config?.headers, 'User-Agent': USER_AGENT } });
+const getConfigWithAgent = (config) => ({ ...config, headers: { ...config?.headers, 'User-Agent': USER_AGENT } });
+axios_1.default.get = async (url, config) => axget(url, getConfigWithAgent(config));
+axios_1.default.post = async (url, data, config) => axpost(url, data, getConfigWithAgent(config));
+axios_1.default.put = async (url, data, config) => axput(url, data, getConfigWithAgent(config));
+axios_1.default.delete = async (url, config) => axdelete(url, getConfigWithAgent(config));
 exports["default"] = {
     getToken: getToken_1.default,
     upsertEntity: upsertEntity_1.default,
     deleteEntity: deleteEntity_1.default,
+    searchEntities: searchEntities_1.default,
     getEntity: getEntity_1.default,
 };
+
+
+/***/ }),
+
+/***/ 8284:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core = __importStar(__nccwpck_require__(2186));
+const axios_1 = __importDefault(__nccwpck_require__(6545));
+const searchEntities = async (baseUrl, accessToken, searchBody) => {
+    const url = `${baseUrl}/v1/entities/search`;
+    try {
+        core.info(`Performing POST request to URL: ${url}`);
+        const config = {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        };
+        const response = await axios_1.default.post(url, searchBody, config);
+        return response.data.entities;
+    }
+    catch (e) {
+        const statusCode = e?.response?.status || e?.code;
+        const error = e?.response?.data?.message || e.message;
+        const log = statusCode >= 400 && statusCode < 500 ? core.warning : core.error;
+        if (log) {
+            log(`Failed to get entities with error "${error}" (${statusCode})`);
+        }
+        throw e;
+    }
+};
+exports["default"] = searchEntities;
 
 
 /***/ }),
@@ -338,8 +402,11 @@ const getInput = () => ({
     operation: core.getInput('operation', { required: true }).toLowerCase(),
     identifier: core.getInput('identifier', { required: false }),
     title: core.getInput('title', { required: false }),
-    blueprint: core.getInput('blueprint', { required: true }),
+    blueprint: core.getInput('blueprint', { required: false }),
     properties: core.getMultilineInput('properties', {
+        required: false,
+    }),
+    query: core.getMultilineInput('query', {
         required: false,
     }),
     team: core.getInput('team', { required: false }),
@@ -420,6 +487,39 @@ exports["default"] = run;
 
 /***/ }),
 
+/***/ 3978:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const assert_1 = __importDefault(__nccwpck_require__(9491));
+const clients_1 = __importDefault(__nccwpck_require__(1954));
+class EntitiesSearchOperation {
+    constructor(input) {
+        this.input = input;
+        this.parseInput = () => {
+            assert_1.default.notDeepEqual(this.input.query, [], 'SEARCH Operation - query is missing from input');
+            const searchBodySchema = this.input.query?.length ? JSON.parse(this.input.query.join('')) : {};
+            return searchBodySchema;
+        };
+        this.execute = async () => {
+            const searchBody = this.parseInput();
+            const accessToken = await clients_1.default.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
+            const entities = await clients_1.default.port.searchEntities(this.input.baseUrl, accessToken, searchBody);
+            return { entities };
+        };
+        this.input = input;
+    }
+}
+exports["default"] = EntitiesSearchOperation;
+
+
+/***/ }),
+
 /***/ 4271:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -436,6 +536,7 @@ class EntityGetterOperation {
         this.input = input;
         this.parseInput = () => {
             (0, assert_1.default)(this.input.identifier, 'GET Operation - identifier is missing from input');
+            (0, assert_1.default)(this.input.blueprint, 'GET Operation - blueprint is missing from input');
             return { blueprint: this.input.blueprint, identifier: this.input.identifier };
         };
         this.execute = async () => {
@@ -470,18 +571,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+const assert_1 = __importDefault(__nccwpck_require__(9491));
 const clients_1 = __importDefault(__nccwpck_require__(1954));
 class EntityUpserterOperation {
     constructor(input) {
         this.input = input;
-        this.parseInput = () => ({
-            ...(this.input.identifier && { identifier: this.input.identifier }),
-            ...(this.input.title && { title: this.input.title }),
-            blueprint: this.input.blueprint,
-            properties: this.input.properties?.length ? JSON.parse(this.input.properties.join('')) : {},
-            ...(this.input.team && { team: this.input.team }),
-            relations: this.input.relations?.length ? JSON.parse(this.input.relations.join('')) : {},
-        });
+        this.parseInput = () => {
+            (0, assert_1.default)(this.input.blueprint, 'UPSERT Operation - blueprint is missing from input');
+            return {
+                ...(this.input.identifier && { identifier: this.input.identifier }),
+                ...(this.input.title && { title: this.input.title }),
+                blueprint: this.input?.blueprint,
+                properties: this.input.properties?.length ? JSON.parse(this.input.properties.join('')) : {},
+                ...(this.input.team && { team: this.input.team }),
+                relations: this.input.relations?.length ? JSON.parse(this.input.relations.join('')) : {},
+            };
+        };
         this.execute = async () => {
             const entityToUpsert = this.parseInput();
             const accessToken = await clients_1.default.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
@@ -508,6 +613,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const types_1 = __nccwpck_require__(8164);
+const EntitiesSearchOperation_1 = __importDefault(__nccwpck_require__(3978));
 const EntityGetterOperation_1 = __importDefault(__nccwpck_require__(4271));
 const EntityUpserterOperation_1 = __importDefault(__nccwpck_require__(5990));
 class OperationFactory {
@@ -517,8 +623,10 @@ class OperationFactory {
                 return new EntityGetterOperation_1.default(input);
             case types_1.OperationType.Upsert:
                 return new EntityUpserterOperation_1.default(input);
+            case types_1.OperationType.Search:
+                return new EntitiesSearchOperation_1.default(input);
             default:
-                throw new Error('Operation not supported, must be one of GET, UPSERT');
+                throw new Error('Operation not supported, must be one of GET, UPSERT, SEARCH');
         }
     }
 }
@@ -538,6 +646,7 @@ var OperationType;
 (function (OperationType) {
     OperationType["Upsert"] = "upsert";
     OperationType["Get"] = "get";
+    OperationType["Search"] = "search";
 })(OperationType = exports.OperationType || (exports.OperationType = {}));
 
 
