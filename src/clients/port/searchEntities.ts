@@ -22,7 +22,7 @@ const searchEntities = async (baseUrl: string, accessToken: string, searchBody: 
 		const error = e?.response?.data?.message || e.message;
 		const log = statusCode >= 400 && statusCode < 500 ? core.warning : core.error;
 		if (log) {
-			log(`Failed to get entities with error "${error}" (${statusCode})`);
+			log(`Failed to search entities with error "${error}" (${statusCode})`);
 		}
 		throw e;
 	}
