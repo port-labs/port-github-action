@@ -28,7 +28,7 @@
     "axios": "^0.27.2"
   },
   "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^3.2.0",
+    "@trivago/prettier-plugin-sort-imports": "^3.4.0",
     "@tsconfig/node16": "^1.0.3",
     "@types/jest": "^29.2.0",
     "@types/node": "^18.11.5",
