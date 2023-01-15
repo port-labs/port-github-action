@@ -21,13 +21,8 @@ export type Entity = {
 	relations?: EntityRelations;
 };
 
-export type EntityToUpsert = {
+export type EntityToUpsert = Omit<Entity, 'identifier'> & {
 	identifier?: string;
-	title?: string;
-	blueprint: string;
-	properties: EntityProperties;
-	team?: string;
-	relations?: EntityRelations;
 };
 
 export type EntityToGet = {
@@ -53,4 +48,5 @@ export type ActionInput = {
 	properties?: string[];
 	team?: string;
 	relations?: string[];
+	runId?: string;
 };
