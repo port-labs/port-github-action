@@ -25,7 +25,9 @@ export default class EntityUpserterOperation implements IOperation {
 	execute = async (): Promise<Record<string, any>> => {
 		const entityToUpsert = this.parseInput();
 		const accessToken = await clients.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
-		const entityRes = await clients.port.upsertEntity(this.input.baseUrl, accessToken, entityToUpsert);
+		const entityRes = await clients.port.upsertEntity(this.input.baseUrl, accessToken, entityToUpsert, {
+			runId: this.input.runId,
+		});
 
 		return {
 			identifier: entityRes.identifier,
