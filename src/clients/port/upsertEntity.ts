@@ -20,7 +20,7 @@ const upsertEntity = async (
 			params: {
 				upsert: true,
 				merge: true,
-				...(options.runId && { runId: options.runId }),
+				...(options.runId && { run_id: options.runId }),
 			},
 		};
 

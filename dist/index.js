@@ -332,7 +332,7 @@ const upsertEntity = async (baseUrl, accessToken, entity, options = {}) => {
             params: {
                 upsert: true,
                 merge: true,
-                ...(options.runId && { runId: options.runId }),
+                ...(options.runId && { run_id: options.runId }),
             },
         };
         const response = await axios_1.default.post(url, entity, config);
@@ -418,6 +418,7 @@ const getInput = () => ({
     relations: core.getMultilineInput('relations', {
         required: false,
     }),
+    runId: core.getInput('runId', { required: false }),
 });
 exports["default"] = getInput;
 

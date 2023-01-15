@@ -22,6 +22,7 @@ const getInput = (): ActionInput => ({
 	relations: core.getMultilineInput('relations', {
 		required: false,
 	}),
+	runId: core.getInput('runId', { required: false }),
 });
 
 export default getInput;
