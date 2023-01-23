@@ -402,6 +402,7 @@ const getInput = () => ({
     operation: core.getInput('operation', { required: true }).toLowerCase(),
     identifier: core.getInput('identifier', { required: false }),
     title: core.getInput('title', { required: false }),
+    icon: core.getInput('icon', { required: false }),
     blueprint: core.getInput('blueprint', { required: false }),
     properties: core.getMultilineInput('properties', {
         required: false,
@@ -581,6 +582,7 @@ class EntityUpserterOperation {
             return {
                 ...(this.input.identifier && { identifier: this.input.identifier }),
                 ...(this.input.title && { title: this.input.title }),
+                ...(this.input.icon && { icon: this.input.icon }),
                 blueprint: this.input?.blueprint,
                 properties: this.input.properties?.length ? JSON.parse(this.input.properties.join('')) : {},
                 ...(this.input.team && { team: this.input.team }),
