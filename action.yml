@@ -38,6 +38,9 @@ inputs:
   relations:
     required: false
     description: 'The related entities of the entity'
+  runId:
+    required: false
+    description: 'The Port action run id that performed the changes to the catalog'
 outputs:
   identifier:
     description: 'The identifier of the created entity'

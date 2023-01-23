@@ -321,13 +321,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const axios_1 = __importDefault(__nccwpck_require__(6545));
-const upsertEntity = async (baseUrl, accessToken, entity) => {
-    const url = `${baseUrl}/v1/blueprints/${entity.blueprint}/entities?upsert=true&merge=true`;
+const upsertEntity = async (baseUrl, accessToken, entity, options = {}) => {
+    const url = `${baseUrl}/v1/blueprints/${entity.blueprint}/entities`;
     try {
         core.info(`Performing POST request to URL: ${url}, with body: ${JSON.stringify(entity)}`);
         const config = {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
+            },
+            params: {
+                upsert: true,
+                merge: true,
+                ...(options.runId && { run_id: options.runId }),
             },
         };
         const response = await axios_1.default.post(url, entity, config);
@@ -414,6 +419,7 @@ const getInput = () => ({
     relations: core.getMultilineInput('relations', {
         required: false,
     }),
+    runId: core.getInput('runId', { required: false }),
 });
 exports["default"] = getInput;
 
@@ -592,7 +598,9 @@ class EntityUpserterOperation {
         this.execute = async () => {
             const entityToUpsert = this.parseInput();
             const accessToken = await clients_1.default.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
-            const entityRes = await clients_1.default.port.upsertEntity(this.input.baseUrl, accessToken, entityToUpsert);
+            const entityRes = await clients_1.default.port.upsertEntity(this.input.baseUrl, accessToken, entityToUpsert, {
+                runId: this.input.runId,
+            });
             return {
                 identifier: entityRes.identifier,
             };
