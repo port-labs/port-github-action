@@ -25,6 +25,9 @@ inputs:
   title:
     required: false
     description: 'The display name of the entity'
+  icon:
+    required: false
+    description: 'The icon of the entity'    
   blueprint:
     required: false
     description: 'The name of the Blueprint that the entity is based on'

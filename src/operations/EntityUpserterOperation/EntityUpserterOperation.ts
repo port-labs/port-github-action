@@ -15,6 +15,7 @@ export default class EntityUpserterOperation implements IOperation {
 		return {
 			...(this.input.identifier && { identifier: this.input.identifier }),
 			...(this.input.title && { title: this.input.title }),
+			...(this.input.icon && { icon: this.input.icon }),
 			blueprint: this.input?.blueprint,
 			properties: this.input.properties?.length ? JSON.parse(this.input.properties.join('')) : {},
 			...(this.input.team && { team: this.input.team }),

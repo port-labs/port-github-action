@@ -44,6 +44,7 @@ export type ActionInput = {
 	query?: string[];
 	identifier?: string;
 	title?: string;
+	icon?: string;
 	blueprint?: string;
 	properties?: string[];
 	team?: string;
