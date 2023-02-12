@@ -27,7 +27,7 @@ export default class EntityGetterOperation implements IOperation {
 				...(entity.title && { title: entity.title }),
 				blueprint: entity.blueprint,
 				properties: entity.properties,
-				...(entity.team && { team: entity.team }),
+				team: Array.isArray(this.input.team) ? JSON.parse(this.input.team.join('')) : this.input.team,
 				...(entity.relations && { relations: entity.relations }),
 			},
 		};

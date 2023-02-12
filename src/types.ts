@@ -17,7 +17,7 @@ export type Entity = {
 	title?: string;
 	blueprint: string;
 	properties: EntityProperties;
-	team?: string;
+	team?: string | string[];
 	relations?: EntityRelations;
 };
 
@@ -47,7 +47,7 @@ export type ActionInput = {
 	icon?: string;
 	blueprint?: string;
 	properties?: string[];
-	team?: string;
+	team?: string | string[];
 	relations?: string[];
 	runId?: string;
 };
