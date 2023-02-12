@@ -40,6 +40,7 @@ describe('Upsert Integration Tests', () => {
 				title: 'GH Action Test Identity',
 				icon: 'GH Action Test Identity',
 				blueprint: 'gh-action-test-bp',
+				team: '["Test"]',
 				properties: '{"text": "test", "number": 1, "boolean": true, "array": [1, 2], "object": {"foo": "bar"}}',
 				relations: '{"gha-relation": "e_nrw9dSY4yAYl9A8U"}',
 				runId: 'r_1HDz2pBPYltPcfA1',

@@ -1,8 +1,9 @@
 const parseTeamInput = (testString: string) => {
-	if (!testString.includes('[') && testString !== '') {
-		return [`"${testString}"`];
+	try {
+		return JSON.parse(testString);
+	} catch (e) {
+		return testString;
 	}
-	return testString === '' ? ['[', ']'].join('') : JSON.stringify(JSON.parse(testString)).split('\n').join('');
 };
 
 export default parseTeamInput;

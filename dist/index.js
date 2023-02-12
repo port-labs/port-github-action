@@ -672,10 +672,12 @@ var OperationType;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const parseTeamInput = (testString) => {
-    if (!testString.includes('[') && testString !== '') {
-        return [`"${testString}"`];
+    try {
+        return JSON.parse(testString);
     }
-    return testString === '' ? ['[', ']'].join('') : JSON.stringify(JSON.parse(testString)).split('\n').join('');
+    catch (e) {
+        return testString;
+    }
 };
 exports["default"] = parseTeamInput;
 
