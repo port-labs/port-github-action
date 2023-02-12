@@ -38,6 +38,7 @@ describe('Get Integration Tests', () => {
 			identifier: 'e_nrw9dSY4yAYl9A8U',
 			properties: { str: 'foo' },
 			relations: {},
+			team: ['Test'],
 			title: 'GH Action 2 Test Identity',
 		});
 		expect(failedMock).toHaveBeenCalledTimes(0);

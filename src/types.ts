@@ -47,7 +47,7 @@ export type ActionInput = {
 	icon?: string;
 	blueprint?: string;
 	properties?: string[];
-	team?: string | string[];
+	team?: string;
 	relations?: string[];
 	runId?: string;
 };

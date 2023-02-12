@@ -3,6 +3,7 @@ import assert from 'assert';
 import clients from '../../clients';
 import { IOperation } from '../../interfaces';
 import { ActionInput, EntityToUpsert } from '../../types';
+import parseTeamInput from '../../utils';
 
 export default class EntityUpserterOperation implements IOperation {
 	constructor(private input: ActionInput) {
@@ -18,7 +19,9 @@ export default class EntityUpserterOperation implements IOperation {
 			...(this.input.icon && { icon: this.input.icon }),
 			blueprint: this.input?.blueprint,
 			properties: this.input.properties?.length ? JSON.parse(this.input.properties.join('')) : {},
-			team: Array.isArray(this.input.team) ? JSON.parse(this.input.team.join('')) : this.input.team,
+			...(this.input.team && {
+				team: parseTeamInput(this.input.team),
+			}),
 			relations: this.input.relations?.length ? JSON.parse(this.input.relations.join('')) : {},
 		};
 	};
