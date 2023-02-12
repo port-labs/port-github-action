@@ -580,10 +580,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const assert_1 = __importDefault(__nccwpck_require__(9491));
 const clients_1 = __importDefault(__nccwpck_require__(1954));
-const utils_1 = __importDefault(__nccwpck_require__(918));
 class EntityUpserterOperation {
     constructor(input) {
         this.input = input;
+        this.parseTeamInput = (testString) => {
+            try {
+                return JSON.parse(testString);
+            }
+            catch (e) {
+                return testString;
+            }
+        };
         this.parseInput = () => {
             (0, assert_1.default)(this.input.blueprint, 'UPSERT Operation - blueprint is missing from input');
             return {
@@ -593,7 +600,7 @@ class EntityUpserterOperation {
                 blueprint: this.input?.blueprint,
                 properties: this.input.properties?.length ? JSON.parse(this.input.properties.join('')) : {},
                 ...(this.input.team && {
-                    team: (0, utils_1.default)(this.input.team),
+                    team: this.parseTeamInput(this.input.team),
                 }),
                 relations: this.input.relations?.length ? JSON.parse(this.input.relations.join('')) : {},
             };
@@ -661,25 +668,6 @@ var OperationType;
     OperationType["Get"] = "get";
     OperationType["Search"] = "search";
 })(OperationType = exports.OperationType || (exports.OperationType = {}));
-
-
-/***/ }),
-
-/***/ 918:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const parseTeamInput = (testString) => {
-    try {
-        return JSON.parse(testString);
-    }
-    catch (e) {
-        return testString;
-    }
-};
-exports["default"] = parseTeamInput;
 
 
 /***/ }),

@@ -3,12 +3,19 @@ import assert from 'assert';
 import clients from '../../clients';
 import { IOperation } from '../../interfaces';
 import { ActionInput, EntityToUpsert } from '../../types';
-import parseTeamInput from '../../utils';
 
 export default class EntityUpserterOperation implements IOperation {
 	constructor(private input: ActionInput) {
 		this.input = input;
 	}
+
+	private parseTeamInput = (testString: string) => {
+		try {
+			return JSON.parse(testString);
+		} catch (e) {
+			return testString;
+		}
+	};
 
 	private parseInput = (): EntityToUpsert => {
 		assert(this.input.blueprint, 'UPSERT Operation - blueprint is missing from input');
@@ -20,7 +27,7 @@ export default class EntityUpserterOperation implements IOperation {
 			blueprint: this.input?.blueprint,
 			properties: this.input.properties?.length ? JSON.parse(this.input.properties.join('')) : {},
 			...(this.input.team && {
-				team: parseTeamInput(this.input.team),
+				team: this.parseTeamInput(this.input.team),
 			}),
 			relations: this.input.relations?.length ? JSON.parse(this.input.relations.join('')) : {},
 		};
