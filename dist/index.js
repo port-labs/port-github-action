@@ -420,6 +420,7 @@ const getInput = () => ({
         required: false,
     }),
     runId: core.getInput('runId', { required: false }),
+    entities: core.getInput('entities', { required: false }),
 });
 exports["default"] = getInput;
 
@@ -527,6 +528,51 @@ exports["default"] = EntitiesSearchOperation;
 
 /***/ }),
 
+/***/ 8589:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+/* eslint-disable no-await-in-loop */
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+/* eslint-disable no-restricted-syntax */
+const assert_1 = __importDefault(__nccwpck_require__(9491));
+const clients_1 = __importDefault(__nccwpck_require__(1954));
+class EntityBulkUpserter {
+    constructor(input) {
+        this.input = input;
+        this.parseInput = () => {
+            (0, assert_1.default)(this.input.blueprint, 'BULK-UPSERT Operation - blueprint is missing from input');
+            return {
+                ...(this.input.entities && { entities: JSON.parse(this.input.entities) }),
+            };
+        };
+        this.execute = async () => {
+            const entitiesToUpsert = this.parseInput();
+            if (!entitiesToUpsert.entities) {
+                return [];
+            }
+            const entitiesRes = [];
+            const accessToken = await clients_1.default.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
+            for (const entityToUpsert of entitiesToUpsert.entities) {
+                const entityRes = await clients_1.default.port.upsertEntity(this.input.baseUrl, accessToken, entityToUpsert, {
+                    runId: this.input.runId,
+                });
+                entitiesRes.push(entityRes);
+            }
+            return entitiesRes.map((entity) => entity.identifier);
+        };
+        this.input = input;
+    }
+}
+exports["default"] = EntityBulkUpserter;
+
+
+/***/ }),
+
 /***/ 4271:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -624,6 +670,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const types_1 = __nccwpck_require__(8164);
 const EntitiesSearchOperation_1 = __importDefault(__nccwpck_require__(3978));
+const EntityBulkUpserterOperation_1 = __importDefault(__nccwpck_require__(8589));
 const EntityGetterOperation_1 = __importDefault(__nccwpck_require__(4271));
 const EntityUpserterOperation_1 = __importDefault(__nccwpck_require__(5990));
 class OperationFactory {
@@ -635,6 +682,8 @@ class OperationFactory {
                 return new EntityUpserterOperation_1.default(input);
             case types_1.OperationType.Search:
                 return new EntitiesSearchOperation_1.default(input);
+            case types_1.OperationType.BulkUpsert:
+                return new EntityBulkUpserterOperation_1.default(input);
             default:
                 throw new Error('Operation not supported, must be one of GET, UPSERT, SEARCH');
         }
@@ -657,6 +706,7 @@ var OperationType;
     OperationType["Upsert"] = "upsert";
     OperationType["Get"] = "get";
     OperationType["Search"] = "search";
+    OperationType["BulkUpsert"] = "bulk_upsert";
 })(OperationType = exports.OperationType || (exports.OperationType = {}));
 
 
