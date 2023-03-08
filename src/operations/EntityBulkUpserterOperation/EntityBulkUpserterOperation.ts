@@ -16,7 +16,7 @@ export default class EntityBulkUpserter implements IOperation {
 		assert(this.input.entities, 'BULK_UPSERT Operation - entities is missing from input');
 
 		return {
-			...(this.input.entities && { entities: JSON.parse(this.input.entities) }),
+			entities: JSON.parse(this.input.entities),
 		};
 	};
 
@@ -26,7 +26,7 @@ export default class EntityBulkUpserter implements IOperation {
 		const entitiesRes = [];
 		const accessToken = await clients.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
 
-		for (const entityToUpsert of entitiesToUpsert.entities!) {
+		for (const entityToUpsert of entitiesToUpsert.entities) {
 			const entityRes = await clients.port.upsertEntity(this.input.baseUrl, accessToken, entityToUpsert, {
 				runId: this.input.runId,
 			});

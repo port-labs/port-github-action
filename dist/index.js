@@ -547,7 +547,7 @@ class EntityBulkUpserter {
         this.parseInput = () => {
             (0, assert_1.default)(this.input.entities, 'BULK_UPSERT Operation - entities is missing from input');
             return {
-                ...(this.input.entities && { entities: JSON.parse(this.input.entities) }),
+                entities: JSON.parse(this.input.entities),
             };
         };
         this.execute = async () => {

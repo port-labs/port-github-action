@@ -26,7 +26,7 @@ export type EntityToUpsert = Omit<Entity, 'identifier'> & {
 };
 
 export type EntitiesToUpsert = {
-	entities?: EntityToUpsert[];
+	entities: EntityToUpsert[];
 };
 
 export type EntityToGet = {
