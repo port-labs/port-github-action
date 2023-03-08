@@ -9,6 +9,14 @@ export default class EntityUpserterOperation implements IOperation {
 		this.input = input;
 	}
 
+	private parseTeamInput = (testString: string) => {
+		try {
+			return JSON.parse(testString);
+		} catch (e) {
+			return testString;
+		}
+	};
+
 	private parseInput = (): EntityToUpsert => {
 		assert(this.input.blueprint, 'UPSERT Operation - blueprint is missing from input');
 
@@ -18,7 +26,9 @@ export default class EntityUpserterOperation implements IOperation {
 			...(this.input.icon && { icon: this.input.icon }),
 			blueprint: this.input?.blueprint,
 			properties: this.input.properties?.length ? JSON.parse(this.input.properties.join('')) : {},
-			...(this.input.team && { team: this.input.team }),
+			...(this.input.team && {
+				team: this.parseTeamInput(this.input.team),
+			}),
 			relations: this.input.relations?.length ? JSON.parse(this.input.relations.join('')) : {},
 		};
 	};

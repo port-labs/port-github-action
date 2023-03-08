@@ -27,7 +27,7 @@ See [action.yml](action.yml) for inputs and outputs.
       {
         "version": "v1"
       }
-    team: Port
+    team: '["Port"]'
     relations: |
       {
         "deployedAt": "prod"

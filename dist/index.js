@@ -629,6 +629,14 @@ const clients_1 = __importDefault(__nccwpck_require__(1954));
 class EntityUpserterOperation {
     constructor(input) {
         this.input = input;
+        this.parseTeamInput = (testString) => {
+            try {
+                return JSON.parse(testString);
+            }
+            catch (e) {
+                return testString;
+            }
+        };
         this.parseInput = () => {
             (0, assert_1.default)(this.input.blueprint, 'UPSERT Operation - blueprint is missing from input');
             return {
@@ -637,7 +645,9 @@ class EntityUpserterOperation {
                 ...(this.input.icon && { icon: this.input.icon }),
                 blueprint: this.input?.blueprint,
                 properties: this.input.properties?.length ? JSON.parse(this.input.properties.join('')) : {},
-                ...(this.input.team && { team: this.input.team }),
+                ...(this.input.team && {
+                    team: this.parseTeamInput(this.input.team),
+                }),
                 relations: this.input.relations?.length ? JSON.parse(this.input.relations.join('')) : {},
             };
         };

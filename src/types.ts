@@ -17,7 +17,7 @@ export type Entity = {
 	title?: string;
 	blueprint: string;
 	properties: EntityProperties;
-	team?: string;
+	team?: string | string[];
 	relations?: EntityRelations;
 };
 
