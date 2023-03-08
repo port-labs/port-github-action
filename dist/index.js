@@ -545,16 +545,13 @@ class EntityBulkUpserter {
     constructor(input) {
         this.input = input;
         this.parseInput = () => {
-            (0, assert_1.default)(this.input.blueprint, 'BULK-UPSERT Operation - blueprint is missing from input');
+            (0, assert_1.default)(this.input.entities, 'BULK-UPSERT Operation - entities is missing from input');
             return {
                 ...(this.input.entities && { entities: JSON.parse(this.input.entities) }),
             };
         };
         this.execute = async () => {
             const entitiesToUpsert = this.parseInput();
-            if (!entitiesToUpsert.entities) {
-                return [];
-            }
             const entitiesRes = [];
             const accessToken = await clients_1.default.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
             for (const entityToUpsert of entitiesToUpsert.entities) {
