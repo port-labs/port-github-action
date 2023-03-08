@@ -24,6 +24,7 @@ const getInput = (): ActionInput => ({
 		required: false,
 	}),
 	runId: core.getInput('runId', { required: false }),
+	entities: core.getInput('entities', { required: false }),
 });
 
 export default getInput;

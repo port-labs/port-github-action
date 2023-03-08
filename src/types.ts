@@ -25,6 +25,10 @@ export type EntityToUpsert = Omit<Entity, 'identifier'> & {
 	identifier?: string;
 };
 
+export type EntitiesToUpsert = {
+	entities: EntityToUpsert[];
+};
+
 export type EntityToGet = {
 	identifier: string;
 	blueprint: string;
@@ -34,6 +38,7 @@ export enum OperationType {
 	Upsert = 'upsert',
 	Get = 'get',
 	Search = 'search',
+	BulkUpsert = 'bulk_upsert',
 }
 
 export type ActionInput = {
@@ -50,4 +55,5 @@ export type ActionInput = {
 	team?: string;
 	relations?: string[];
 	runId?: string;
+	entities: string;
 };
