@@ -13,7 +13,7 @@ export default class EntityBulkUpserter implements IOperation {
 	}
 
 	private parseInput = (): EntitiesToUpsert => {
-		assert(this.input.entities, 'BULK-UPSERT Operation - entities is missing from input');
+		assert(this.input.entities, 'BULK_UPSERT Operation - entities is missing from input');
 
 		return {
 			...(this.input.entities && { entities: JSON.parse(this.input.entities) }),
