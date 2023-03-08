@@ -695,7 +695,7 @@ class OperationFactory {
             case types_1.OperationType.BulkUpsert:
                 return new EntityBulkUpserterOperation_1.default(input);
             default:
-                throw new Error('Operation not supported, must be one of GET, UPSERT, SEARCH');
+                throw new Error('Operation not supported, must be one of GET, UPSERT, SEARCH, BULK_UPSERT');
         }
     }
 }
