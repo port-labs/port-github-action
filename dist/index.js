@@ -545,7 +545,7 @@ class EntityBulkUpserter {
     constructor(input) {
         this.input = input;
         this.parseInput = () => {
-            (0, assert_1.default)(this.input.entities, 'BULK-UPSERT Operation - entities is missing from input');
+            (0, assert_1.default)(this.input.entities, 'BULK_UPSERT Operation - entities is missing from input');
             return {
                 ...(this.input.entities && { entities: JSON.parse(this.input.entities) }),
             };
@@ -560,7 +560,7 @@ class EntityBulkUpserter {
                 });
                 entitiesRes.push(entityRes);
             }
-            return entitiesRes.map((entity) => entity.identifier);
+            return { identifiers: entitiesRes.map((entity) => entity.identifier) };
         };
         this.input = input;
     }

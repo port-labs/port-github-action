@@ -22,7 +22,7 @@ describe('Bulk Upsert Integration Tests', () => {
 
 	afterEach(async () => {
 		const blueprint = getInput('blueprint');
-		const identifier = outputMock.mock.calls.length ? outputMock.mock.calls[0][1] : '';
+		const identifier = outputMock.mock.calls.length ? outputMock.mock.calls[0][1][0] : '';
 		if (blueprint && identifier)
 			await clients.port.deleteEntity(
 				getInput('baseUrl'),
@@ -47,7 +47,7 @@ describe('Bulk Upsert Integration Tests', () => {
 
 		await main();
 
-		expect(outputMock).toHaveBeenCalledWith('identifier', expect.any(Array<String>));
+		expect(outputMock).toHaveBeenCalledWith('identifiers', [expect.any(String)]);
 		expect(failedMock).toHaveBeenCalledTimes(0);
 	});
 
@@ -72,7 +72,7 @@ describe('Bulk Upsert Integration Tests', () => {
 			...getBaseInput(),
 			...{
 				operation: 'BULK_UPSERT',
-				entities: "[]]"
+				entities: '[]]',
 			},
 		};
 

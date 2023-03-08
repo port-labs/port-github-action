@@ -34,6 +34,6 @@ export default class EntityBulkUpserter implements IOperation {
 			entitiesRes.push(entityRes);
 		}
 
-		return entitiesRes.map((entity) => entity.identifier);
+		return { identifiers: entitiesRes.map((entity) => entity.identifier) };
 	};
 }

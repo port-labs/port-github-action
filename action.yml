@@ -50,6 +50,8 @@ inputs:
 outputs:
   identifier:
     description: 'The identifier of the created entity'
+  identifiers: 
+    description: 'When using BULK_UPSERT operation, this is the identifiers array output'
   entity:
     description: 'The full JSON string entity'
   entities:
