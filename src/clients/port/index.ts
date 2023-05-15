@@ -4,6 +4,8 @@ import deleteEntity from './deleteEntity';
 import getEntity from './getEntity';
 import getToken from './getToken';
 import searchEntities from './searchEntities';
+import updateRun from './updateRun';
+import updateRunLogs from './updateRunLogs';
 import upsertEntity from './upsertEntity';
 
 const USER_AGENT = 'github-action/v1.0';
@@ -25,4 +27,6 @@ export default {
 	deleteEntity,
 	searchEntities,
 	getEntity,
+	updateRun,
+	updateRunLogs,
 };
