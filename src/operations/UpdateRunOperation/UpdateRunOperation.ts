@@ -9,17 +9,13 @@ export default class UpdateActionOperation implements IOperation {
 		this.input = input;
 	}
 
-	private parseTeamInput = (testString: string) => {
-		try {
-			return JSON.parse(testString);
-		} catch (e) {
-			return testString;
-		}
-	};
-
 	private parseInput = (): RunToUpdate => {
 		if (!this.input.message && !this.input.status) {
 			throw new Error('ACTION_UPDATE Operation - message or status is required');
+		}
+
+		if (this.input.status && !['SUCCESS', 'FAILURE'].includes(this.input.status)) {
+			throw new Error('ACTION_UPDATE Operation - status must be one of SUCCESS or FAILURE');
 		}
 
 		return {
@@ -43,7 +39,7 @@ export default class UpdateActionOperation implements IOperation {
 			await clients.port.updateRun(this.input.baseUrl, accessToken, this.input.runId, runToUpdate);
 		}
 		return {
-			identifier: this.input.runId,
+			runId: this.input.runId,
 		};
 	};
 }
