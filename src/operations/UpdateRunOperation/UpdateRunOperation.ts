@@ -42,7 +42,7 @@ export default class UpdateActionOperation implements IOperation {
 			run.runId = runLogs.runId;
 		}
 		if (Object.keys(runToUpdate).length !== 0) {
-			const updateRun = await clients.port.updateRun(this.input.baseUrl, accessToken, this.input.runId, runToUpdate);
+			const updateRun = await clients.port.patchRun(this.input.baseUrl, accessToken, this.input.runId, runToUpdate);
 			run.runId = updateRun.id;
 		}
 		return run;

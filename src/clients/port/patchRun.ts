@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import { Run, RunToUpdate } from '../../types';
 
-const updateRun = async (baseUrl: string, accessToken: string, runId: string, run: RunToUpdate): Promise<Run> => {
+const patchRun = async (baseUrl: string, accessToken: string, runId: string, run: RunToUpdate): Promise<Run> => {
 	const url = `${baseUrl}/v1/actions/runs/${runId}`;
 	try {
 		core.info(`Performing PATCH request to URL: ${url}, with body: ${JSON.stringify(run)}`);
@@ -23,10 +23,10 @@ const updateRun = async (baseUrl: string, accessToken: string, runId: string, ru
 		const error = e?.response?.data?.message || e.message;
 		const log = statusCode >= 400 && statusCode < 500 ? core.warning : core.error;
 		if (log) {
-			log(`Failed to update run with error "${error}" (${statusCode})`);
+			log(`Failed to patch run with error "${error}" (${statusCode})`);
 		}
 		throw e;
 	}
 };
 
-export default updateRun;
+export default patchRun;

@@ -3,8 +3,8 @@ import axios from 'axios';
 import deleteEntity from './deleteEntity';
 import getEntity from './getEntity';
 import getToken from './getToken';
+import patchRun from './patchRun';
 import searchEntities from './searchEntities';
-import updateRun from './updateRun';
 import updateRunLogs from './updateRunLogs';
 import upsertEntity from './upsertEntity';
 
@@ -27,6 +27,6 @@ export default {
 	deleteEntity,
 	searchEntities,
 	getEntity,
-	updateRun,
+	patchRun,
 	updateRunLogs,
 };
