@@ -17,7 +17,7 @@ const updateRun = async (baseUrl: string, accessToken: string, runId: string, ru
 
 		const response = await axios.patch(url, run, config);
 
-		return response.data.entity;
+		return response.data.run;
 	} catch (e: any) {
 		const statusCode = e?.response?.status || e?.code;
 		const error = e?.response?.data?.message || e.message;

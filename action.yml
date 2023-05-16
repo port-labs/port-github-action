@@ -59,6 +59,9 @@ inputs:
   status:
     required: false
     description: 'The port action status (success, failure)'
+  logMessage:
+    required: false
+    description: 'The port action log message'
 outputs:
   identifier:
     description: 'The identifier of the created entity'

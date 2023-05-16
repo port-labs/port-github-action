@@ -3,7 +3,7 @@ import * as core from '@actions/core';
 import main from '../main';
 import { TestInputs, clearInputs, getBaseInput, setInputs } from './utils/utils';
 
-describe('Update Run Integration Tests', () => {
+describe('Patch Run Integration Tests', () => {
 	let outputMock: jest.SpyInstance;
 	let failedMock: jest.SpyInstance;
 	let input: TestInputs = {};
@@ -19,13 +19,13 @@ describe('Update Run Integration Tests', () => {
 		input = {};
 	});
 
-	test('Should update run successfully', async () => {
+	test('Should patch run successfully', async () => {
 		input = {
 			...getBaseInput(),
 			...{
 				operation: 'PATCH_RUN',
 				runId: 'r_1HDz2pBPYltPcfA1',
-				message: 'Test message',
+				logMessage: 'Test message',
 			},
 		};
 
@@ -34,16 +34,18 @@ describe('Update Run Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledWith('runId', expect.any(String));
+		expect(outputMock).toHaveBeenCalledWith('logMessage', 'Test message');
+
 		expect(failedMock).toHaveBeenCalledTimes(0);
 	});
 
-	test('Should update run successfully - with link', async () => {
+	test('Should patch run successfully - with link', async () => {
 		input = {
 			...getBaseInput(),
 			...{
 				operation: 'PATCH_RUN',
 				runId: 'r_1HDz2pBPYltPcfA1',
-				message: 'Test message',
+				logMessage: 'Test message',
 				link: 'https://www.google.com',
 			},
 		};
@@ -52,6 +54,7 @@ describe('Update Run Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledWith('runId', expect.any(String));
+		expect(outputMock).toHaveBeenCalledWith('logMessage', 'Test message');
 		expect(failedMock).toHaveBeenCalledTimes(0);
 	});
 

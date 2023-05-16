@@ -53,7 +53,7 @@ export type EntityToUpsert = Omit<Entity, 'identifier'> & {
 
 export type RunToUpdate = {
 	status?: 'SUCCESS' | 'FAILURE';
-	message?: string;
+	logMessage?: string;
 	link?: string;
 	summary?: string;
 	externalRunId?: string;
@@ -75,7 +75,7 @@ export enum OperationType {
 	Get = 'get',
 	Search = 'search',
 	BulkUpsert = 'bulk_upsert',
-	UpdateRun = 'PATCH_RUN',
+	PatchRun = 'patch_run',
 }
 
 export type ActionInput = {
@@ -93,7 +93,7 @@ export type ActionInput = {
 	relations?: string[];
 	runId?: string;
 	entities: string;
-	message?: string;
+	logMessage?: string;
 	status?: 'SUCCESS' | 'FAILURE';
 	link?: string;
 	summary?: string;

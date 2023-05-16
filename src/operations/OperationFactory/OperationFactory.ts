@@ -18,7 +18,7 @@ export default class OperationFactory {
 				return new EntitiesSearchOperation(input);
 			case OperationType.BulkUpsert:
 				return new EntityBulkUpserterOperation(input);
-			case OperationType.UpdateRun:
+			case OperationType.PatchRun:
 				return new UpdateRunOperation(input);
 			default:
 				throw new Error(OPERATION_IS_NOT_SUPPORTED);
