@@ -87,6 +87,6 @@ describe('Update Run Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith('ACTION_UPDATE Operation - status must be one of SUCCESS or FAILURE');
+		expect(failedMock).toHaveBeenCalledWith('UPDATE_RUN Operation - status must be one of SUCCESS or FAILURE');
 	});
 });
