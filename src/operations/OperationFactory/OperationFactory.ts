@@ -1,3 +1,4 @@
+import { OPERATION_IS_NOT_SUPPORTED } from '../../consts';
 import { IOperation } from '../../interfaces';
 import { ActionInput, OperationType } from '../../types';
 import EntitiesSearchOperation from '../EntitiesSearchOperation/EntitiesSearchOperation';
@@ -20,7 +21,7 @@ export default class OperationFactory {
 			case OperationType.UpdateRun:
 				return new UpdateRunOperation(input);
 			default:
-				throw new Error('Operation not supported, must be one of GET, UPSERT, SEARCH, BULK_UPSERT, UPDATE_RUN');
+				throw new Error(OPERATION_IS_NOT_SUPPORTED);
 		}
 	}
 }

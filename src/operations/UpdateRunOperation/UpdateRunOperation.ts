@@ -1,6 +1,7 @@
 import assert from 'assert';
 
 import clients from '../../clients';
+import { STATUS_OPTIONS } from '../../consts';
 import { IOperation } from '../../interfaces';
 import { ActionInput, RunToUpdate } from '../../types';
 
@@ -14,7 +15,7 @@ export default class UpdateActionOperation implements IOperation {
 			throw new Error('UPDATE_RUN Operation - message or status is required');
 		}
 
-		if (this.input.status && !['SUCCESS', 'FAILURE'].includes(this.input.status)) {
+		if (this.input.status && !STATUS_OPTIONS.includes(this.input.status)) {
 			throw new Error('UPDATE_RUN Operation - status must be one of SUCCESS or FAILURE');
 		}
 
