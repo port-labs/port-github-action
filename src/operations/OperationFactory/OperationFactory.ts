@@ -20,7 +20,7 @@ export default class OperationFactory {
 			case OperationType.UpdateRun:
 				return new UpdateRunOperation(input);
 			default:
-				throw new Error('Operation not supported, must be one of GET, UPSERT, SEARCH, BULK_UPSERT');
+				throw new Error('Operation not supported, must be one of GET, UPSERT, SEARCH, BULK_UPSERT, UPDATE_RUN');
 		}
 	}
 }

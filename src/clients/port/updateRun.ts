@@ -23,7 +23,7 @@ const updateRun = async (baseUrl: string, accessToken: string, runId: string, ru
 		const error = e?.response?.data?.message || e.message;
 		const log = statusCode >= 400 && statusCode < 500 ? core.warning : core.error;
 		if (log) {
-			log(`Failed to upsert entity with error "${error}" (${statusCode})`);
+			log(`Failed to update run with error "${error}" (${statusCode})`);
 		}
 		throw e;
 	}
