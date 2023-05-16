@@ -23,7 +23,7 @@ describe('Update Run Integration Tests', () => {
 		input = {
 			...getBaseInput(),
 			...{
-				operation: 'UPDATE_RUN',
+				operation: 'PATCH_RUN',
 				runId: 'r_1HDz2pBPYltPcfA1',
 				message: 'Test message',
 			},
@@ -37,11 +37,29 @@ describe('Update Run Integration Tests', () => {
 		expect(failedMock).toHaveBeenCalledTimes(0);
 	});
 
+	test('Should update run successfully - with link', async () => {
+		input = {
+			...getBaseInput(),
+			...{
+				operation: 'PATCH_RUN',
+				runId: 'r_1HDz2pBPYltPcfA1',
+				message: 'Test message',
+				link: 'https://www.google.com',
+			},
+		};
+
+		setInputs(input);
+		await main();
+
+		expect(outputMock).toHaveBeenCalledWith('runId', expect.any(String));
+		expect(failedMock).toHaveBeenCalledTimes(0);
+	});
+
 	test('Should fail to update run - run already completed', async () => {
 		input = {
 			...getBaseInput(),
 			...{
-				operation: 'UPDATE_RUN',
+				operation: 'PATCH_RUN',
 				runId: 'r_NAFIufSPQomsEjhm',
 				status: 'SUCCESS',
 			},
@@ -60,7 +78,7 @@ describe('Update Run Integration Tests', () => {
 		input = {
 			...getBaseInput(),
 			...{
-				operation: 'BULK_UPSERT',
+				operation: 'PATCH_RUN',
 			},
 		};
 
@@ -69,14 +87,14 @@ describe('Update Run Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith('BULK_UPSERT Operation - entities is missing from input');
+		expect(failedMock).toHaveBeenCalledWith('PATCH_RUN Operation - runId is missing from input');
 	});
 
 	test('Should fail parse input - invalid status value', async () => {
 		input = {
 			...getBaseInput(),
 			...{
-				operation: 'UPDATE_RUN',
+				operation: 'PATCH_RUN',
 				runId: 'r_oB7y1xUZY37J6uRU',
 				status: 'INVALID',
 			},
@@ -87,6 +105,6 @@ describe('Update Run Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith('UPDATE_RUN Operation - status must be one of SUCCESS or FAILURE');
+		expect(failedMock).toHaveBeenCalledWith('PATCH_RUN Operation - status must be one of SUCCESS or FAILURE');
 	});
 });

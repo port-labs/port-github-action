@@ -75,7 +75,7 @@ export enum OperationType {
 	Get = 'get',
 	Search = 'search',
 	BulkUpsert = 'bulk_upsert',
-	UpdateRun = 'update_run',
+	UpdateRun = 'PATCH_RUN',
 }
 
 export type ActionInput = {

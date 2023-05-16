@@ -14,7 +14,7 @@ inputs:
     description: 'Client secret'
   operation:
     required: true
-    description: 'One of the following operations: GET, UPSERT, SEARCH, BULK_UPSERT', UPDATE_RUN
+    description: 'One of the following operations: GET, UPSERT, SEARCH, BULK_UPSERT', PATCH_RUN
     default: 'UPSERT'
   query:
     required: false
@@ -47,6 +47,18 @@ inputs:
   entities:
     required: false
     description: 'The entities to be used for BULK_UPSERT operation'
+  link:
+    required: false
+    description: 'The Port action link'
+  summary:
+    required: false
+    description: 'The port action summary'
+  externalRunId:
+    required: false
+    description: 'The port action external run id'
+  status:
+    required: false
+    description: 'The port action status (success, failure)'
 outputs:
   identifier:
     description: 'The identifier of the created entity'

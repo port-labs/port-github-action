@@ -12,11 +12,11 @@ export default class UpdateActionOperation implements IOperation {
 
 	private parseInput = (): RunToUpdate => {
 		if (!this.input.message && !this.input.status) {
-			throw new Error('UPDATE_RUN Operation - message or status is required');
+			throw new Error('PATCH_RUN Operation - message or status is required');
 		}
 
 		if (this.input.status && !STATUS_OPTIONS.includes(this.input.status)) {
-			throw new Error('UPDATE_RUN Operation - status must be one of SUCCESS or FAILURE');
+			throw new Error('PATCH_RUN Operation - status must be one of SUCCESS or FAILURE');
 		}
 
 		return {
@@ -29,7 +29,7 @@ export default class UpdateActionOperation implements IOperation {
 	};
 
 	execute = async (): Promise<Record<string, any>> => {
-		assert(this.input.runId, 'UPDATE_RUN Operation - runId is missing from input');
+		assert(this.input.runId, 'PATCH_RUN Operation - runId is missing from input');
 		const updateRun = this.parseInput();
 		const { message, ...runToUpdate } = updateRun;
 		const accessToken = await clients.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
