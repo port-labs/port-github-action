@@ -14,7 +14,7 @@ inputs:
     description: 'Client secret'
   operation:
     required: true
-    description: 'One of the following operations: GET, UPSERT, SEARCH, BULK_UPSERT', PATCH_RUN
+    description: 'One of the following operations: GET, UPSERT, SEARCH, BULK_UPSERT, PATCH_RUN'
     default: 'UPSERT'
   query:
     required: false
@@ -65,7 +65,7 @@ inputs:
 outputs:
   identifier:
     description: 'The identifier of the created entity'
-  identifiers: 
+  identifiers:
     description: 'When using BULK_UPSERT operation, this is the identifiers array output'
   entity:
     description: 'The full JSON string entity'
