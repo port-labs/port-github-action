@@ -24,6 +24,11 @@ const getInput = (): ActionInput => ({
 		required: false,
 	}),
 	runId: core.getInput('runId', { required: false }),
+	logMessage: core.getInput('logMessage', { required: false }),
+	status: core.getInput('status', { required: false }) as 'SUCCESS' | 'FAILURE',
+	link: core.getInput('link', { required: false }),
+	summary: core.getInput('summary', { required: false }),
+	externalRunId: core.getInput('externalRunId', { required: false }),
 	entities: core.getInput('entities', { required: false }),
 });
 

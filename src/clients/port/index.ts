@@ -3,7 +3,9 @@ import axios from 'axios';
 import deleteEntity from './deleteEntity';
 import getEntity from './getEntity';
 import getToken from './getToken';
+import patchRun from './patchRun';
 import searchEntities from './searchEntities';
+import updateRunLogs from './updateRunLogs';
 import upsertEntity from './upsertEntity';
 
 const USER_AGENT = 'github-action/v1.0';
@@ -25,4 +27,6 @@ export default {
 	deleteEntity,
 	searchEntities,
 	getEntity,
+	patchRun,
+	updateRunLogs,
 };

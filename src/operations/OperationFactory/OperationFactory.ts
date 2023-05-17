@@ -1,9 +1,11 @@
+import { OPERATION_IS_NOT_SUPPORTED } from '../../consts';
 import { IOperation } from '../../interfaces';
 import { ActionInput, OperationType } from '../../types';
 import EntitiesSearchOperation from '../EntitiesSearchOperation/EntitiesSearchOperation';
 import EntityBulkUpserterOperation from '../EntityBulkUpserterOperation/EntityBulkUpserterOperation';
 import EntityGetterOperation from '../EntityGetterOperation/EntityGetterOperation';
 import EntityUpserterOperation from '../EntityUpserterOperation/EntityUpserterOperation';
+import UpdateRunOperation from '../UpdateRunOperation/UpdateRunOperation';
 
 export default class OperationFactory {
 	createOperation(input: ActionInput): IOperation {
@@ -16,8 +18,10 @@ export default class OperationFactory {
 				return new EntitiesSearchOperation(input);
 			case OperationType.BulkUpsert:
 				return new EntityBulkUpserterOperation(input);
+			case OperationType.PatchRun:
+				return new UpdateRunOperation(input);
 			default:
-				throw new Error('Operation not supported, must be one of GET, UPSERT, SEARCH, BULK_UPSERT');
+				throw new Error(OPERATION_IS_NOT_SUPPORTED);
 		}
 	}
 }

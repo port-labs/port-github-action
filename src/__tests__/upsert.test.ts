@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 
 import clients from '../clients';
+import { OPERATION_IS_NOT_SUPPORTED } from '../consts';
 import main from '../main';
 import { TestInputs, clearInputs, getBaseInput, getInput, setInputs } from './utils/utils';
 
@@ -141,6 +142,6 @@ describe('Upsert Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith('Operation not supported, must be one of GET, UPSERT, SEARCH, BULK_UPSERT');
+		expect(failedMock).toHaveBeenCalledWith(OPERATION_IS_NOT_SUPPORTED);
 	});
 });

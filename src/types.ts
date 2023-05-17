@@ -21,9 +21,45 @@ export type Entity = {
 	relations?: EntityRelations;
 };
 
+export type Run = {
+	id: string;
+	status: 'SUCCESS' | 'FAILURE' | 'IN_PROGRESS';
+	source: string;
+	link: string[];
+	summary: string;
+	requiredApproval: boolean;
+	action: {
+		identifier: string;
+		title: string;
+		icon: string;
+	};
+	blueprint: {
+		identifier: string;
+		title: string;
+		icon: string;
+	};
+	properties: EntityProperties;
+};
+
+export type RunLog = {
+	id: string;
+	runId: string;
+	message: string;
+};
+
 export type EntityToUpsert = Omit<Entity, 'identifier'> & {
 	identifier?: string;
 };
+
+export type RunToUpdate = {
+	status?: 'SUCCESS' | 'FAILURE';
+	logMessage?: string;
+	link?: string;
+	summary?: string;
+	externalRunId?: string;
+};
+
+export type ActionLogs = {};
 
 export type EntitiesToUpsert = {
 	entities: EntityToUpsert[];
@@ -39,6 +75,7 @@ export enum OperationType {
 	Get = 'get',
 	Search = 'search',
 	BulkUpsert = 'bulk_upsert',
+	PatchRun = 'patch_run',
 }
 
 export type ActionInput = {
@@ -56,4 +93,9 @@ export type ActionInput = {
 	relations?: string[];
 	runId?: string;
 	entities: string;
+	logMessage?: string;
+	status?: 'SUCCESS' | 'FAILURE';
+	link?: string;
+	summary?: string;
+	externalRunId?: string;
 };
