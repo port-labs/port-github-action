@@ -865,6 +865,14 @@ const consts_1 = __nccwpck_require__(4831);
 class UpdateActionOperation {
     constructor(input) {
         this.input = input;
+        this.parseLinkInput = (testString) => {
+            try {
+                return JSON.parse(testString);
+            }
+            catch (e) {
+                return testString;
+            }
+        };
         this.parseInput = () => {
             if (!this.input.logMessage && !this.input.status) {
                 throw new Error('PATCH_RUN Operation - message or status is required');
@@ -875,7 +883,7 @@ class UpdateActionOperation {
             return {
                 ...(this.input.logMessage && { logMessage: this.input.logMessage }),
                 ...(this.input.status && { status: this.input.status }),
-                ...(this.input.link && { link: this.input.link }),
+                ...(this.input.link && { link: this.parseLinkInput(this.input.link) }),
                 ...(this.input.summary && { summary: this.input.summary }),
                 ...(this.input.externalRunId && { externalRunId: this.input.externalRunId }),
             };
