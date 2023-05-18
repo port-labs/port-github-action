@@ -46,7 +46,7 @@ describe('Patch Run Integration Tests', () => {
 				operation: 'PATCH_RUN',
 				runId: 'r_1HDz2pBPYltPcfA1',
 				logMessage: 'Test message',
-				link: 'https://www.google.com',
+				link: `["https://www.google.com","https://www.google.com"]`,
 			},
 		};
 
