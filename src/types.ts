@@ -54,7 +54,7 @@ export type EntityToUpsert = Omit<Entity, 'identifier'> & {
 export type RunToUpdate = {
 	status?: 'SUCCESS' | 'FAILURE';
 	logMessage?: string;
-	link?: string;
+	link?: string[];
 	summary?: string;
 	externalRunId?: string;
 };

@@ -10,6 +10,14 @@ export default class UpdateActionOperation implements IOperation {
 		this.input = input;
 	}
 
+	private parseLinkInput = (testString: string) => {
+		try {
+			return JSON.parse(testString);
+		} catch (e) {
+			return testString;
+		}
+	};
+
 	private parseInput = (): RunToUpdate => {
 		if (!this.input.logMessage && !this.input.status) {
 			throw new Error('PATCH_RUN Operation - message or status is required');
@@ -22,7 +30,7 @@ export default class UpdateActionOperation implements IOperation {
 		return {
 			...(this.input.logMessage && { logMessage: this.input.logMessage }),
 			...(this.input.status && { status: this.input.status }),
-			...(this.input.link && { link: this.input.link }),
+			...(this.input.link && { link: this.parseLinkInput(this.input.link) }),
 			...(this.input.summary && { summary: this.input.summary }),
 			...(this.input.externalRunId && { externalRunId: this.input.externalRunId }),
 		};
