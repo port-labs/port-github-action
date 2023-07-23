@@ -8,7 +8,7 @@ Port is the Developer Platform meant to supercharge your DevOps and Developers, 
 
 ### Docs
 
-- [Port Docs](https://docs.getport.io/api-providers/github-action)
+- [Port Docs](https://docs.getport.io/build-your-software-catalog/sync-data-to-catalog/ci-cd/github-workflow/)
 
 ## Usage
 
