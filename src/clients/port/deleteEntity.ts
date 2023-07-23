@@ -1,7 +1,13 @@
 import * as core from '@actions/core';
 import axios from 'axios';
 
-const deleteEntity = async (baseUrl: string, accessToken: string, blueprint: string, identifier: string): Promise<void> => {
+const deleteEntity = async (
+	baseUrl: string,
+	accessToken: string,
+	blueprint: string,
+	identifier: string,
+	options: Partial<{ runId: string }> = {},
+): Promise<void> => {
 	const url = `${baseUrl}/v1/blueprints/${blueprint}/entities/${identifier}`;
 	try {
 		core.info(`Performing DELETE request to URL: ${url}`);
@@ -9,6 +15,9 @@ const deleteEntity = async (baseUrl: string, accessToken: string, blueprint: str
 		const config = {
 			headers: {
 				Authorization: `Bearer ${accessToken}`,
+			},
+			params: {
+				...(options.runId && { run_id: options.runId }),
 			},
 		};
 

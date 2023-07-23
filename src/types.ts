@@ -70,12 +70,15 @@ export type EntityToGet = {
 	blueprint: string;
 };
 
+export type EntityToDelete = EntityToGet;
+
 export enum OperationType {
 	Upsert = 'upsert',
 	Get = 'get',
 	Search = 'search',
 	BulkUpsert = 'bulk_upsert',
 	PatchRun = 'patch_run',
+	Delete = 'delete',
 }
 
 export type ActionInput = {
