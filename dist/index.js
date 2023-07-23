@@ -52,13 +52,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const axios_1 = __importDefault(__nccwpck_require__(8757));
-const deleteEntity = async (baseUrl, accessToken, blueprint, identifier) => {
+const deleteEntity = async (baseUrl, accessToken, blueprint, identifier, options = {}) => {
     const url = `${baseUrl}/v1/blueprints/${blueprint}/entities/${identifier}`;
     try {
         core.info(`Performing DELETE request to URL: ${url}`);
         const config = {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
+            },
+            params: {
+                ...(options.runId && { run_id: options.runId }),
             },
         };
         await axios_1.default.delete(url, config);
@@ -487,7 +490,7 @@ exports["default"] = upsertEntity;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.STATUS_OPTIONS = exports.OPERATION_IS_NOT_SUPPORTED = void 0;
-exports.OPERATION_IS_NOT_SUPPORTED = 'Operation is not supported, must be one of GET, UPSERT, SEARCH, BULK_UPSERT, PATCH_RUN';
+exports.OPERATION_IS_NOT_SUPPORTED = 'Operation is not supported, must be one of GET, UPSERT, SEARCH, BULK_UPSERT, PATCH_RUN, DELETE';
 exports.STATUS_OPTIONS = ['SUCCESS', 'FAILURE'];
 
 
@@ -715,6 +718,41 @@ exports["default"] = EntityBulkUpserter;
 
 /***/ }),
 
+/***/ 731:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const assert_1 = __importDefault(__nccwpck_require__(9491));
+const clients_1 = __importDefault(__nccwpck_require__(1954));
+class EntityGetterOperation {
+    constructor(input) {
+        this.input = input;
+        this.parseInput = () => {
+            (0, assert_1.default)(this.input.identifier, 'DELETE Operation - identifier is missing from input');
+            (0, assert_1.default)(this.input.blueprint, 'DELETE Operation - blueprint is missing from input');
+            return { blueprint: this.input.blueprint, identifier: this.input.identifier };
+        };
+        this.execute = async () => {
+            const entityToDelete = this.parseInput();
+            const accessToken = await clients_1.default.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
+            await clients_1.default.port.deleteEntity(this.input.baseUrl, accessToken, entityToDelete.blueprint, entityToDelete.identifier, {
+                runId: this.input.runId,
+            });
+            return { ok: true };
+        };
+        this.input = input;
+    }
+}
+exports["default"] = EntityGetterOperation;
+
+
+/***/ }),
+
 /***/ 4271:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -824,6 +862,7 @@ const consts_1 = __nccwpck_require__(4831);
 const types_1 = __nccwpck_require__(8164);
 const EntitiesSearchOperation_1 = __importDefault(__nccwpck_require__(3978));
 const EntityBulkUpserterOperation_1 = __importDefault(__nccwpck_require__(8589));
+const EntityDeleteOperation_1 = __importDefault(__nccwpck_require__(731));
 const EntityGetterOperation_1 = __importDefault(__nccwpck_require__(4271));
 const EntityUpserterOperation_1 = __importDefault(__nccwpck_require__(5990));
 const UpdateRunOperation_1 = __importDefault(__nccwpck_require__(9435));
@@ -840,6 +879,8 @@ class OperationFactory {
                 return new EntityBulkUpserterOperation_1.default(input);
             case types_1.OperationType.PatchRun:
                 return new UpdateRunOperation_1.default(input);
+            case types_1.OperationType.Delete:
+                return new EntityDeleteOperation_1.default(input);
             default:
                 throw new Error(consts_1.OPERATION_IS_NOT_SUPPORTED);
         }
@@ -929,6 +970,7 @@ var OperationType;
     OperationType["Search"] = "search";
     OperationType["BulkUpsert"] = "bulk_upsert";
     OperationType["PatchRun"] = "patch_run";
+    OperationType["Delete"] = "delete";
 })(OperationType = exports.OperationType || (exports.OperationType = {}));
 
 
