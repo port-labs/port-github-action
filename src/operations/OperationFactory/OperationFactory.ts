@@ -3,6 +3,7 @@ import { IOperation } from '../../interfaces';
 import { ActionInput, OperationType } from '../../types';
 import EntitiesSearchOperation from '../EntitiesSearchOperation/EntitiesSearchOperation';
 import EntityBulkUpserterOperation from '../EntityBulkUpserterOperation/EntityBulkUpserterOperation';
+import EntityDeleteOperation from '../EntityDeleteOperation/EntityDeleteOperation';
 import EntityGetterOperation from '../EntityGetterOperation/EntityGetterOperation';
 import EntityUpserterOperation from '../EntityUpserterOperation/EntityUpserterOperation';
 import UpdateRunOperation from '../UpdateRunOperation/UpdateRunOperation';
@@ -20,6 +21,8 @@ export default class OperationFactory {
 				return new EntityBulkUpserterOperation(input);
 			case OperationType.PatchRun:
 				return new UpdateRunOperation(input);
+			case OperationType.Delete:
+				return new EntityDeleteOperation(input);
 			default:
 				throw new Error(OPERATION_IS_NOT_SUPPORTED);
 		}
