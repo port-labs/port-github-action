@@ -30,6 +30,7 @@ const getInput = (): ActionInput => ({
 	summary: core.getInput('summary', { required: false }),
 	externalRunId: core.getInput('externalRunId', { required: false }),
 	entities: core.getInput('entities', { required: false }),
+	action: core.getInput('action', { required: false }),
 });
 
 export default getInput;

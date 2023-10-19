@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+import createRun from './createRun';
 import deleteEntity from './deleteEntity';
 import getEntity from './getEntity';
 import getToken from './getToken';
@@ -27,6 +28,7 @@ export default {
 	deleteEntity,
 	searchEntities,
 	getEntity,
+	createRun,
 	patchRun,
 	updateRunLogs,
 };
