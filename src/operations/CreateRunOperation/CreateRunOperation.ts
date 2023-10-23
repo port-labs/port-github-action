@@ -5,7 +5,7 @@ import clients from '../../clients';
 import { IOperation } from '../../interfaces';
 import { ActionInput, RunToCreate } from '../../types';
 
-export default class CreateActionOperation implements IOperation {
+export default class CreateRunOperation implements IOperation {
 	constructor(private input: ActionInput) {
 		this.input = input;
 	}

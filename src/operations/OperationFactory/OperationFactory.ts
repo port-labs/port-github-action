@@ -1,7 +1,7 @@
 import { OPERATION_IS_NOT_SUPPORTED } from '../../consts';
 import { IOperation } from '../../interfaces';
 import { ActionInput, OperationType } from '../../types';
-import CreateActionOperation from '../CreateRunOperation/CreateRunOperation';
+import CreateRunOperation from '../CreateRunOperation/CreateRunOperation';
 import EntitiesSearchOperation from '../EntitiesSearchOperation/EntitiesSearchOperation';
 import EntityBulkUpserterOperation from '../EntityBulkUpserterOperation/EntityBulkUpserterOperation';
 import EntityDeleteOperation from '../EntityDeleteOperation/EntityDeleteOperation';
@@ -21,7 +21,7 @@ export default class OperationFactory {
 			case OperationType.BulkUpsert:
 				return new EntityBulkUpserterOperation(input);
 			case OperationType.CreateRun:
-				return new CreateActionOperation(input);
+				return new CreateRunOperation(input);
 			case OperationType.PatchRun:
 				return new UpdateRunOperation(input);
 			case OperationType.Delete:

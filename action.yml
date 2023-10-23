@@ -62,6 +62,9 @@ inputs:
   logMessage:
     required: false
     description: 'The port action log message'
+  action:
+    required: false
+    description: 'The port action identifier to creare run for'
 outputs:
   identifier:
     description: 'The identifier of the created entity'
