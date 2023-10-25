@@ -18,6 +18,72 @@ exports["default"] = {
 
 /***/ }),
 
+/***/ 3470:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core = __importStar(__nccwpck_require__(2186));
+const axios_1 = __importDefault(__nccwpck_require__(8757));
+const patchRun = async (baseUrl, accessToken, run) => {
+    const entityActionUrl = `${baseUrl}/v1/blueprints/${run.blueprint}/entities/${run.identifier}/actions/${run.action}/runs`;
+    const blueprintActionUrl = `${baseUrl}/v1/blueprints/${run.blueprint}/actions/${run.action}/runs`;
+    const url = run.identifier ? entityActionUrl : blueprintActionUrl;
+    const body = {
+        properties: run.properties,
+    };
+    try {
+        core.info(`Performing CREATE request to URL: ${url}, with body: ${JSON.stringify(body)}`);
+        const config = {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        };
+        const response = await axios_1.default.post(url, body, config);
+        return response.data.run;
+    }
+    catch (e) {
+        const statusCode = e?.response?.status || e?.code;
+        const error = e?.response?.data?.message || e.message;
+        const log = statusCode >= 400 && statusCode < 500 ? core.warning : core.error;
+        if (log) {
+            log(`Failed to create run with error "${error}" (${statusCode})`);
+        }
+        throw e;
+    }
+};
+exports["default"] = patchRun;
+
+
+/***/ }),
+
 /***/ 15:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -203,6 +269,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const axios_1 = __importDefault(__nccwpck_require__(8757));
+const createRun_1 = __importDefault(__nccwpck_require__(3470));
 const deleteEntity_1 = __importDefault(__nccwpck_require__(15));
 const getEntity_1 = __importDefault(__nccwpck_require__(7298));
 const getToken_1 = __importDefault(__nccwpck_require__(2262));
@@ -226,6 +293,7 @@ exports["default"] = {
     deleteEntity: deleteEntity_1.default,
     searchEntities: searchEntities_1.default,
     getEntity: getEntity_1.default,
+    createRun: createRun_1.default,
     patchRun: patchRun_1.default,
     updateRunLogs: updateRunLogs_1.default,
 };
@@ -490,7 +558,7 @@ exports["default"] = upsertEntity;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.STATUS_OPTIONS = exports.OPERATION_IS_NOT_SUPPORTED = void 0;
-exports.OPERATION_IS_NOT_SUPPORTED = 'Operation is not supported, must be one of GET, UPSERT, SEARCH, BULK_UPSERT, PATCH_RUN, DELETE';
+exports.OPERATION_IS_NOT_SUPPORTED = 'Operation is not supported, must be one of GET, UPSERT, SEARCH, BULK_UPSERT, CREATE_RUN, PATCH_RUN, DELETE';
 exports.STATUS_OPTIONS = ['SUCCESS', 'FAILURE'];
 
 
@@ -569,6 +637,7 @@ const getInput = () => ({
     summary: core.getInput('summary', { required: false }),
     externalRunId: core.getInput('externalRunId', { required: false }),
     entities: core.getInput('entities', { required: false }),
+    action: core.getInput('action', { required: false }),
 });
 exports["default"] = getInput;
 
@@ -639,6 +708,46 @@ async function run() {
     }
 }
 exports["default"] = run;
+
+
+/***/ }),
+
+/***/ 5962:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const assert_1 = __importDefault(__nccwpck_require__(9491));
+const clients_1 = __importDefault(__nccwpck_require__(1954));
+class CreateRunOperation {
+    constructor(input) {
+        this.input = input;
+        this.parseInput = () => {
+            (0, assert_1.default)(this.input.blueprint, 'CREATE_RUN Operation - blueprint is missing from input');
+            (0, assert_1.default)(this.input.action, 'CREATE_RUN Operation - action is missing from input');
+            return {
+                ...(this.input.identifier && { identifier: this.input.identifier }),
+                blueprint: this.input?.blueprint,
+                action: this.input?.action,
+                properties: this.input.properties?.length ? JSON.parse(this.input.properties.join('')) : {},
+            };
+        };
+        this.execute = async () => {
+            const createRunInput = this.parseInput();
+            const accessToken = await clients_1.default.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
+            const runRes = await clients_1.default.port.createRun(this.input.baseUrl, accessToken, createRunInput);
+            return {
+                runId: runRes.id,
+            };
+        };
+        this.input = input;
+    }
+}
+exports["default"] = CreateRunOperation;
 
 
 /***/ }),
@@ -860,6 +969,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const consts_1 = __nccwpck_require__(4831);
 const types_1 = __nccwpck_require__(8164);
+const CreateRunOperation_1 = __importDefault(__nccwpck_require__(5962));
 const EntitiesSearchOperation_1 = __importDefault(__nccwpck_require__(3978));
 const EntityBulkUpserterOperation_1 = __importDefault(__nccwpck_require__(8589));
 const EntityDeleteOperation_1 = __importDefault(__nccwpck_require__(731));
@@ -877,6 +987,8 @@ class OperationFactory {
                 return new EntitiesSearchOperation_1.default(input);
             case types_1.OperationType.BulkUpsert:
                 return new EntityBulkUpserterOperation_1.default(input);
+            case types_1.OperationType.CreateRun:
+                return new CreateRunOperation_1.default(input);
             case types_1.OperationType.PatchRun:
                 return new UpdateRunOperation_1.default(input);
             case types_1.OperationType.Delete:
@@ -969,6 +1081,7 @@ var OperationType;
     OperationType["Get"] = "get";
     OperationType["Search"] = "search";
     OperationType["BulkUpsert"] = "bulk_upsert";
+    OperationType["CreateRun"] = "create_run";
     OperationType["PatchRun"] = "patch_run";
     OperationType["Delete"] = "delete";
 })(OperationType = exports.OperationType || (exports.OperationType = {}));

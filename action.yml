@@ -14,7 +14,7 @@ inputs:
     description: 'Client secret'
   operation:
     required: true
-    description: 'One of the following operations: GET, UPSERT, SEARCH, BULK_UPSERT, PATCH_RUN, DELETE'
+    description: 'One of the following operations: GET, UPSERT, SEARCH, BULK_UPSERT, CREATE_RUN, PATCH_RUN, DELETE'
     default: 'UPSERT'
   query:
     required: false
@@ -62,6 +62,9 @@ inputs:
   logMessage:
     required: false
     description: 'The port action log message'
+  action:
+    required: false
+    description: 'The port action identifier for which to create a new run'
 outputs:
   identifier:
     description: 'The identifier of the created entity'

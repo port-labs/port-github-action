@@ -59,6 +59,13 @@ export type RunToUpdate = {
 	externalRunId?: string;
 };
 
+export type RunToCreate = {
+	identifier?: string;
+	blueprint: string;
+	action: string;
+	properties?: EntityProperties;
+};
+
 export type ActionLogs = {};
 
 export type EntitiesToUpsert = {
@@ -77,6 +84,7 @@ export enum OperationType {
 	Get = 'get',
 	Search = 'search',
 	BulkUpsert = 'bulk_upsert',
+	CreateRun = 'create_run',
 	PatchRun = 'patch_run',
 	Delete = 'delete',
 }
@@ -101,4 +109,5 @@ export type ActionInput = {
 	link?: string;
 	summary?: string;
 	externalRunId?: string;
+	action?: string;
 };
