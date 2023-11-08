@@ -127,6 +127,7 @@ const deleteEntity = async (baseUrl, accessToken, blueprint, identifier, options
                 Authorization: `Bearer ${accessToken}`,
             },
             params: {
+                delete_dependent: options.delete_dependent,
                 ...(options.runId && { run_id: options.runId }),
             },
         };
