@@ -31,6 +31,7 @@ const getInput = (): ActionInput => ({
 	externalRunId: core.getInput('externalRunId', { required: false }),
 	entities: core.getInput('entities', { required: false }),
 	action: core.getInput('action', { required: false }),
+	delete_dependents: core.getInput('delete_dependents', { required: false }),
 });
 
 export default getInput;

@@ -6,18 +6,16 @@ const deleteEntity = async (
 	accessToken: string,
 	blueprint: string,
 	identifier: string,
-	options: Partial<{ runId: string; delete_dependent: boolean }> = {},
+	options: Partial<{ runId: string; delete_dependents: boolean }> = {},
 ): Promise<void> => {
 	const url = `${baseUrl}/v1/blueprints/${blueprint}/entities/${identifier}`;
 	try {
-		core.info(`Performing DELETE request to URL: ${url}`);
-
 		const config = {
 			headers: {
 				Authorization: `Bearer ${accessToken}`,
 			},
 			params: {
-				delete_dependent: options.delete_dependent,
+				delete_dependents: options.delete_dependents,
 				...(options.runId && { run_id: options.runId }),
 			},
 		};

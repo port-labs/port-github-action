@@ -12,6 +12,7 @@ export default class EntityGetterOperation implements IOperation {
 	private parseInput = (): EntityToDelete => {
 		assert(this.input.identifier, 'DELETE Operation - identifier is missing from input');
 		assert(this.input.blueprint, 'DELETE Operation - blueprint is missing from input');
+		assert(!this.input.delete_dependents || this.input.delete_dependents === 'true' || this.input.delete_dependents === 'false', 'Invalid value for delete_dependents. It must be "true" or "false".');
 		return { blueprint: this.input.blueprint, identifier: this.input.identifier };
 	};
 
@@ -21,8 +22,9 @@ export default class EntityGetterOperation implements IOperation {
 
 		await clients.port.deleteEntity(this.input.baseUrl, accessToken, entityToDelete.blueprint, entityToDelete.identifier, {
 			runId: this.input.runId,
+			delete_dependents: this.input.delete_dependents === "true",
 		});
 
 		return { ok: true };
-	};
-}
+	}
+};
