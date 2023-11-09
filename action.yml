@@ -65,6 +65,10 @@ inputs:
   action:
     required: false
     description: 'The port action identifier for which to create a new run'
+  delete_dependents:
+    required: false
+    description: 'When deleting entity, this is the flag that indicates to delete dependent entities also'
+    default: 'false'
 outputs:
   identifier:
     description: 'The identifier of the created entity'
