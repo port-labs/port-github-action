@@ -10,6 +10,7 @@ const deleteEntity = async (
 ): Promise<void> => {
 	const url = `${baseUrl}/v1/blueprints/${blueprint}/entities/${identifier}`;
 	try {
+		core.info(`Performing DELETE request to URL: ${url}`);
 		const config = {
 			headers: {
 				Authorization: `Bearer ${accessToken}`,
