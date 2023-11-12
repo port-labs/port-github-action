@@ -19,27 +19,60 @@ describe('Get Integration Tests', () => {
 		clearInputs(input);
 		input = { ...getBaseInput() };
 		setInputs(input);
-		const entityToUpsert = {
-			identifier: 'delete-test',
-			title: 'GH Action Test Identity Delete',
+
+		const parentEntityToUpsert = {
+			identifier: 'delete_test_parent',
+			title: 'GH Action Test Identity Delete Parent',
 			icon: 'GH Action Test Identity',
-			blueprint: 'gh-action-test-bp',
+			blueprint: 'gh-action-test-bp2',
 			team: [],
 			properties: {},
 			relations: {},
 		};
+
+		const childEntityToUpsert = {
+			identifier: 'delete_test_child',
+			title: 'GH Action Test Identity Delete Child',
+			icon: 'GH Action Test Identity',
+			blueprint: 'gh-action-test-bp',
+			team: [],
+			properties: {},
+			relations: { 'gha-relation': 'delete_test_parent' },
+		};
+
 		await clients.port.upsertEntity(
 			getInput('baseUrl'),
 			await clients.port.getToken(getInput('baseUrl'), getInput('clientId'), getInput('clientSecret')),
-			entityToUpsert,
+			parentEntityToUpsert,
+		);
+
+		await clients.port.upsertEntity(
+			getInput('baseUrl'),
+			await clients.port.getToken(getInput('baseUrl'), getInput('clientId'), getInput('clientSecret')),
+			childEntityToUpsert,
 		);
 	});
 
 	test('Should delete entity successfully', async () => {
 		input = {
 			operation: 'DELETE',
-			identifier: 'delete-test',
+			identifier: 'delete_test_child',
 			blueprint: 'gh-action-test-bp',
+		};
+
+		setInputs(input);
+
+		await main();
+
+		expect(outputMock).toHaveBeenCalledWith('ok', true);
+	});
+
+	test('Should delete entity successfully using dependent', async () => {
+		input = {
+			operation: 'DELETE',
+			identifier: 'delete_test_parent',
+			blueprint: 'gh-action-test-bp2',
+			delete_dependents: 'true',
 		};
 
 		setInputs(input);
