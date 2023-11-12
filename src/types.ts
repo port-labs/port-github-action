@@ -110,4 +110,5 @@ export type ActionInput = {
 	summary?: string;
 	externalRunId?: string;
 	action?: string;
+	delete_dependents?: string;
 };
