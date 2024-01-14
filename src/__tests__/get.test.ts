@@ -40,7 +40,6 @@ describe('Get Integration Tests', () => {
 			relations: {},
 			team: ['Test'],
 			title: 'GH Action 2 Test Identity',
-			scorecards: {}
 		});
 		expect(failedMock).toHaveBeenCalledTimes(0);
 	});
