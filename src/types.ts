@@ -1,5 +1,6 @@
 type EntityProperties = Record<string, any>;
 type EntityRelations = Record<string, string>;
+type EntityScorecards = Record<string, any>;
 
 export type SearchBody = {
 	rules: {
@@ -19,6 +20,7 @@ export type Entity = {
 	properties: EntityProperties;
 	team?: string | string[];
 	relations?: EntityRelations;
+	scorecards?: EntityScorecards;
 };
 
 export type Run = {
