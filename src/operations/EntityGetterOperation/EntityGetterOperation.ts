@@ -29,6 +29,7 @@ export default class EntityGetterOperation implements IOperation {
 				properties: entity.properties,
 				...(entity.team && { team: entity.team }),
 				...(entity.relations && { relations: entity.relations }),
+				...(entity.scorecards && { scorecards: entity.scorecards }),
 			},
 		};
 	};
