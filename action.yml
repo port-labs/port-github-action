@@ -75,7 +75,7 @@ outputs:
   entities:
     description: 'When using SEARCH operation, this is entities array output'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
 branding:
   icon: 'arrow-right'

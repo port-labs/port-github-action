@@ -3,6 +3,9 @@
 	"version": "1.0.0",
 	"private": true,
 	"main": "lib/index.js",
+	"engines": {
+		"node": ">=20"
+	},
 	"scripts": {
 		"build": "tsc",
 		"format": "prettier --write '**/*.ts'",
@@ -32,7 +35,7 @@
 		"@trivago/prettier-plugin-sort-imports": "^3.4.0",
 		"@tsconfig/node16": "^1.0.3",
 		"@types/jest": "^29.2.3",
-		"@types/node": "^18.11.9",
+		"@types/node": "^20.12.2",
 		"@vercel/ncc": "^0.34.0",
 		"cross-env": "^7.0.3",
 		"eslint": "8.32.0",
