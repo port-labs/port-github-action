@@ -1,0 +1,27 @@
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+name: release-please
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          release-type: node
+      - uses: actions/checkout@v4
+
+      - uses: jimeh/update-tags-action@v1
+        if: ${{ steps.release.outputs.release_created }}
+        with:
+          tags: |
+            v${{ steps.release.outputs.major }}
+            v${{ steps.release.outputs.major }}.${{ steps.release-please.outputs.minor }}
+            v${{ steps.release.outputs.major }}.${{ steps.release-please.outputs.minor }}.${{ steps.release-please.outputs.patch }}
