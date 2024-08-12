@@ -16,6 +16,7 @@ jobs:
       - run: |
           npm run build && npm test
         env:
+          PORT_BASE_URL: ${{ secrets.PORT_BASE_URL }}
           INPUT_BASEURL: ${{ secrets.PORT_BASE_URL }}
           INPUT_CLIENTID: ${{ secrets.PORT_CLIENT_ID }}
           INPUT_CLIENTSECRET: ${{ secrets.PORT_CLIENT_SECRET }}
