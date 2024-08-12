@@ -43,7 +43,7 @@ describe('Upsert Integration Tests', () => {
 				blueprint: 'gh-action-test-bp',
 				team: '["Test"]',
 				properties: '{"text": "test", "number": 1, "boolean": true, "array": [1, 2], "object": {"foo": "bar"}}',
-				relations: '{"gha-relation": "e_nrw9dSY4yAYl9A8U"}',
+				relations: '{"gha-relation": "test"}',
 				runId: 'r_1HDz2pBPYltPcfA1',
 			},
 		};
