@@ -63,7 +63,7 @@ describe('Patch Run Integration Tests', () => {
 			...getBaseInput(),
 			...{
 				operation: 'PATCH_RUN',
-				runId: 'r_NAFIufSPQomsEjhm',
+				runId: 'r_oNfB7XpORwwJqvd8',
 				status: 'SUCCESS',
 			},
 		};
