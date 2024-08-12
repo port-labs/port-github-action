@@ -732,12 +732,10 @@ class CreateRunOperation {
     constructor(input) {
         this.input = input;
         this.parseInput = () => {
-            (0, assert_1.default)(this.input.blueprint, 'CREATE_RUN Operation - blueprint is missing from input');
             (0, assert_1.default)(this.input.action, 'CREATE_RUN Operation - action is missing from input');
             return {
                 ...(this.input.identifier && { identifier: this.input.identifier }),
-                blueprint: this.input?.blueprint,
-                action: this.input?.action,
+                action: this.input.action,
                 properties: this.input.properties?.length ? JSON.parse(this.input.properties.join('')) : {},
             };
         };
