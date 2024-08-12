@@ -63,7 +63,6 @@ export type RunToUpdate = {
 
 export type RunToCreate = {
 	identifier?: string;
-	blueprint: string;
 	action: string;
 	properties?: EntityProperties;
 };

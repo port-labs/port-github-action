@@ -23,7 +23,6 @@ const createRun = async (baseUrl: string, accessToken: string, run: RunToCreate)
 		};
 
 		const response = await axios.post(url, body, config);
-
 		return response.data.run;
 	} catch (e: any) {
 		const statusCode = e?.response?.status || e?.code;

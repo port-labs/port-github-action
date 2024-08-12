@@ -24,7 +24,6 @@ describe('Create Run Integration Tests', () => {
 			...getBaseInput(),
 			...{
 				operation: 'CREATE_RUN',
-				blueprint: 'gh-action-test-bp',
 				action: 'gh-action-test',
 				properties: '{"text": "test", "number": 1, "boolean": true}',
 			},
@@ -43,7 +42,6 @@ describe('Create Run Integration Tests', () => {
 			...getBaseInput(),
 			...{
 				operation: 'CREATE_RUN',
-				blueprint: 'gh-action-test-bp',
 				action: 'gh-action-test-entity',
 				identifier: 'gh-action-test-bp-entity',
 				properties: '{"text": "test", "number": 1, "boolean": true}',
