@@ -44,7 +44,6 @@ describe('Upsert Integration Tests', () => {
 				team: '["Test"]',
 				properties: '{"text": "test", "number": 1, "boolean": true, "array": [1, 2], "object": {"foo": "bar"}}',
 				relations: '{"gha-relation": "test"}',
-				runId: 'r_1HDz2pBPYltPcfA1',
 			},
 		};
 
