@@ -3,13 +3,16 @@ import axios from 'axios';
 
 import { Run, RunToCreate } from '../../types';
 
-const patchRun = async (baseUrl: string, accessToken: string, run: RunToCreate): Promise<Run> => {
-	const entityActionUrl = `${baseUrl}/v1/blueprints/${run.blueprint}/entities/${run.identifier}/actions/${run.action}/runs`;
-	const blueprintActionUrl = `${baseUrl}/v1/blueprints/${run.blueprint}/actions/${run.action}/runs`;
-	const url = run.identifier ? entityActionUrl : blueprintActionUrl;
-	const body = {
+const createRun = async (baseUrl: string, accessToken: string, run: RunToCreate): Promise<Run> => {
+	const url = `${baseUrl}/v1/actions/${run.action}/runs`;
+	const bodyWithEntity = {
+		properties: run.properties,
+		entity: run.identifier,
+	};
+	const bodyWithoutEntity = {
 		properties: run.properties,
 	};
+	const body = run.identifier ? bodyWithEntity : bodyWithoutEntity;
 	try {
 		core.info(`Performing CREATE request to URL: ${url}, with body: ${JSON.stringify(body)}`);
 
@@ -33,4 +36,4 @@ const patchRun = async (baseUrl: string, accessToken: string, run: RunToCreate):
 	}
 };
 
-export default patchRun;
+export default createRun;
