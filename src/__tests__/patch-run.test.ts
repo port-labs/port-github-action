@@ -24,7 +24,7 @@ describe('Patch Run Integration Tests', () => {
 			...getBaseInput(),
 			...{
 				operation: 'PATCH_RUN',
-				runId: 'r_1HDz2pBPYltPcfA1',
+				runId: 'r_oNfB7XpORwwJqvd8',
 				logMessage: 'Test message',
 			},
 		};
@@ -44,7 +44,7 @@ describe('Patch Run Integration Tests', () => {
 			...getBaseInput(),
 			...{
 				operation: 'PATCH_RUN',
-				runId: 'r_1HDz2pBPYltPcfA1',
+				runId: 'r_oNfB7XpORwwJqvd8',
 				logMessage: 'Test message',
 				link: `["https://www.google.com","https://www.google.com"]`,
 			},
