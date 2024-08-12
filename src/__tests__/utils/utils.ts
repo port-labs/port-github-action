@@ -1,6 +1,7 @@
 export type TestInputs = Record<string, string>;
 
 export const getBaseInput = (): TestInputs => ({
+	baseUrl: getInput('baseUrl'),
 	properties: '{}',
 	relations: '{}',
 });
