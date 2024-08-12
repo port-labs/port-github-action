@@ -1,7 +1,6 @@
 export type TestInputs = Record<string, string>;
 
 export const getBaseInput = (): TestInputs => ({
-	baseUrl: 'https://api.getport.io',
 	properties: '{}',
 	relations: '{}',
 });

@@ -132,7 +132,7 @@ describe('Upsert Integration Tests', () => {
 		input = {
 			...getBaseInput(),
 			...{
-				operation: 'UPSERTT',
+				operation: 'UPSERT',
 				blueprint: 'gh-action-test-bp',
 			},
 		};
