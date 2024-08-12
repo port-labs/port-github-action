@@ -24,10 +24,11 @@ describe('Upsert Integration Tests', () => {
 	afterEach(async () => {
 		const blueprint = getInput('blueprint');
 		const identifier = outputMock.mock.calls.length ? outputMock.mock.calls[0][1] : '';
+		const baseUrl = process.env['PORT_BASE_URL'] ?? '';
 		if (blueprint && identifier)
 			await clients.port.deleteEntity(
-				getInput('baseUrl'),
-				await clients.port.getToken(getInput('baseUrl'), getInput('clientId'), getInput('clientSecret')),
+				baseUrl,
+				await clients.port.getToken(baseUrl, getInput('clientId'), getInput('clientSecret')),
 				blueprint,
 				identifier,
 			);
