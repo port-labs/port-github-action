@@ -24,7 +24,7 @@ describe('Get Integration Tests', () => {
 			...getBaseInput(),
 			...{
 				operation: 'GET',
-				identifier: 'e_nrw9dSY4yAYl9A8U',
+				identifier: 'test_entity',
 				blueprint: 'gh-action-test-bp2',
 			},
 		};
