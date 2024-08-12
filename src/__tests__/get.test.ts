@@ -35,7 +35,7 @@ describe('Get Integration Tests', () => {
 
 		expect(outputMock).toHaveBeenCalledWith('entity', {
 			blueprint: 'gh-action-test-bp2',
-			identifier: 'e_nrw9dSY4yAYl9A8U',
+			identifier: 'test_entity',
 			properties: { str: 'foo' },
 			relations: {},
 			team: ['Test'],
