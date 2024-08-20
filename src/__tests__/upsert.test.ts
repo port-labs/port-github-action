@@ -24,10 +24,11 @@ describe('Upsert Integration Tests', () => {
 	afterEach(async () => {
 		const blueprint = getInput('blueprint');
 		const identifier = outputMock.mock.calls.length ? outputMock.mock.calls[0][1] : '';
+		const baseUrl = process.env['PORT_BASE_URL'] ?? '';
 		if (blueprint && identifier)
 			await clients.port.deleteEntity(
-				getInput('baseUrl'),
-				await clients.port.getToken(getInput('baseUrl'), getInput('clientId'), getInput('clientSecret')),
+				baseUrl,
+				await clients.port.getToken(baseUrl, getInput('clientId'), getInput('clientSecret')),
 				blueprint,
 				identifier,
 			);
@@ -43,8 +44,7 @@ describe('Upsert Integration Tests', () => {
 				blueprint: 'gh-action-test-bp',
 				team: '["Test"]',
 				properties: '{"text": "test", "number": 1, "boolean": true, "array": [1, 2], "object": {"foo": "bar"}}',
-				relations: '{"gha-relation": "e_nrw9dSY4yAYl9A8U"}',
-				runId: 'r_1HDz2pBPYltPcfA1',
+				relations: '{"gha-relation": "test"}',
 			},
 		};
 

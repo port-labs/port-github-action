@@ -19,6 +19,7 @@ describe('Get Integration Tests', () => {
 		clearInputs(input);
 		input = { ...getBaseInput() };
 		setInputs(input);
+		const baseUrl = process.env['PORT_BASE_URL'] ?? '';
 
 		const parentEntityToUpsert = {
 			identifier: 'delete_test_parent',
@@ -41,14 +42,14 @@ describe('Get Integration Tests', () => {
 		};
 
 		await clients.port.upsertEntity(
-			getInput('baseUrl'),
-			await clients.port.getToken(getInput('baseUrl'), getInput('clientId'), getInput('clientSecret')),
+			baseUrl,
+			await clients.port.getToken(baseUrl, getInput('clientId'), getInput('clientSecret')),
 			parentEntityToUpsert,
 		);
 
 		await clients.port.upsertEntity(
-			getInput('baseUrl'),
-			await clients.port.getToken(getInput('baseUrl'), getInput('clientId'), getInput('clientSecret')),
+			baseUrl,
+			await clients.port.getToken(baseUrl, getInput('clientId'), getInput('clientSecret')),
 			childEntityToUpsert,
 		);
 	});

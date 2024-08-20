@@ -16,6 +16,7 @@ jobs:
       - run: |
           npm run build && npm test
         env:
-          INPUT_BASEURL: https://api.getport.io
-          INPUT_CLIENTID: ${{ secrets.PORT_INTEG_CLIENT_ID }}
-          INPUT_CLIENTSECRET: ${{ secrets.PORT_INTEG_CLIENT_SECRET }}
+          PORT_BASE_URL: ${{ secrets.PORT_BASE_URL }}
+          INPUT_BASEURL: ${{ secrets.PORT_BASE_URL }}
+          INPUT_CLIENTID: ${{ secrets.PORT_CLIENT_ID }}
+          INPUT_CLIENTSECRET: ${{ secrets.PORT_CLIENT_SECRET }}
