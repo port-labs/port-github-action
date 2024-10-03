@@ -1,0 +1,41 @@
+name: Port Update Test
+
+on:
+  push:
+    branches:
+      - PORT-10327-bug-cannot-update-certain-fields-from-github-action  # Trigger only for this branch
+  workflow_dispatch:  # Allows manual triggering from the Actions tab
+
+jobs:
+  test-port-update:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Run the Port GitHub Action test
+      - name: Run Port Action for Update Run
+        uses: port-labs/port-github-action@v1
+        with:
+          clientId: ${{ secrets.PORT_CLIENT_ID }}       # Set these secrets in GitHub
+          clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
+          baseUrl: 'https://api.getport.io'
+          runId: 'r_QOz6WoOB1Q2lmhZZ'  # Test run ID
+          status: 'SUCCESS'
+          statusLabel: 'Completed successfully'
+          logMessage: 'Test log message'
+          link: 'https://github.com/port-labs/port-github-action'
+          summary: 'This is a summary'
+

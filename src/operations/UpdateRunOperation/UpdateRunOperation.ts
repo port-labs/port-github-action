@@ -19,10 +19,6 @@ export default class UpdateActionOperation implements IOperation {
 	};
 
 	private parseInput = (): RunToUpdate => {
-		if (!this.input.logMessage && !this.input.status) {
-			throw new Error('PATCH_RUN Operation - message or status is required');
-		}
-
 		if (this.input.status && !STATUS_OPTIONS.includes(this.input.status)) {
 			throw new Error('PATCH_RUN Operation - status must be one of SUCCESS or FAILURE');
 		}
@@ -30,6 +26,7 @@ export default class UpdateActionOperation implements IOperation {
 		return {
 			...(this.input.logMessage && { logMessage: this.input.logMessage }),
 			...(this.input.status && { status: this.input.status }),
+			...(this.input.statusLabel && { statusLabel: this.input.statusLabel }),
 			...(this.input.link && { link: this.parseLinkInput(this.input.link) }),
 			...(this.input.summary && { summary: this.input.summary }),
 			...(this.input.externalRunId && { externalRunId: this.input.externalRunId }),
