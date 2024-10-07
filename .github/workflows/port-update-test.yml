@@ -29,13 +29,14 @@ jobs:
       - name: Run Port Action for Update Run
         uses: port-labs/port-github-action@v1
         with:
-          clientId: ${{ secrets.PORT_CLIENT_ID }}       # Set these secrets in GitHub
-          clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
+          clientId: 'wtGpOieUtjnVspRTECQZ3XlweQHnSNpn'
+          clientSecret: 'YUQqsYVv2qSXEzt4SIO0b4XuPEJ8XQ56LjfgCsfwXmMD2RHYd0FzWefZKAd5FSOg'
           baseUrl: 'https://api.getport.io'
-          runId: 'r_QOz6WoOB1Q2lmhZZ'  # Test run ID
+          runId: 'r_NNh6FNpwIf9SPjGp'  # Test run ID
           status: 'SUCCESS'
           statusLabel: 'Completed successfully'
           logMessage: 'Test log message'
+          blueprint: 'service'
           link: 'https://github.com/port-labs/port-github-action'
           summary: 'This is a summary'
 
