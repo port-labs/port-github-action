@@ -107,6 +107,7 @@ export type ActionInput = {
 	entities: string;
 	logMessage?: string;
 	status?: 'SUCCESS' | 'FAILURE';
+	statusLabel?: string;
 	link?: string;
 	summary?: string;
 	externalRunId?: string;
