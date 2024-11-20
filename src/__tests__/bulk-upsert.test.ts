@@ -39,8 +39,8 @@ describe('Bulk Upsert Integration Tests', () => {
 			...{
 				operation: 'BULK_UPSERT',
 				entities:
-					'[{"title": "GH Action Test Identity", "icon": "GH Action Test Identity", "blueprint": "gh-action-test-bp", "team": ["Test"],"properties": {"text": "test","number": 1,"boolean": true, "array": [1,2],"object": { "foo": "bar" } },"relations": { "gha-relation": "test"}, "runId": "r_eeUY1AJKzQeaywfv"}]',
-				runId: 'r_eeUY1AJKzQeaywfv',
+					'[{"title": "GH Action Test Identity", "icon": "GH Action Test Identity", "blueprint": "gh-action-test-bp", "team": ["Test"],"properties": {"text": "test","number": 1,"boolean": true, "array": [1,2],"object": { "foo": "bar" } },"relations": { "gha-relation": "test"}, "runId": "r_GlgkML4bonUb7S89"}]',
+				runId: 'r_GlgkML4bonUb7S89',
 			},
 		};
 
@@ -82,6 +82,6 @@ describe('Bulk Upsert Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith('Unexpected token ] in JSON at position 2');
+		expect(failedMock).toHaveBeenCalledWith('Unexpected non-whitespace character after JSON at position 2');
 	});
 });
