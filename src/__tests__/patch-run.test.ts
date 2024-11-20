@@ -24,7 +24,7 @@ describe('Patch Run Integration Tests', () => {
 			...getBaseInput(),
 			...{
 				operation: 'PATCH_RUN',
-				runId: 'r_eeUY1AJKzQeaywfv',
+				runId: 'r_OsJdfkZvZQxGI8Dr',
 				logMessage: 'Test message',
 			},
 		};
@@ -44,7 +44,7 @@ describe('Patch Run Integration Tests', () => {
 			...getBaseInput(),
 			...{
 				operation: 'PATCH_RUN',
-				runId: 'r_eeUY1AJKzQeaywfv',
+				runId: 'r_OsJdfkZvZQxGI8Dr',
 				logMessage: 'Test message',
 				link: `["https://www.google.com","https://www.google.com"]`,
 			},
@@ -63,7 +63,7 @@ describe('Patch Run Integration Tests', () => {
 			...getBaseInput(),
 			...{
 				operation: 'PATCH_RUN',
-				runId: 'r_oNfB7XpORwwJqvd8',
+				runId: 'r_GlgkML4bonUb7S89',
 				status: 'SUCCESS',
 			},
 		};
@@ -98,7 +98,7 @@ describe('Patch Run Integration Tests', () => {
 			...getBaseInput(),
 			...{
 				operation: 'PATCH_RUN',
-				runId: 'r_oB7y1xUZY37J6uRU',
+				runId: 'r_OsJdfkZvZQxGI8Dr',
 				status: 'INVALID',
 			},
 		};
