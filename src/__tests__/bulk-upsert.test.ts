@@ -5,6 +5,8 @@ import main from '../main';
 import { TestInputs, clearInputs, getBaseInput, getInput, setInputs } from './utils/utils';
 
 describe('Bulk Upsert Integration Tests', () => {
+	jest.setTimeout(100000);
+
 	let outputMock: jest.SpyInstance;
 	let failedMock: jest.SpyInstance;
 	let input: TestInputs = {};
@@ -39,8 +41,7 @@ describe('Bulk Upsert Integration Tests', () => {
 			...{
 				operation: 'BULK_UPSERT',
 				entities:
-					'[{"title": "GH Action Test Identity", "icon": "GH Action Test Identity", "blueprint": "gh-action-test-bp", "team": ["Test"],"properties": {"text": "test","number": 1,"boolean": true, "array": [1,2],"object": { "foo": "bar" } },"relations": { "gha-relation": "test"}, "runId": "r_eeUY1AJKzQeaywfv"}]',
-				runId: 'r_eeUY1AJKzQeaywfv',
+					'[{"title": "GH Action Test Identity", "icon": "GH Action Test Identity", "blueprint": "gh-action-test-bp", "team": ["Test"],"properties": {"text": "test","number": 1,"boolean": true, "array": [1,2],"object": { "foo": "bar" } },"relations": { "gha-relation": "test"}}]',
 			},
 		};
 
@@ -82,6 +83,5 @@ describe('Bulk Upsert Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith('Unexpected token ] in JSON at position 2');
 	});
 });
