@@ -40,7 +40,7 @@ describe('Upsert Integration Tests', () => {
 			...{
 				operation: 'UPSERT',
 				title: 'GH Action Test Identity',
-				icon: 'GH Action Test Identity',
+				icon: 'Backstage',
 				blueprint: 'gh-action-test-bp',
 				team: '["Test"]',
 				properties: '{"text": "test", "number": 1, "boolean": true, "array": [1, 2], "object": {"foo": "bar"}}',
