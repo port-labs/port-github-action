@@ -15,7 +15,7 @@ Port is the Developer Platform meant to supercharge your DevOps and Developers, 
 See [action.yml](action.yml) for inputs and outputs.
 
 ```yaml
-- uses: port-labs/port-github-action@v1
+- uses: port-labs/port-github-action@v1.7.2
   with:
     clientId: ${{ secrets.CLIENT_ID }}
     clientSecret: ${{ secrets.CLIENT_SECRET }}
