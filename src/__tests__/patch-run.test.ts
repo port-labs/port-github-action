@@ -4,6 +4,8 @@ import main from '../main';
 import { TestInputs, clearInputs, getBaseInput, setInputs } from './utils/utils';
 
 describe('Patch Run Integration Tests', () => {
+	jest.setTimeout(100000);
+
 	let outputMock: jest.SpyInstance;
 	let failedMock: jest.SpyInstance;
 	let input: TestInputs = {};

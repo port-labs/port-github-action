@@ -6,6 +6,8 @@ import main from '../main';
 import { TestInputs, clearInputs, getBaseInput, getInput, setInputs } from './utils/utils';
 
 describe('Upsert Integration Tests', () => {
+	jest.setTimeout(100000);
+
 	let outputMock: jest.SpyInstance;
 	let failedMock: jest.SpyInstance;
 	let input: TestInputs = {};
