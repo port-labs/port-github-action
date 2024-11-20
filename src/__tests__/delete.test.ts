@@ -24,7 +24,7 @@ describe('Get Integration Tests', () => {
 		const parentEntityToUpsert = {
 			identifier: 'delete_test_parent',
 			title: 'GH Action Test Identity Delete Parent',
-			icon: 'GH Action Test Identity',
+			icon: 'Microservice',
 			blueprint: 'gh-action-test-bp2',
 			team: [],
 			properties: {},
@@ -34,7 +34,7 @@ describe('Get Integration Tests', () => {
 		const childEntityToUpsert = {
 			identifier: 'delete_test_child',
 			title: 'GH Action Test Identity Delete Child',
-			icon: 'GH Action Test Identity',
+			icon: 'Microservice',
 			blueprint: 'gh-action-test-bp',
 			team: [],
 			properties: {},
