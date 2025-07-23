@@ -1,10 +1,12 @@
-<img align="right" width="100" height="74" src="https://user-images.githubusercontent.com/8277210/183290025-d7b24277-dfb4-4ce1-bece-7fe0ecd5efd4.svg" />
+<img align="right" width="100" height="74" src="https://cdn.prod.website-files.com/622996415264e2107087774c/65b09e2a73ab4ac42ad0c139_logo.svg" />
 
 # Port GitHub Action
 
-[![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)](https://join.slack.com/t/devex-community/shared_invite/zt-1bmf5621e-GGfuJdMPK2D8UN58qL4E_g)
+[![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)](https://port-community.slack.com/signup#/domain-signup)
 
-Port is the Developer Platform meant to supercharge your DevOps and Developers, and allow you to regain control of your environment.
+Port is an open, flexible internal developer portal that enables platform teams to streamline everything developers need to know to be productive, reduces cognitive load on developers, and guide them along your golden paths. Start free at [port.io](https://port.io/).
+
+This Port GitHub Action allows you to automatically keep your Port software catalog up-to-date. You can create, read, update, and delete entities in Port, directly from your GitHub workflows. 
 
 ### Docs
 
