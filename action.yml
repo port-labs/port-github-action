@@ -1,6 +1,6 @@
-name: 'port-github-action'
-description: 'Official Port.io GitHub Action'
-author: 'port-labs <port-labs@getport.io>'
+name: 'Port.io GitHub Action'
+description: 'Automate your software catalog updates as you run pipelines'
+author: 'port-labs <port-labs@port.io>'
 inputs:
   baseUrl:
     required: true
