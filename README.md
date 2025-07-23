@@ -10,7 +10,7 @@ This Port GitHub Action allows you to automatically keep your Port software cata
 
 ### Docs
 
-- [Port Docs](https://docs.getport.io/build-your-software-catalog/custom-integration/api/ci-cd/github-workflow/)
+- [Port Docs](https://docs.port.io/build-your-software-catalog/custom-integration/api/ci-cd/github-workflow/)
 
 ## Usage
 

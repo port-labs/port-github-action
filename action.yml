@@ -1,6 +1,6 @@
 name: 'Port.io GitHub Action'
 description: 'Automate your software catalog updates as you run pipelines'
-author: 'port-labs <port-labs@getport.io>'
+author: 'port-labs <port-labs@port.io>'
 inputs:
   baseUrl:
     required: true
