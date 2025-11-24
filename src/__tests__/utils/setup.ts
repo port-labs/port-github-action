@@ -98,6 +98,39 @@ const silentDeleteEntity = async (
 	}
 };
 
+const deleteAllEntitiesFromBlueprint = async (
+	baseUrl: string,
+	accessToken: string,
+	blueprintId: string,
+): Promise<void> => {
+	try {
+		// Search for all entities in this blueprint
+		const entities = await clients.port.searchEntities(baseUrl, accessToken, {
+			rules: [
+				{
+					operator: '=',
+					value: blueprintId,
+					property: '$blueprint',
+				},
+			],
+			combinator: 'and',
+		});
+
+		if (entities && Array.isArray(entities)) {
+			for (const entity of entities) {
+				if (entity.identifier) {
+					await silentDeleteEntity(baseUrl, accessToken, blueprintId, entity.identifier);
+				}
+			}
+		}
+	} catch (error: any) {
+		// If search fails, that's okay - blueprint might not exist or have no entities
+		if (error?.response?.status !== 404) {
+			console.log(`Could not search entities for blueprint ${blueprintId}: ${error?.response?.data?.message || error?.message}`);
+		}
+	}
+};
+
 const silentDeleteRun = async (
 	baseUrl: string,
 	accessToken: string,
@@ -183,8 +216,13 @@ export const cleanupPortEnvironment = async (baseUrl: string, clientId: string, 
 			await silentDeleteAction(baseUrl, accessToken, actionId);
 		}
 
-		// Delete blueprints (this will also delete associated actions and remaining entities)
+		// Delete all entities from blueprints before deleting blueprints
 		const blueprints = ['gh-action-test-bp', 'gh-action-test-bp-entity', 'gh-action-test-bp2'];
+		for (const blueprintId of blueprints) {
+			await deleteAllEntitiesFromBlueprint(baseUrl, accessToken, blueprintId);
+		}
+
+		// Delete blueprints (this will also delete associated actions)
 		for (const blueprintId of blueprints) {
 			try {
 				await axios.delete(`${baseUrl}/v1/blueprints/${blueprintId}`, {
