@@ -8,7 +8,7 @@ const deleteEntity = async (
 	identifier: string,
 	options: Partial<{ runId: string; delete_dependents: boolean }> = {},
 ): Promise<void> => {
-	const url = `${baseUrl}/v1/blueprints/${blueprint}/entities/${identifier}`;
+	const url = `${baseUrl}/v1/blueprints/${blueprint}/entities/${encodeURIComponent(identifier)}`;
 	try {
 		core.info(`Performing DELETE request to URL: ${url}`);
 		const config = {

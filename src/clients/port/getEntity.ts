@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Entity, EntityToGet } from '../../types';
 
 const getEntity = async (baseUrl: string, accessToken: string, entity: EntityToGet): Promise<Entity> => {
-	const url = `${baseUrl}/v1/blueprints/${entity.blueprint}/entities/${entity.identifier}`;
+	const url = `${baseUrl}/v1/blueprints/${entity.blueprint}/entities/${encodeURIComponent(entity.identifier)}`;
 	try {
 		core.info(`Performing GET request to URL: ${url}`);
 
