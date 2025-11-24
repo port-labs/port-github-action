@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import assert from 'assert';
+import * as assert from 'assert';
 
 import clients from '../../clients';
 import { IOperation } from '../../interfaces';
