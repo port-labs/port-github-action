@@ -1,3 +1,6 @@
+/* eslint-disable no-await-in-loop */
+
+/* eslint-disable no-restricted-syntax */
 import assert from 'assert';
 
 import clients from '../../clients';
