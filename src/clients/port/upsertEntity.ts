@@ -8,7 +8,7 @@ const upsertEntity = async (
 	accessToken: string,
 	entity: EntityToUpsert,
 ): Promise<Entity> => {
-	const url = `${baseUrl}/v1/blueprints/${entity.blueprint}/entities`;
+	const url = `${baseUrl}/v1/blueprints/${encodeURIComponent(entity.blueprint)}/entities`;
 	try {
 		core.info(`Performing POST request to URL: ${url}, with body: ${JSON.stringify(entity)}`);
 
