@@ -2,6 +2,7 @@ import * as core from '@actions/core';
 
 import clients from '../clients';
 import main from '../main';
+import { cleanupPortEnvironment, setupPortEnvironment } from './utils/setup';
 import { TestInputs, clearInputs, getBaseInput, getInput, setInputs } from './utils/utils';
 
 describe('Get Integration Tests', () => {
@@ -14,6 +15,14 @@ describe('Get Integration Tests', () => {
 	beforeAll(async () => {
 		outputMock = jest.spyOn(core, 'setOutput');
 		failedMock = jest.spyOn(core, 'setFailed');
+		
+		const baseInput = getBaseInput();
+		await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
+	});
+
+	afterAll(async () => {
+		const baseInput = getBaseInput();
+		await cleanupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
 	});
 
 	beforeEach(async () => {
@@ -21,7 +30,7 @@ describe('Get Integration Tests', () => {
 		clearInputs(input);
 		input = { ...getBaseInput() };
 		setInputs(input);
-		const baseUrl = process.env['PORT_BASE_URL'] ?? '';
+		const baseUrl = getInput('baseUrl');
 
 		const parentEntityToUpsert = {
 			identifier: 'delete_test_parent',

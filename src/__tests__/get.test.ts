@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 
 import main from '../main';
+import { cleanupPortEnvironment, setupPortEnvironment } from './utils/setup';
 import { TestInputs, clearInputs, getBaseInput, setInputs } from './utils/utils';
 
 describe('Get Integration Tests', () => {
@@ -10,9 +11,17 @@ describe('Get Integration Tests', () => {
 	let failedMock: jest.SpyInstance;
 	let input: TestInputs = {};
 
-	beforeAll(() => {
+	beforeAll(async () => {
 		outputMock = jest.spyOn(core, 'setOutput');
 		failedMock = jest.spyOn(core, 'setFailed');
+		
+		const baseInput = getBaseInput();
+		await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
+	});
+
+	afterAll(async () => {
+		const baseInput = getBaseInput();
+		await cleanupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
 	});
 
 	beforeEach(() => {

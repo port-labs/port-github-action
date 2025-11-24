@@ -3,6 +3,7 @@ import * as core from '@actions/core';
 import clients from '../clients';
 import { OPERATION_IS_NOT_SUPPORTED } from '../consts';
 import main from '../main';
+import { cleanupPortEnvironment, setupPortEnvironment } from './utils/setup';
 import { TestInputs, clearInputs, getBaseInput, getInput, setInputs } from './utils/utils';
 
 describe('Upsert Integration Tests', () => {
@@ -12,10 +13,19 @@ describe('Upsert Integration Tests', () => {
 	let failedMock: jest.SpyInstance;
 	let input: TestInputs = {};
 
-	beforeAll(() => {
+	beforeAll(async () => {
 		outputMock = jest.spyOn(core, 'setOutput');
 		failedMock = jest.spyOn(core, 'setFailed');
+		
+		const baseInput = getBaseInput();
+		await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
 	});
+
+	afterAll(async () => {
+		const baseInput = getBaseInput();
+		await cleanupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
+	});
+
 
 	beforeEach(() => {
 		jest.clearAllMocks();
@@ -26,7 +36,7 @@ describe('Upsert Integration Tests', () => {
 	afterEach(async () => {
 		const blueprint = getInput('blueprint');
 		const identifier = outputMock.mock.calls.length ? outputMock.mock.calls[0][1] : '';
-		const baseUrl = process.env['PORT_BASE_URL'] ?? '';
+		const baseUrl = getInput('baseUrl');
 		if (blueprint && identifier)
 			await clients.port.deleteEntity(
 				baseUrl,
