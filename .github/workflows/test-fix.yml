@@ -1,0 +1,31 @@
+name: ohohohoh
+
+on:
+  push:
+    branches:
+      [ main ]
+
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v4
+        with:
+            ref: PORT-13544-bug-url-encoding-issue-in-git-hub-action
+
+      - name: Test Port Action
+        uses: ./
+        with:
+          operation: GET
+          blueprint: githubRepository
+          identifier: raskinmaya/stam
+          clientId: ${{ secrets.PORT_TEST_CLIENT_ID }}
+          clientSecret: ${{ secrets.PORT_TEST_CLIENT_SECRET }}
