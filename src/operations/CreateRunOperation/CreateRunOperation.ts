@@ -15,7 +15,7 @@ export default class CreateRunOperation implements IOperation {
 
 		return {
 			...(this.input.identifier && { identifier: this.input.identifier }),
-			action: this.input.action as string,
+			action: this.input.action,
 			properties: this.input.properties?.length ? JSON.parse(this.input.properties.join('')) : {},
 		};
 	};
