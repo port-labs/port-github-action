@@ -2,6 +2,8 @@ export type TestInputs = Record<string, string>;
 
 export const getBaseInput = (): TestInputs => ({
 	baseUrl: process.env['PORT_BASE_URL'] ?? '',
+	clientId: process.env['INPUT_CLIENTID'] ?? '',
+	clientSecret: process.env['INPUT_CLIENTSECRET'] ?? '',
 	properties: '{}',
 	relations: '{}',
 });
