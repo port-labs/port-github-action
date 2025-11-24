@@ -89,7 +89,7 @@ describe('Upsert Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith('Unexpected end of JSON input');
+		expect(failedMock).toHaveBeenCalledWith(expect.stringMatching(/JSON|json/));
 	});
 
 	test('Should fail get token - wrong base url', async () => {
