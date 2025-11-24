@@ -98,6 +98,64 @@ const silentDeleteEntity = async (
 	}
 };
 
+const silentDeleteRun = async (
+	baseUrl: string,
+	accessToken: string,
+	runId: string,
+): Promise<void> => {
+	try {
+		await axios.delete(`${baseUrl}/v1/actions/runs/${runId}`, {
+			headers: { Authorization: `Bearer ${accessToken}` },
+		});
+	} catch (error: any) {
+		if (error?.response?.status !== 404 && error?.response?.status !== 422) {
+			console.log(`Could not delete run ${runId}: ${error?.response?.data?.message || error?.message}`);
+		}
+	}
+};
+
+const silentDeleteAction = async (
+	baseUrl: string,
+	accessToken: string,
+	actionId: string,
+): Promise<void> => {
+	try {
+		await axios.delete(`${baseUrl}/v1/actions/${actionId}`, {
+			headers: { Authorization: `Bearer ${accessToken}` },
+		});
+	} catch (error: any) {
+		if (error?.response?.status !== 404) {
+			console.log(`Could not delete action ${actionId}: ${error?.response?.data?.message || error?.message}`);
+		}
+	}
+};
+
+const cleanupActionRuns = async (
+	baseUrl: string,
+	accessToken: string,
+	actionId: string,
+): Promise<void> => {
+	try {
+		// Try to get runs for the action
+		const response = await axios.get(`${baseUrl}/v1/actions/${actionId}/runs`, {
+			headers: { Authorization: `Bearer ${accessToken}` },
+		});
+		
+		if (response.data?.runs && Array.isArray(response.data.runs)) {
+			for (const run of response.data.runs) {
+				if (run.id) {
+					await silentDeleteRun(baseUrl, accessToken, run.id);
+				}
+			}
+		}
+	} catch (error: any) {
+		// If the endpoint doesn't exist or action doesn't exist, that's okay
+		if (error?.response?.status !== 404) {
+			console.log(`Could not list runs for action ${actionId}: ${error?.response?.data?.message || error?.message}`);
+		}
+	}
+};
+
 export const cleanupPortEnvironment = async (baseUrl: string, clientId: string, clientSecret: string): Promise<void> => {
 	try {
 		const accessToken = await clients.port.getToken(baseUrl, clientId, clientSecret);
@@ -111,6 +169,17 @@ export const cleanupPortEnvironment = async (baseUrl: string, clientId: string, 
 
 		for (const entity of entitiesToDelete) {
 			await silentDeleteEntity(baseUrl, accessToken, entity.blueprint, entity.identifier);
+		}
+
+		// Clean up runs for test actions before deleting actions
+		const testActions = ['gh-action-test', 'gh-action-test-entity'];
+		for (const actionId of testActions) {
+			await cleanupActionRuns(baseUrl, accessToken, actionId);
+		}
+
+		// Delete test actions
+		for (const actionId of testActions) {
+			await silentDeleteAction(baseUrl, accessToken, actionId);
 		}
 
 		// Delete blueprints (this will also delete associated actions and remaining entities)
@@ -230,6 +299,39 @@ export const setupPortEnvironment = async (baseUrl: string, clientId: string, cl
 		console.warn(`Could not seed test: ${error.message}`);
 	}
 
-	// Actions are skipped for now - CREATE_RUN and PATCH_RUN tests will need manual setup
+	// Setup actions for CREATE_RUN and PATCH_RUN tests
+	await ensureAction(baseUrl, accessToken, 'gh-action-test-bp', 'gh-action-test', {
+		identifier: 'gh-action-test',
+		title: 'GH Action Test',
+		icon: 'DefaultBlueprint',
+		trigger: {
+			operation: 'DELETE',
+			type: 'self-service',
+			userInputs: {
+				properties: {}
+			}
+		},
+		invocationMethod: {
+			type: 'WEBHOOK',
+			url: 'https://example.com',
+		}
+	});
+
+	await ensureAction(baseUrl, accessToken, 'gh-action-test-bp-entity', 'gh-action-test-entity', {
+		identifier: 'gh-action-test-entity',
+		title: 'GH Action Test Entity',
+		icon: 'DefaultBlueprint',
+		trigger: {
+			operation: 'DELETE',
+			type: 'self-service',
+			userInputs: {
+				properties: {}
+			}
+		},
+		invocationMethod: {
+			type: 'WEBHOOK',
+			url: 'https://example.com',
+		}
+	});
 };
 
