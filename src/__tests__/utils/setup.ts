@@ -165,6 +165,7 @@ export const cleanupPortEnvironment = async (baseUrl: string, clientId: string, 
 			{ blueprint: 'gh-action-test-bp2', identifier: 'test' },
 			{ blueprint: 'gh-action-test-bp2', identifier: 'delete_test_parent' },
 			{ blueprint: 'gh-action-test-bp', identifier: 'delete_test_child' },
+			{ blueprint: 'gh-action-test-bp-entity', identifier: 'gh-action-test-bp-entity' },
 		];
 
 		for (const entity of entitiesToDelete) {
@@ -299,6 +300,18 @@ export const setupPortEnvironment = async (baseUrl: string, clientId: string, cl
 		console.warn(`Could not seed test: ${error.message}`);
 	}
 
+	try {
+		await ensureTestEntity(baseUrl, accessToken, 'gh-action-test-bp-entity', {
+			identifier: 'gh-action-test-bp-entity',
+			title: 'GH Action Test Entity',
+			team: ['Test'],
+			properties: { text: 'test', number: 1, boolean: true },
+			relations: {},
+		});
+	} catch (error: any) {
+		console.warn(`Could not seed gh-action-test-bp-entity: ${error.message}`);
+	}
+
 	// Setup actions for CREATE_RUN and PATCH_RUN tests
 	await ensureAction(baseUrl, accessToken, 'gh-action-test-bp', 'gh-action-test', {
 		identifier: 'gh-action-test',
@@ -323,6 +336,7 @@ export const setupPortEnvironment = async (baseUrl: string, clientId: string, cl
 		icon: 'DefaultBlueprint',
 		trigger: {
 			operation: 'DELETE',
+			blueprintIdentifier: 'gh-action-test-bp-entity',
 			type: 'self-service',
 			userInputs: {
 				properties: {}
