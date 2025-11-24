@@ -63,6 +63,26 @@ export const ensureAction = async (
 	}
 };
 
+export const ensureTeam = async (
+	baseUrl: string,
+	accessToken: string,
+	teamIdentifier: string,
+): Promise<void> => {
+	try {
+		await clients.port.upsertEntity(baseUrl, accessToken, {
+			identifier: teamIdentifier,
+			title: teamIdentifier,
+			blueprint: '_team',
+			properties: {},
+			relations: {},
+		});
+	} catch (error: any) {
+		const errorMsg = error?.response?.data?.message || error?.message || 'Unknown error';
+		console.error(`Failed to create team ${teamIdentifier}: ${errorMsg}`);
+		throw new Error(`Failed to create team ${teamIdentifier}: ${errorMsg}`);
+	}
+};
+
 export const ensureTestEntity = async (
 	baseUrl: string,
 	accessToken: string,
@@ -199,6 +219,8 @@ export const cleanupPortEnvironment = async (baseUrl: string, clientId: string, 
 			{ blueprint: 'gh-action-test-bp2', identifier: 'delete_test_parent' },
 			{ blueprint: 'gh-action-test-bp', identifier: 'delete_test_child' },
 			{ blueprint: 'gh-action-test-bp-entity', identifier: 'gh-action-test-bp-entity' },
+			{ blueprint: '_team', identifier: 'Test' },
+			{ blueprint: '_team', identifier: 'test' },
 		];
 
 		for (const entity of entitiesToDelete) {
@@ -312,6 +334,19 @@ export const setupPortEnvironment = async (baseUrl: string, clientId: string, cl
 			title: 'team',
 		},
 	});
+
+	// Ensure team entity exists before creating entities that reference it
+	try {
+		await ensureTeam(baseUrl, accessToken, 'Test');
+	} catch (error: any) {
+		console.warn(`Could not create team Test: ${error.message}`);
+	}
+
+	try {
+		await ensureTeam(baseUrl, accessToken, 'test');
+	} catch (error: any) {
+		console.warn(`Could not create team test: ${error.message}`);
+	}
 
 	// Seed entities for tests
 	try {
