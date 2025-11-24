@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import * as assert from 'assert';
+import assert from 'assert';
 
 import clients from '../../clients';
 import { IOperation } from '../../interfaces';
@@ -15,7 +15,7 @@ export default class CreateRunOperation implements IOperation {
 
 		return {
 			...(this.input.identifier && { identifier: this.input.identifier }),
-			action: this.input.action,
+			action: this.input.action as string,
 			properties: this.input.properties?.length ? JSON.parse(this.input.properties.join('')) : {},
 		};
 	};

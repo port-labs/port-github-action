@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import assert from 'assert';
 
 import clients from '../../clients';
 import { IOperation } from '../../interfaces';

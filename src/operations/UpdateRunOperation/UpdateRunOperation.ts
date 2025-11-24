@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import assert from 'assert';
 
 import clients from '../../clients';
 import { STATUS_OPTIONS } from '../../consts';
