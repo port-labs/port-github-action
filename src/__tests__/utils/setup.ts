@@ -21,7 +21,7 @@ export const ensureBlueprint = async (
 				});
 			} catch (createError: any) {
 				const errorMsg = createError?.response?.data?.message || createError?.message || 'Unknown error';
-				console.error(`Failed to create blueprint ${blueprintId}: ${errorMsg}`);
+				console.warn(`Failed to create blueprint ${blueprintId}: ${errorMsg}`);
 				throw new Error(`Failed to create blueprint ${blueprintId}: ${errorMsg}`);
 			}
 		} else {
@@ -53,7 +53,7 @@ export const ensureAction = async (
 				});
 			} catch (createError: any) {
 				const errorMsg = createError?.response?.data?.message || createError?.message || 'Unknown error';
-				console.error(`Failed to create action ${actionId}: ${errorMsg}`);
+				console.warn(`Failed to create action ${actionId}: ${errorMsg}`);
 				throw new Error(`Failed to create action ${actionId}: ${errorMsg}`);
 			}
 		} else {
@@ -78,7 +78,7 @@ export const ensureTeam = async (
 		});
 	} catch (error: any) {
 		const errorMsg = error?.response?.data?.message || error?.message || 'Unknown error';
-		console.error(`Failed to create team ${teamIdentifier}: ${errorMsg}`);
+		console.warn(`Failed to create team ${teamIdentifier}: ${errorMsg}`);
 		throw new Error(`Failed to create team ${teamIdentifier}: ${errorMsg}`);
 	}
 };
@@ -96,7 +96,7 @@ export const ensureTestEntity = async (
 		});
 	} catch (error: any) {
 		const errorMsg = error?.response?.data?.message || error?.message || 'Unknown error';
-		console.error(`Failed to create entity ${entity.identifier}: ${errorMsg}`);
+		console.warn(`Failed to create entity ${entity.identifier}: ${errorMsg}`);
 		throw new Error(`Failed to create entity ${entity.identifier}: ${errorMsg}`);
 	}
 };
@@ -257,7 +257,7 @@ export const cleanupPortEnvironment = async (baseUrl: string, clientId: string, 
 			}
 		}
 	} catch (error: any) {
-		console.error('Error during cleanup:', error?.message || 'Unknown error');
+		console.warn('Error during cleanup:', error?.message || 'Unknown error');
 	}
 };
 
