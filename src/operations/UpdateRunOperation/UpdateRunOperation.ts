@@ -39,6 +39,11 @@ export default class UpdateActionOperation implements IOperation {
 		const { logMessage, ...runToUpdate } = updateRunInput;
 		const accessToken = await clients.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
 		const run: { runId: string; logMessage?: string } = { runId: '' };
+
+		if (Object.keys(runToUpdate).length !== 0) {
+			const updateRun = await clients.port.patchRun(this.input.baseUrl, accessToken, this.input.runId, runToUpdate);
+			run.runId = updateRun.id;
+		}
 		if (logMessage) {
 			const runLogs = await clients.port.updateRunLogs(this.input.baseUrl, accessToken, this.input.runId, {
 				message: logMessage,
@@ -46,10 +51,7 @@ export default class UpdateActionOperation implements IOperation {
 			run.logMessage = runLogs.message;
 			run.runId = runLogs.runId;
 		}
-		if (Object.keys(runToUpdate).length !== 0) {
-			const updateRun = await clients.port.patchRun(this.input.baseUrl, accessToken, this.input.runId, runToUpdate);
-			run.runId = updateRun.id;
-		}
+
 		return run;
 	};
 }
