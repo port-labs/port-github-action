@@ -9,12 +9,12 @@ describe('Get Integration Tests', () => {
 	jest.setTimeout(100000);
 	
 	let outputMock: jest.SpyInstance;
-	let failedMock: jest.SpyInstance;
+	let warningMock: jest.SpyInstance;
 	let input: TestInputs = {};
 
 	beforeAll(async () => {
 		outputMock = jest.spyOn(core, 'setOutput');
-		failedMock = jest.spyOn(core, 'setFailed');
+		warningMock = jest.spyOn(core, 'warning');
 		
 		const baseInput = getBaseInput();
 		await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
@@ -107,7 +107,7 @@ describe('Get Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith('DELETE Operation - identifier is missing from input');
+		expect(warningMock).toHaveBeenCalledWith('DELETE Operation - identifier is missing from input');
 	});
 
 	test('Should fail get input - entity not exists', async () => {
@@ -124,6 +124,6 @@ describe('Get Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith('Request failed with status code 404');
+		expect(warningMock).toHaveBeenCalledWith('Request failed with status code 404');
 	});
 });

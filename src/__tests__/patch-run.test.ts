@@ -9,7 +9,7 @@ describe('Patch Run Integration Tests', () => {
 	jest.setTimeout(100000);
 
 	let outputMock: jest.SpyInstance;
-	let failedMock: jest.SpyInstance;
+	let warningMock: jest.SpyInstance;
 	let input: TestInputs = {};
 	let completedRunId: string;
 
@@ -29,7 +29,7 @@ describe('Patch Run Integration Tests', () => {
 
 	beforeAll(async () => {
 		outputMock = jest.spyOn(core, 'setOutput');
-		failedMock = jest.spyOn(core, 'setFailed');
+		warningMock = jest.spyOn(core, 'warning');
 		
 		const baseInput = getBaseInput();
 		await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
@@ -77,7 +77,7 @@ describe('Patch Run Integration Tests', () => {
 		expect(outputMock).toHaveBeenCalledWith('runId', expect.any(String));
 		expect(outputMock).toHaveBeenCalledWith('logMessage', 'Test message');
 
-		expect(failedMock).toHaveBeenCalledTimes(0);
+		expect(warningMock).toHaveBeenCalledTimes(0);
 	});
 
 	test('Should patch run successfully - with link', async () => {
@@ -98,7 +98,7 @@ describe('Patch Run Integration Tests', () => {
 
 		expect(outputMock).toHaveBeenCalledWith('runId', expect.any(String));
 		expect(outputMock).toHaveBeenCalledWith('logMessage', 'Test message');
-		expect(failedMock).toHaveBeenCalledTimes(0);
+		expect(warningMock).toHaveBeenCalledTimes(0);
 	});
 
 	test('Should fail to update run - run already completed', async () => {
@@ -117,7 +117,7 @@ describe('Patch Run Integration Tests', () => {
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
 
-		expect(failedMock).toHaveBeenCalledWith('Request failed with status code 422');
+		expect(warningMock).toHaveBeenCalledWith('Request failed with status code 422');
 	});
 
 	test('Should fail get input - missing required param entities', async () => {
@@ -133,7 +133,7 @@ describe('Patch Run Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith('PATCH_RUN Operation - runId is missing from input');
+		expect(warningMock).toHaveBeenCalledWith('PATCH_RUN Operation - runId is missing from input');
 	});
 
 	test('Should fail parse input - invalid status value', async () => {
@@ -151,6 +151,6 @@ describe('Patch Run Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith('PATCH_RUN Operation - status must be one of SUCCESS or FAILURE');
+		expect(warningMock).toHaveBeenCalledWith('PATCH_RUN Operation - status must be one of SUCCESS or FAILURE');
 	});
 });

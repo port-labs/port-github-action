@@ -9,12 +9,12 @@ describe('Bulk Upsert Integration Tests', () => {
 	jest.setTimeout(100000);
 
 	let outputMock: jest.SpyInstance;
-	let failedMock: jest.SpyInstance;
+	let warningMock: jest.SpyInstance;
 	let input: TestInputs = {};
 
 	beforeAll(async () => {
 		outputMock = jest.spyOn(core, 'setOutput');
-		failedMock = jest.spyOn(core, 'setFailed');
+		warningMock = jest.spyOn(core, 'warning');
 		
 		const baseInput = getBaseInput();
 		await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
@@ -59,7 +59,7 @@ describe('Bulk Upsert Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledWith('identifiers', [expect.any(String)]);
-		expect(failedMock).toHaveBeenCalledTimes(0);
+		expect(warningMock).toHaveBeenCalledTimes(0);
 	});
 
 	test('Should fail get input - missing required param entities', async () => {
@@ -75,7 +75,7 @@ describe('Bulk Upsert Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith('BULK_UPSERT Operation - entities is missing from input');
+		expect(warningMock).toHaveBeenCalledWith('BULK_UPSERT Operation - entities is missing from input');
 	});
 
 	test('Should fail parse input - invalid properties json', async () => {

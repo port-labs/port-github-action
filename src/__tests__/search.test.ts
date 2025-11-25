@@ -8,12 +8,12 @@ describe('Search Integration Tests', () => {
 	jest.setTimeout(100000);
 
 	let outputMock: jest.SpyInstance;
-	let failedMock: jest.SpyInstance;
+	let warningMock: jest.SpyInstance;
 	let input: TestInputs = {};
 
 	beforeAll(async () => {
 		outputMock = jest.spyOn(core, 'setOutput');
-		failedMock = jest.spyOn(core, 'setFailed');
+		warningMock = jest.spyOn(core, 'warning');
 		
 		const baseInput = getBaseInput();
 		await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
@@ -45,7 +45,7 @@ describe('Search Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledWith('entities', []);
-		expect(failedMock).toHaveBeenCalledTimes(0);
+		expect(warningMock).toHaveBeenCalledTimes(0);
 	});
 
 	test('Should fail search input - missing required param query', async () => {
@@ -61,6 +61,6 @@ describe('Search Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith('SEARCH Operation - query is missing from input');
+		expect(warningMock).toHaveBeenCalledWith('SEARCH Operation - query is missing from input');
 	});
 });

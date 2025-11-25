@@ -8,12 +8,12 @@ describe('Create Run Integration Tests', () => {
 	jest.setTimeout(100000);
 
 	let outputMock: jest.SpyInstance;
-	let failedMock: jest.SpyInstance;
+	let warningMock: jest.SpyInstance;
 	let input: TestInputs = {};
 
 	beforeAll(async () => {
 		outputMock = jest.spyOn(core, 'setOutput');
-		failedMock = jest.spyOn(core, 'setFailed');
+		warningMock = jest.spyOn(core, 'warning');
 		
 		const baseInput = getBaseInput();
 		await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
@@ -45,7 +45,7 @@ describe('Create Run Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledWith('runId', expect.any(String));
-		expect(failedMock).toHaveBeenCalledTimes(0);
+		expect(warningMock).toHaveBeenCalledTimes(0);
 	});
 
 	test('Should create run successfully for entity', async () => {
@@ -63,6 +63,6 @@ describe('Create Run Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledWith('runId', expect.any(String));
-		expect(failedMock).toHaveBeenCalledTimes(0);
+		expect(warningMock).toHaveBeenCalledTimes(0);
 	});
 });

@@ -10,12 +10,12 @@ describe('Upsert Integration Tests', () => {
 	jest.setTimeout(100000);
 
 	let outputMock: jest.SpyInstance;
-	let failedMock: jest.SpyInstance;
+	let warningMock: jest.SpyInstance;
 	let input: TestInputs = {};
 
 	beforeAll(async () => {
 		outputMock = jest.spyOn(core, 'setOutput');
-		failedMock = jest.spyOn(core, 'setFailed');
+		warningMock = jest.spyOn(core, 'warning');
 		
 		const baseInput = getBaseInput();
 		await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
@@ -65,7 +65,7 @@ describe('Upsert Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledWith('identifier', expect.any(String));
-		expect(failedMock).toHaveBeenCalledTimes(0);
+		expect(warningMock).toHaveBeenCalledTimes(0);
 	});
 
 	test('Should fail get input - missing required param blueprint', async () => {
@@ -81,7 +81,7 @@ describe('Upsert Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith('UPSERT Operation - blueprint is missing from input');
+		expect(warningMock).toHaveBeenCalledWith('UPSERT Operation - blueprint is missing from input');
 	});
 
 	test('Should fail parse input - invalid properties json', async () => {
@@ -99,7 +99,7 @@ describe('Upsert Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith(expect.stringMatching(/JSON|json/));
+		expect(warningMock).toHaveBeenCalledWith(expect.stringMatching(/JSON|json/));
 	});
 
 	test('Should fail get token - wrong base url', async () => {
@@ -118,7 +118,7 @@ describe('Upsert Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith(expect.stringContaining('invalidurl'));
+		expect(warningMock).toHaveBeenCalledWith(expect.stringContaining('invalidurl'));
 	});
 
 	test('Should fail upsert entity - relation id not found', async () => {
@@ -137,7 +137,7 @@ describe('Upsert Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith('Request failed with status code 404');
+		expect(warningMock).toHaveBeenCalledWith('Request failed with status code 404');
 	});
 
 	test('Should fail upsert entity - operation is wrong', async () => {
@@ -154,6 +154,6 @@ describe('Upsert Integration Tests', () => {
 		await main();
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
-		expect(failedMock).toHaveBeenCalledWith(OPERATION_IS_NOT_SUPPORTED);
+		expect(warningMock).toHaveBeenCalledWith(OPERATION_IS_NOT_SUPPORTED);
 	});
 });

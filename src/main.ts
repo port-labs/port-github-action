@@ -10,7 +10,7 @@ async function run(): Promise<void> {
 		const output = await new OperationFactory().createOperation(input).execute();
 		Object.entries(output).forEach(([key, value]) => core.setOutput(key, value));
 	} catch (error: any) {
-		if (error?.message) core.setFailed(error.message);
+		if (error?.message) core.warning(error.message);
 	}
 }
 
