@@ -2,6 +2,8 @@ export type TestInputs = Record<string, string>;
 
 export const getBaseInput = (): TestInputs => ({
 	baseUrl: process.env['PORT_BASE_URL'] ?? '',
+	clientId: process.env['INPUT_CLIENTID'] ?? '',
+	clientSecret: process.env['INPUT_CLIENTSECRET'] ?? '',
 	properties: '{}',
 	relations: '{}',
 });
@@ -19,7 +21,11 @@ export const setInputs = (inputs: TestInputs): void => {
 };
 
 export const clearInputs = (inputs: TestInputs): void => {
+	const baseInputKeys = ['baseUrl', 'clientId', 'clientSecret'];
+	
 	Object.keys(inputs).forEach((input) => {
-		delete process.env[getInputName(input)];
+		if (!baseInputKeys.includes(input)) {
+			delete process.env[getInputName(input)];
+		}
 	});
 };

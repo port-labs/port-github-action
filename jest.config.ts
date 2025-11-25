@@ -5,5 +5,6 @@ const config: Config.InitialOptions = {
 	verbose: true,
 	testMatch: ['**/?(*.)+(spec|test).[jt]s'],
 	bail: 1,
+	maxWorkers: 1,
 };
 export default config;
