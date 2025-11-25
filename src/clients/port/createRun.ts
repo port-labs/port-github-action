@@ -5,10 +5,10 @@ import { Run, RunToCreate } from '../../types';
 
 const createRun = async (baseUrl: string, accessToken: string, run: RunToCreate): Promise<Run> => {
 	const url = `${baseUrl}/v1/actions/${run.action}/runs`;
-	const body = {  
-        properties: run.properties,  
-        ...(run.identifier ? {entity: run.identifier} : null),  
-    };
+	const body = {
+		properties: run.properties,
+		...(run.identifier ? { entity: run.identifier } : null),
+	};
 	try {
 		core.info(`Performing CREATE request to URL: ${url}, with body: ${JSON.stringify(body)}`);
 

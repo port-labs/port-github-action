@@ -16,7 +16,7 @@ describe('Upsert Integration Tests', () => {
 	beforeAll(async () => {
 		outputMock = jest.spyOn(core, 'setOutput');
 		failedMock = jest.spyOn(core, 'setFailed').mockImplementation(() => {});
-		
+
 		const baseInput = getBaseInput();
 		await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
 	});
@@ -25,7 +25,6 @@ describe('Upsert Integration Tests', () => {
 		const baseInput = getBaseInput();
 		await cleanupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
 	});
-
 
 	beforeEach(() => {
 		jest.clearAllMocks();

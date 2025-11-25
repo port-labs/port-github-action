@@ -30,12 +30,12 @@ describe('Patch Run Integration Tests', () => {
 	beforeAll(async () => {
 		outputMock = jest.spyOn(core, 'setOutput');
 		failedMock = jest.spyOn(core, 'setFailed').mockImplementation(() => {});
-		
+
 		const baseInput = getBaseInput();
 		await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
-		
+
 		const accessToken = await clients.port.getToken(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
-		
+
 		// Create a completed run for the test that checks failure on completed runs
 		const run2 = await clients.port.createRun(baseInput.baseUrl, accessToken, {
 			action: 'gh-action-test',

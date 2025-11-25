@@ -63,11 +63,7 @@ export const ensureAction = async (
 	}
 };
 
-export const ensureTeam = async (
-	baseUrl: string,
-	accessToken: string,
-	teamIdentifier: string,
-): Promise<void> => {
+export const ensureTeam = async (baseUrl: string, accessToken: string, teamIdentifier: string): Promise<void> => {
 	try {
 		await clients.port.upsertEntity(baseUrl, accessToken, {
 			identifier: teamIdentifier,
@@ -118,11 +114,7 @@ const silentDeleteEntity = async (
 	}
 };
 
-const deleteAllEntitiesFromBlueprint = async (
-	baseUrl: string,
-	accessToken: string,
-	blueprintId: string,
-): Promise<void> => {
+const deleteAllEntitiesFromBlueprint = async (baseUrl: string, accessToken: string, blueprintId: string): Promise<void> => {
 	try {
 		// Search for all entities in this blueprint
 		const entities = await clients.port.searchEntities(baseUrl, accessToken, {
@@ -146,16 +138,14 @@ const deleteAllEntitiesFromBlueprint = async (
 	} catch (error: any) {
 		// If search fails, that's okay - blueprint might not exist or have no entities
 		if (error?.response?.status !== 404) {
-			console.log(`Could not search entities for blueprint ${blueprintId}: ${error?.response?.data?.message || error?.message}`);
+			console.log(
+				`Could not search entities for blueprint ${blueprintId}: ${error?.response?.data?.message || error?.message}`,
+			);
 		}
 	}
 };
 
-const silentDeleteRun = async (
-	baseUrl: string,
-	accessToken: string,
-	runId: string,
-): Promise<void> => {
+const silentDeleteRun = async (baseUrl: string, accessToken: string, runId: string): Promise<void> => {
 	try {
 		await axios.delete(`${baseUrl}/v1/actions/runs/${runId}`, {
 			headers: { Authorization: `Bearer ${accessToken}` },
@@ -167,11 +157,7 @@ const silentDeleteRun = async (
 	}
 };
 
-const silentDeleteAction = async (
-	baseUrl: string,
-	accessToken: string,
-	actionId: string,
-): Promise<void> => {
+const silentDeleteAction = async (baseUrl: string, accessToken: string, actionId: string): Promise<void> => {
 	try {
 		await axios.delete(`${baseUrl}/v1/actions/${actionId}`, {
 			headers: { Authorization: `Bearer ${accessToken}` },
@@ -183,17 +169,13 @@ const silentDeleteAction = async (
 	}
 };
 
-const cleanupActionRuns = async (
-	baseUrl: string,
-	accessToken: string,
-	actionId: string,
-): Promise<void> => {
+const cleanupActionRuns = async (baseUrl: string, accessToken: string, actionId: string): Promise<void> => {
 	try {
 		// Try to get runs for the action
 		const response = await axios.get(`${baseUrl}/v1/actions/${actionId}/runs`, {
 			headers: { Authorization: `Bearer ${accessToken}` },
 		});
-		
+
 		if (response.data?.runs && Array.isArray(response.data.runs)) {
 			for (const run of response.data.runs) {
 				if (run.id) {
@@ -394,13 +376,13 @@ export const setupPortEnvironment = async (baseUrl: string, clientId: string, cl
 			operation: 'DELETE',
 			type: 'self-service',
 			userInputs: {
-				properties: {}
-			}
+				properties: {},
+			},
 		},
 		invocationMethod: {
 			type: 'WEBHOOK',
 			url: 'https://example.com',
-		}
+		},
 	});
 
 	await ensureAction(baseUrl, accessToken, 'gh-action-test-bp-entity', 'gh-action-test-entity', {
@@ -412,13 +394,12 @@ export const setupPortEnvironment = async (baseUrl: string, clientId: string, cl
 			blueprintIdentifier: 'gh-action-test-bp-entity',
 			type: 'self-service',
 			userInputs: {
-				properties: {}
-			}
+				properties: {},
+			},
 		},
 		invocationMethod: {
 			type: 'WEBHOOK',
 			url: 'https://example.com',
-		}
+		},
 	});
 };
-
