@@ -40,16 +40,25 @@ export default class UpdateActionOperation implements IOperation {
 		const accessToken = await clients.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
 		const run: { runId: string; logMessage?: string } = { runId: '' };
 
+		let currentRunId = this.input.runId;
+
 		if (Object.keys(runToUpdate).length !== 0) {
 			const updateRun = await clients.port.patchRun(this.input.baseUrl, accessToken, this.input.runId, runToUpdate);
 			run.runId = updateRun.id;
+			currentRunId = updateRun.id;
 		}
 		if (logMessage) {
-			const runLogs = await clients.port.updateRunLogs(this.input.baseUrl, accessToken, this.input.runId, {
+			const runLogs = await clients.port.updateRunLogs(this.input.baseUrl, accessToken, currentRunId, {
 				message: logMessage,
 			});
 			run.logMessage = runLogs.message;
-			run.runId = runLogs.runId;
+			if (!run.runId) {
+				run.runId = runLogs.runId;
+			}
+		}
+
+		if (!run.runId) {
+			run.runId = this.input.runId;
 		}
 
 		return run;
