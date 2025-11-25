@@ -22,7 +22,7 @@ export const setInputs = (inputs: TestInputs): void => {
 
 export const clearInputs = (inputs: TestInputs): void => {
 	const baseInputKeys = ['baseUrl', 'clientId', 'clientSecret'];
-	
+
 	Object.keys(inputs).forEach((input) => {
 		if (!baseInputKeys.includes(input)) {
 			delete process.env[getInputName(input)];

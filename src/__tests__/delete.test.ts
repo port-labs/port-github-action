@@ -7,7 +7,7 @@ import { TestInputs, clearInputs, getBaseInput, getInput, setInputs } from './ut
 
 describe('Get Integration Tests', () => {
 	jest.setTimeout(100000);
-	
+
 	let outputMock: jest.SpyInstance;
 	let failedMock: jest.SpyInstance;
 	let input: TestInputs = {};
@@ -15,7 +15,7 @@ describe('Get Integration Tests', () => {
 	beforeAll(async () => {
 		outputMock = jest.spyOn(core, 'setOutput');
 		failedMock = jest.spyOn(core, 'setFailed').mockImplementation(() => {});
-		
+
 		const baseInput = getBaseInput();
 		await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
 	});

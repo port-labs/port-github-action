@@ -3,11 +3,7 @@ import axios from 'axios';
 
 import { Entity, EntityToUpsert } from '../../types';
 
-const upsertEntity = async (
-	baseUrl: string,
-	accessToken: string,
-	entity: EntityToUpsert,
-): Promise<Entity> => {
+const upsertEntity = async (baseUrl: string, accessToken: string, entity: EntityToUpsert): Promise<Entity> => {
 	const url = `${baseUrl}/v1/blueprints/${entity.blueprint}/entities`;
 	try {
 		core.info(`Performing POST request to URL: ${url}, with body: ${JSON.stringify(entity)}`);
