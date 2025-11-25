@@ -13,7 +13,7 @@ describe('Create Run Integration Tests', () => {
 
 	beforeAll(async () => {
 		outputMock = jest.spyOn(core, 'setOutput');
-		failedMock = jest.spyOn(core, 'setFailed');
+		failedMock = jest.spyOn(core, 'setFailed').mockImplementation(() => {});
 		
 		const baseInput = getBaseInput();
 		await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
