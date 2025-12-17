@@ -29,7 +29,7 @@ if (!process.env['PORT_BASE_URL'] && !process.env['INPUT_CLIENTID'] && !process.
 						team: ['Test'],
 						title: 'GH Action 2 Test Identity',
 					},
-				}
+				},
 			};
 		}
 		if (url.pathname.includes('invalid')) {
@@ -42,7 +42,7 @@ if (!process.env['PORT_BASE_URL'] && !process.env['INPUT_CLIENTID'] && !process.
 			throw { code: 'ENOTFOUND', message: 'getaddrinfo ENOTFOUND invalidurl' };
 		}
 		return {
-			data: { entities: [], run: { id: 'runId'}, entity: { identifier: 'id' } }
+			data: { entities: [], run: { id: 'runId' }, entity: { identifier: 'id' } },
 		};
 	};
 
@@ -50,10 +50,13 @@ if (!process.env['PORT_BASE_URL'] && !process.env['INPUT_CLIENTID'] && !process.
 	jest.spyOn(axios, 'get').mockImplementation((url, _) => mockResponse(url));
 	jest.spyOn(axios, 'delete').mockImplementation((url, _) => mockResponse(url));
 	jest.spyOn(axios, 'put').mockImplementation((url, _, __) => mockResponse(url));
-	jest.spyOn(axios, 'patch')
+	jest
+		.spyOn(axios, 'patch')
 		.mockImplementationOnce((url, _, __) => mockResponse(url))
-		.mockImplementation(() => { throw { code: 422, message: 'Request failed with status code 422' }});
-	
+		.mockImplementation(() => {
+			throw { code: 422, message: 'Request failed with status code 422' };
+		});
+
 	console.log('⚠️  Environment variables not supplied - using axios mocks (all requests will return 200 OK)');
 }
 

@@ -6,7 +6,7 @@ import { cleanupPortEnvironment, setupPortEnvironment } from './utils/setup';
 import { TestInputs, clearInputs, getBaseInput, setInputs } from './utils/utils';
 
 describe('Get Integration Tests', () => {
-jest.setTimeout(100000);
+	jest.setTimeout(100000);
 
 	let outputMock: jest.SpyInstance;
 	let failedMock: jest.SpyInstance;
@@ -112,13 +112,16 @@ jest.setTimeout(100000);
 
 		await main();
 
-		expect(outputMock).toHaveBeenCalledWith('entity', expect.objectContaining({
-			blueprint: 'gh-action-test-bp2',
-			identifier: 'test_entity',
-			properties: { str: 'foo' },
-		}));
+		expect(outputMock).toHaveBeenCalledWith(
+			'entity',
+			expect.objectContaining({
+				blueprint: 'gh-action-test-bp2',
+				identifier: 'test_entity',
+				properties: { str: 'foo' },
+			}),
+		);
 		expect(failedMock).toHaveBeenCalledTimes(0);
-		
+
 		expect(axiosGetSpy).toHaveBeenCalled();
 		const requestUrl = axiosGetSpy.mock.calls[0][0];
 		expect(requestUrl).toContain('include=identifier');
@@ -139,11 +142,14 @@ jest.setTimeout(100000);
 
 		await main();
 
-		expect(outputMock).toHaveBeenCalledWith('entity', expect.objectContaining({
-			blueprint: 'gh-action-test-bp2',
-			identifier: 'test_entity',
-			properties: { str: 'foo' },
-		}));
+		expect(outputMock).toHaveBeenCalledWith(
+			'entity',
+			expect.objectContaining({
+				blueprint: 'gh-action-test-bp2',
+				identifier: 'test_entity',
+				properties: { str: 'foo' },
+			}),
+		);
 		expect(failedMock).toHaveBeenCalledTimes(0);
 		expect(axiosGetSpy).toHaveBeenCalled();
 
@@ -167,11 +173,14 @@ jest.setTimeout(100000);
 
 		await main();
 
-		expect(outputMock).toHaveBeenCalledWith('entity', expect.objectContaining({
-			blueprint: 'gh-action-test-bp2',
-			identifier: 'test_entity',
-			properties: { str: 'foo' },
-		}));
+		expect(outputMock).toHaveBeenCalledWith(
+			'entity',
+			expect.objectContaining({
+				blueprint: 'gh-action-test-bp2',
+				identifier: 'test_entity',
+				properties: { str: 'foo' },
+			}),
+		);
 		expect(failedMock).toHaveBeenCalledTimes(0);
 		expect(axiosGetSpy).toHaveBeenCalled();
 

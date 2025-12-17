@@ -1,9 +1,14 @@
 import * as core from '@actions/core';
 import axios from 'axios';
 
-import { Entity, SearchBody, EntityQueryParameters } from '../../types';
+import { Entity, EntityQueryParameters, SearchBody } from '../../types';
 
-const searchEntities = async (baseUrl: string, accessToken: string, searchBody: SearchBody, queryParameters?: EntityQueryParameters): Promise<Entity[]> => {
+const searchEntities = async (
+	baseUrl: string,
+	accessToken: string,
+	searchBody: SearchBody,
+	queryParameters?: EntityQueryParameters,
+): Promise<Entity[]> => {
 	const url = `${baseUrl}/v1/entities/search`;
 	try {
 		core.info(`Performing POST request to URL: ${url}`);

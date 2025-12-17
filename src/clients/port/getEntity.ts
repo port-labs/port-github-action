@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import axios from 'axios';
 
-import { Entity, EntityToGet, EntityQueryParameters } from '../../types';
+import { Entity, EntityQueryParameters, EntityToGet } from '../../types';
 
 const toSearchParams = (params?: EntityQueryParameters): URLSearchParams => {
 	const searchParams = new URLSearchParams();
@@ -15,12 +15,17 @@ const toSearchParams = (params?: EntityQueryParameters): URLSearchParams => {
 		}
 	});
 	return searchParams;
-}
+};
 
-const getEntity = async (baseUrl: string, accessToken: string, entity: EntityToGet, queryParameters?: EntityQueryParameters): Promise<Entity> => {
+const getEntity = async (
+	baseUrl: string,
+	accessToken: string,
+	entity: EntityToGet,
+	queryParameters?: EntityQueryParameters,
+): Promise<Entity> => {
 	const url = new URL(`${baseUrl}/v1/blueprints/${entity.blueprint}/entities/${encodeURIComponent(entity.identifier)}`);
 	url.search = toSearchParams(queryParameters).toString();
-	
+
 	try {
 		core.info(`Performing GET request to URL: ${url.toString()}`);
 

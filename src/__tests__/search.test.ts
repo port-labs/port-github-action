@@ -88,7 +88,7 @@ describe('Search Integration Tests', () => {
 
 		expect(outputMock).toHaveBeenCalledWith('entities', []);
 		expect(failedMock).toHaveBeenCalledTimes(0);
-		
+
 		expect(axiosPostSpy).toHaveBeenCalled();
 		const requestBody = axiosPostSpy.mock.calls[1][1];
 		expect(requestBody.include).toEqual(['identifier']);

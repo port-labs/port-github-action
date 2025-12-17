@@ -18,7 +18,11 @@ export default class EntitiesSearchOperation implements IOperation {
 	};
 
 	private parseQueryParameters = (): EntityQueryParameters => {
-		const include = this.input.include?.split(',').map((s) => s.trim()).filter((s) => s.length > 0) || undefined;
+		const include =
+			this.input.include
+				?.split(',')
+				.map((s) => s.trim())
+				.filter((s) => s.length > 0) || undefined;
 
 		return {
 			...(include && { include }),
@@ -30,7 +34,12 @@ export default class EntitiesSearchOperation implements IOperation {
 		const queryParameters = this.parseQueryParameters();
 		const accessToken = await clients.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
 
-		const entities: Entity[] = await clients.port.searchEntities(this.input.baseUrl, accessToken, searchBody, queryParameters);
+		const entities: Entity[] = await clients.port.searchEntities(
+			this.input.baseUrl,
+			accessToken,
+			searchBody,
+			queryParameters,
+		);
 
 		return { entities };
 	};
