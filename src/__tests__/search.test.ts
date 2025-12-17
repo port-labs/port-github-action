@@ -30,7 +30,6 @@ describe('Search Integration Tests', () => {
 		jest.clearAllMocks();
 		clearInputs(input);
 		input = {};
-		// Spy on axios.post before it gets wrapped by the port client
 		axiosPostSpy = jest.spyOn(axios, 'post');
 	});
 
@@ -50,6 +49,7 @@ describe('Search Integration Tests', () => {
 
 		expect(outputMock).toHaveBeenCalledWith('entities', []);
 		expect(failedMock).toHaveBeenCalledTimes(0);
+
 		expect(axiosPostSpy).toHaveBeenCalled();
 		const requestBody = axiosPostSpy.mock.calls[0][1];
 		expect(requestBody.include).toBeUndefined();
@@ -111,6 +111,7 @@ describe('Search Integration Tests', () => {
 
 		expect(outputMock).toHaveBeenCalledWith('entities', []);
 		expect(failedMock).toHaveBeenCalledTimes(0);
+
 		expect(axiosPostSpy).toHaveBeenCalled();
 		const requestBody = axiosPostSpy.mock.calls[1][1];
 		expect(requestBody.include).toEqual(['properties.str', 'identifier']);
@@ -133,6 +134,7 @@ describe('Search Integration Tests', () => {
 
 		expect(outputMock).toHaveBeenCalledWith('entities', []);
 		expect(failedMock).toHaveBeenCalledTimes(0);
+
 		expect(axiosPostSpy).toHaveBeenCalled();
 		const requestBody = axiosPostSpy.mock.calls[1][1];
 		expect(requestBody.include).toEqual(['properties.str', 'identifier', 'blueprint']);

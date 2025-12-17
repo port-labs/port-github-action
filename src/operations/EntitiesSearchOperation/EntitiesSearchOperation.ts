@@ -23,7 +23,6 @@ export default class EntitiesSearchOperation implements IOperation {
 				?.split(',')
 				.map((s) => s.trim())
 				.filter((s) => s.length > 0) || undefined;
-
 		return {
 			...(include && { include }),
 		};

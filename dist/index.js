@@ -789,10 +789,7 @@ class EntitiesSearchOperation {
             return searchBodySchema;
         };
         this.parseQueryParameters = () => {
-            const include = this.input.include
-                ?.split(',')
-                .map((s) => s.trim())
-                .filter((s) => s.length > 0) || undefined;
+            const include = this.input.include?.split(',').map((s) => s.trim()).filter((s) => s.length > 0) || undefined;
             return {
                 ...(include && { include }),
             };
@@ -909,10 +906,7 @@ class EntityGetterOperation {
             return { blueprint: this.input.blueprint, identifier: this.input.identifier };
         };
         this.parseQueryParameters = () => {
-            const include = this.input.include
-                ?.split(',')
-                .map((s) => s.trim())
-                .filter((s) => s.length > 0) || undefined;
+            const include = this.input.include?.split(',').map((s) => s.trim()).filter((s) => s.length > 0) || undefined;
             return {
                 ...(include && { include }),
             };
