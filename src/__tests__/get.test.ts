@@ -1,14 +1,16 @@
 import * as core from '@actions/core';
+import axios from 'axios';
 
 import main from '../main';
 import { cleanupPortEnvironment, setupPortEnvironment } from './utils/setup';
 import { TestInputs, clearInputs, getBaseInput, setInputs } from './utils/utils';
 
 describe('Get Integration Tests', () => {
-	jest.setTimeout(100000);
+jest.setTimeout(100000);
 
 	let outputMock: jest.SpyInstance;
 	let failedMock: jest.SpyInstance;
+	let axiosGetSpy: jest.SpyInstance;
 	let input: TestInputs = {};
 
 	beforeAll(async () => {
@@ -28,6 +30,7 @@ describe('Get Integration Tests', () => {
 		jest.clearAllMocks();
 		clearInputs(input);
 		input = {};
+		axiosGetSpy = jest.spyOn(axios, 'get');
 	});
 
 	test('Should get entity successfully', async () => {
@@ -53,6 +56,10 @@ describe('Get Integration Tests', () => {
 			title: 'GH Action 2 Test Identity',
 		});
 		expect(failedMock).toHaveBeenCalledTimes(0);
+
+		expect(axiosGetSpy).toHaveBeenCalled();
+		const requestUrl = axiosGetSpy.mock.calls[0][0];
+		expect(requestUrl).not.toContain('include=');
 	});
 
 	test('Should fail get input - missing required param identifier', async () => {
@@ -111,6 +118,10 @@ describe('Get Integration Tests', () => {
 			properties: { str: 'foo' },
 		}));
 		expect(failedMock).toHaveBeenCalledTimes(0);
+		
+		expect(axiosGetSpy).toHaveBeenCalled();
+		const requestUrl = axiosGetSpy.mock.calls[0][0];
+		expect(requestUrl).toContain('include=identifier');
 	});
 
 	test('Should get entity with include parameter - multiple values', async () => {
@@ -134,6 +145,11 @@ describe('Get Integration Tests', () => {
 			properties: { str: 'foo' },
 		}));
 		expect(failedMock).toHaveBeenCalledTimes(0);
+		expect(axiosGetSpy).toHaveBeenCalled();
+
+		const requestUrl = axiosGetSpy.mock.calls[0][0];
+		expect(requestUrl).toContain('include=properties.str');
+		expect(requestUrl).toContain('include=identifier');
 	});
 
 	test('Should get entity with include parameter - with extra whitespace', async () => {
@@ -143,7 +159,7 @@ describe('Get Integration Tests', () => {
 				operation: 'GET',
 				identifier: 'test_entity',
 				blueprint: 'gh-action-test-bp2',
-				include: '  properties.str  ,  identifier  ,  blueprint  ',
+				include: '  properties.str  ,  identifier  ,  title  ',
 			},
 		};
 
@@ -157,5 +173,11 @@ describe('Get Integration Tests', () => {
 			properties: { str: 'foo' },
 		}));
 		expect(failedMock).toHaveBeenCalledTimes(0);
+		expect(axiosGetSpy).toHaveBeenCalled();
+
+		const requestUrl = axiosGetSpy.mock.calls[0][0];
+		expect(requestUrl).toContain('include=properties.str');
+		expect(requestUrl).toContain('include=identifier');
+		expect(requestUrl).toContain('include=title');
 	});
 });

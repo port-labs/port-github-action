@@ -1,4 +1,5 @@
 import * as core from '@actions/core';
+import axios from 'axios';
 
 import main from '../main';
 import { cleanupPortEnvironment, setupPortEnvironment } from './utils/setup';
@@ -9,6 +10,7 @@ describe('Search Integration Tests', () => {
 
 	let outputMock: jest.SpyInstance;
 	let failedMock: jest.SpyInstance;
+	let axiosPostSpy: jest.SpyInstance;
 	let input: TestInputs = {};
 
 	beforeAll(async () => {
@@ -28,6 +30,8 @@ describe('Search Integration Tests', () => {
 		jest.clearAllMocks();
 		clearInputs(input);
 		input = {};
+		// Spy on axios.post before it gets wrapped by the port client
+		axiosPostSpy = jest.spyOn(axios, 'post');
 	});
 
 	test('Should search entities successfully', async () => {
@@ -46,6 +50,9 @@ describe('Search Integration Tests', () => {
 
 		expect(outputMock).toHaveBeenCalledWith('entities', []);
 		expect(failedMock).toHaveBeenCalledTimes(0);
+		expect(axiosPostSpy).toHaveBeenCalled();
+		const requestBody = axiosPostSpy.mock.calls[0][1];
+		expect(requestBody.include).toBeUndefined();
 	});
 
 	test('Should fail search input - missing required param query', async () => {
@@ -81,6 +88,10 @@ describe('Search Integration Tests', () => {
 
 		expect(outputMock).toHaveBeenCalledWith('entities', []);
 		expect(failedMock).toHaveBeenCalledTimes(0);
+		
+		expect(axiosPostSpy).toHaveBeenCalled();
+		const requestBody = axiosPostSpy.mock.calls[1][1];
+		expect(requestBody.include).toEqual(['identifier']);
 	});
 
 	test('Should search entities with include parameter - multiple values', async () => {
@@ -100,6 +111,9 @@ describe('Search Integration Tests', () => {
 
 		expect(outputMock).toHaveBeenCalledWith('entities', []);
 		expect(failedMock).toHaveBeenCalledTimes(0);
+		expect(axiosPostSpy).toHaveBeenCalled();
+		const requestBody = axiosPostSpy.mock.calls[1][1];
+		expect(requestBody.include).toEqual(['properties.str', 'identifier']);
 	});
 
 	test('Should search entities with include parameter - with extra whitespace', async () => {
@@ -119,5 +133,8 @@ describe('Search Integration Tests', () => {
 
 		expect(outputMock).toHaveBeenCalledWith('entities', []);
 		expect(failedMock).toHaveBeenCalledTimes(0);
+		expect(axiosPostSpy).toHaveBeenCalled();
+		const requestBody = axiosPostSpy.mock.calls[1][1];
+		expect(requestBody.include).toEqual(['properties.str', 'identifier', 'blueprint']);
 	});
 });
