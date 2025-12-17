@@ -1,12 +1,28 @@
 import * as core from '@actions/core';
 import axios from 'axios';
 
-import { Entity, EntityToGet } from '../../types';
+import { Entity, EntityToGet, EntityQueryParameters } from '../../types';
 
-const getEntity = async (baseUrl: string, accessToken: string, entity: EntityToGet): Promise<Entity> => {
-	const url = `${baseUrl}/v1/blueprints/${entity.blueprint}/entities/${encodeURIComponent(entity.identifier)}`;
+const toSearchParams = (params?: EntityQueryParameters): URLSearchParams => {
+	const searchParams = new URLSearchParams();
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (Array.isArray(value)) {
+			value.forEach((v) => searchParams.append(key, v));
+			return;
+		}
+		if (value !== undefined) {
+			searchParams.append(key, value);
+		}
+	});
+	return searchParams;
+}
+
+const getEntity = async (baseUrl: string, accessToken: string, entity: EntityToGet, queryParameters?: EntityQueryParameters): Promise<Entity> => {
+	const url = new URL(`${baseUrl}/v1/blueprints/${entity.blueprint}/entities/${encodeURIComponent(entity.identifier)}`);
+	url.search = toSearchParams(queryParameters).toString();
+	
 	try {
-		core.info(`Performing GET request to URL: ${url}`);
+		core.info(`Performing GET request to URL: ${url.toString()}`);
 
 		const config = {
 			headers: {
@@ -14,7 +30,7 @@ const getEntity = async (baseUrl: string, accessToken: string, entity: EntityToG
 			},
 		};
 
-		const response = await axios.get(url, config);
+		const response = await axios.get(url.toString(), config);
 
 		return response.data.entity;
 	} catch (e: any) {

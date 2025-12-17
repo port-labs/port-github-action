@@ -1,9 +1,9 @@
 import * as core from '@actions/core';
 import axios from 'axios';
 
-import { Entity, SearchBody } from '../../types';
+import { Entity, SearchBody, EntityQueryParameters } from '../../types';
 
-const searchEntities = async (baseUrl: string, accessToken: string, searchBody: SearchBody): Promise<Entity[]> => {
+const searchEntities = async (baseUrl: string, accessToken: string, searchBody: SearchBody, queryParameters?: EntityQueryParameters): Promise<Entity[]> => {
 	const url = `${baseUrl}/v1/entities/search`;
 	try {
 		core.info(`Performing POST request to URL: ${url}`);
@@ -14,7 +14,12 @@ const searchEntities = async (baseUrl: string, accessToken: string, searchBody: 
 			},
 		};
 
-		const response = await axios.post(url, searchBody, config);
+		const requestBody: Record<string, any> = {
+			...searchBody,
+			...queryParameters,
+		};
+
+		const response = await axios.post(url, requestBody, config);
 
 		return response.data.entities;
 	} catch (e: any) {

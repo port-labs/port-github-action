@@ -89,4 +89,73 @@ describe('Get Integration Tests', () => {
 		expect(outputMock).toHaveBeenCalledTimes(0);
 		expect(failedMock).toHaveBeenCalledWith('Request failed with status code 404');
 	});
+
+	test('Should get entity with include parameter - single value', async () => {
+		input = {
+			...getBaseInput(),
+			...{
+				operation: 'GET',
+				identifier: 'test_entity',
+				blueprint: 'gh-action-test-bp2',
+				include: 'identifier',
+			},
+		};
+
+		setInputs(input);
+
+		await main();
+
+		expect(outputMock).toHaveBeenCalledWith('entity', expect.objectContaining({
+			blueprint: 'gh-action-test-bp2',
+			identifier: 'test_entity',
+			properties: { str: 'foo' },
+		}));
+		expect(failedMock).toHaveBeenCalledTimes(0);
+	});
+
+	test('Should get entity with include parameter - multiple values', async () => {
+		input = {
+			...getBaseInput(),
+			...{
+				operation: 'GET',
+				identifier: 'test_entity',
+				blueprint: 'gh-action-test-bp2',
+				include: 'properties.str, identifier',
+			},
+		};
+
+		setInputs(input);
+
+		await main();
+
+		expect(outputMock).toHaveBeenCalledWith('entity', expect.objectContaining({
+			blueprint: 'gh-action-test-bp2',
+			identifier: 'test_entity',
+			properties: { str: 'foo' },
+		}));
+		expect(failedMock).toHaveBeenCalledTimes(0);
+	});
+
+	test('Should get entity with include parameter - with extra whitespace', async () => {
+		input = {
+			...getBaseInput(),
+			...{
+				operation: 'GET',
+				identifier: 'test_entity',
+				blueprint: 'gh-action-test-bp2',
+				include: '  properties.str  ,  identifier  ,  blueprint  ',
+			},
+		};
+
+		setInputs(input);
+
+		await main();
+
+		expect(outputMock).toHaveBeenCalledWith('entity', expect.objectContaining({
+			blueprint: 'gh-action-test-bp2',
+			identifier: 'test_entity',
+			properties: { str: 'foo' },
+		}));
+		expect(failedMock).toHaveBeenCalledTimes(0);
+	});
 });

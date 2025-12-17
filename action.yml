@@ -19,6 +19,9 @@ inputs:
   query:
     required: false
     description: 'Query to be used for SEARCH operation'
+  include:
+    required: false
+    description: 'The properties of the entity to include in the response. Only these values will be returned in the response. Only applicable for GET and SEARCH operations. For example: properties.propertyIdentifier,identifier'
   identifier:
     required: false
     description: 'The identifier of the entity'

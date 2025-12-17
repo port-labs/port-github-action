@@ -63,4 +63,61 @@ describe('Search Integration Tests', () => {
 		expect(outputMock).toHaveBeenCalledTimes(0);
 		expect(failedMock).toHaveBeenCalledWith('SEARCH Operation - query is missing from input');
 	});
+
+	test('Should search entities with include parameter - single value', async () => {
+		input = {
+			...getBaseInput(),
+			...{
+				operation: 'SEARCH',
+				query:
+					'{ "rules": [{ "operator": "=", "value": "not_exists_entity", "property": "$identifier"}], "combinator": "and" }',
+				include: 'identifier',
+			},
+		};
+
+		setInputs(input);
+
+		await main();
+
+		expect(outputMock).toHaveBeenCalledWith('entities', []);
+		expect(failedMock).toHaveBeenCalledTimes(0);
+	});
+
+	test('Should search entities with include parameter - multiple values', async () => {
+		input = {
+			...getBaseInput(),
+			...{
+				operation: 'SEARCH',
+				query:
+					'{ "rules": [{ "operator": "=", "value": "not_exists_entity", "property": "$identifier"}], "combinator": "and" }',
+				include: 'properties.str,identifier',
+			},
+		};
+
+		setInputs(input);
+
+		await main();
+
+		expect(outputMock).toHaveBeenCalledWith('entities', []);
+		expect(failedMock).toHaveBeenCalledTimes(0);
+	});
+
+	test('Should search entities with include parameter - with extra whitespace', async () => {
+		input = {
+			...getBaseInput(),
+			...{
+				operation: 'SEARCH',
+				query:
+					'{ "rules": [{ "operator": "=", "value": "not_exists_entity", "property": "$identifier"}], "combinator": "and" }',
+				include: '  properties.str  ,  identifier  ,  blueprint  ',
+			},
+		};
+
+		setInputs(input);
+
+		await main();
+
+		expect(outputMock).toHaveBeenCalledWith('entities', []);
+		expect(failedMock).toHaveBeenCalledTimes(0);
+	});
 });
