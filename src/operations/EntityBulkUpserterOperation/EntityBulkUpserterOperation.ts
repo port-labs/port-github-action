@@ -27,7 +27,9 @@ export default class EntityBulkUpserter implements IOperation {
 		const accessToken = await clients.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
 
 		for (const entityToUpsert of entitiesToUpsert.entities) {
-			const entityRes = await clients.port.upsertEntity(this.input.baseUrl, accessToken, entityToUpsert);
+			const entityRes = await clients.port.upsertEntity(this.input.baseUrl, accessToken, entityToUpsert, {
+				runId: this.input.runId,
+			});
 			entitiesRes.push(entityRes);
 		}
 
