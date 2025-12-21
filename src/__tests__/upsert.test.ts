@@ -1,4 +1,5 @@
 import * as core from '@actions/core';
+import axios from 'axios';
 
 import clients from '../clients';
 import { OPERATION_IS_NOT_SUPPORTED } from '../consts';
@@ -154,5 +155,48 @@ describe('Upsert Integration Tests', () => {
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
 		expect(failedMock).toHaveBeenCalledWith(OPERATION_IS_NOT_SUPPORTED);
+	});
+
+	test('Should upsert entity with runId parameter and associate with run', async () => {
+		const testEntityId = 'test-entity-with-runid';
+		const baseInput = getBaseInput();
+		const accessToken = await clients.port.getToken(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
+
+		const run = await clients.port.createRun(baseInput.baseUrl, accessToken, {
+			action: 'gh-action-test-entity',
+			identifier: 'gh-action-test-bp-entity',
+			properties: {},
+		});
+
+		const createdRunId = run.id;
+		expect(createdRunId).toBeDefined();
+
+		input = {
+			...getBaseInput(),
+			...{
+				operation: 'UPSERT',
+				title: 'GH Action Test Entity with RunId',
+				icon: 'Microservice',
+				blueprint: 'gh-action-test-bp',
+				identifier: testEntityId,
+				properties: '{"text": "test", "number": 1, "boolean": true}',
+				runId: createdRunId,
+			},
+		};
+
+		setInputs(input);
+
+		await main();
+
+		expect(failedMock).toHaveBeenCalledTimes(0);
+		expect(outputMock).toHaveBeenCalledWith('identifier', expect.any(String));
+
+		const runsResponse = await axios.get(`${baseInput.baseUrl}/v1/audit-log`, {
+			headers: { Authorization: `Bearer ${accessToken}` },
+			params: { resources: 'entity', run_id: createdRunId, includes: 'context' },
+		});
+
+		expect(runsResponse.data.audits).toHaveLength(1);
+		expect(runsResponse.data.audits.find((r: any) => r.context.entity === testEntityId)).toBeDefined();
 	});
 });
