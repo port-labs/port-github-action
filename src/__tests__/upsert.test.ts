@@ -4,7 +4,7 @@ import axios from 'axios';
 import clients from '../clients';
 import { OPERATION_IS_NOT_SUPPORTED } from '../consts';
 import main from '../main';
-import { cleanupPortEnvironment, setupPortEnvironment } from './utils/setup';
+import { cleanupPortEnvironment, ensureAction, setupPortEnvironment } from './utils/setup';
 import { TestInputs, clearInputs, getBaseInput, getInput, setInputs } from './utils/utils';
 
 describe('Upsert Integration Tests', () => {
@@ -158,13 +158,29 @@ describe('Upsert Integration Tests', () => {
 	});
 
 	test('Should upsert entity with runId parameter and associate with run', async () => {
-		const testEntityId = 'test-entity-with-runid';
+		const actionIdentifier = 'gh-action-async-test';
+		const testEntityId = 'gh-action-test-bp-entity';
 		const baseUrl = getInput('baseUrl');
 		const accessToken = await clients.port.getToken(baseUrl, getInput('clientId'), getInput('clientSecret'));
 
+		await ensureAction(baseUrl, accessToken, '', actionIdentifier, {
+			identifier: actionIdentifier,
+			trigger: {
+				operation: 'CREATE',
+				type: 'self-service',
+				userInputs: {
+					properties: {},
+				},
+			},
+			invocationMethod: {
+				type: 'WEBHOOK',
+				url: 'https://dummyjson.com/test',
+				synchronized: false,
+			},
+		});
+
 		const run = await clients.port.createRun(baseUrl, accessToken, {
-			action: 'gh-action-test-entity',
-			identifier: 'gh-action-test-bp-entity',
+			action: actionIdentifier,
 			properties: {},
 		});
 
