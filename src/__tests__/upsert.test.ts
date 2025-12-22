@@ -159,10 +159,10 @@ describe('Upsert Integration Tests', () => {
 
 	test('Should upsert entity with runId parameter and associate with run', async () => {
 		const testEntityId = 'test-entity-with-runid';
-		const baseInput = getBaseInput();
-		const accessToken = await clients.port.getToken(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
+		const baseUrl = getInput('baseUrl');
+		const accessToken = await clients.port.getToken(baseUrl, getInput('clientId'), getInput('clientSecret'));
 
-		const run = await clients.port.createRun(baseInput.baseUrl, accessToken, {
+		const run = await clients.port.createRun(baseUrl, accessToken, {
 			action: 'gh-action-test-entity',
 			identifier: 'gh-action-test-bp-entity',
 			properties: {},
@@ -191,7 +191,7 @@ describe('Upsert Integration Tests', () => {
 		expect(failedMock).toHaveBeenCalledTimes(0);
 		expect(outputMock).toHaveBeenCalledWith('identifier', expect.any(String));
 
-		const runsResponse = await axios.get(`${baseInput.baseUrl}/v1/audit-log`, {
+		const runsResponse = await axios.get(`${baseUrl}/v1/audit-log`, {
 			headers: { Authorization: `Bearer ${accessToken}` },
 			params: { resources: 'entity', run_id: createdRunId, includes: 'context' },
 		});
