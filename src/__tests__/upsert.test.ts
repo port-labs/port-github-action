@@ -4,10 +4,8 @@ import axios from 'axios';
 import clients from '../clients';
 import { OPERATION_IS_NOT_SUPPORTED } from '../consts';
 import main from '../main';
-import { ensureAction, setupPortEnvironment } from './utils/setup';
+import { setupPortEnvironment } from './utils/setup';
 import { TestInputs, clearInputs, getBaseInput, getInput, setInputs } from './utils/utils';
-
-const asyncActionIdentifier = 'gh-action-async-test';
 
 describe('Upsert Integration Tests', () => {
 	jest.setTimeout(100000);
@@ -165,25 +163,8 @@ describe('Upsert Integration Tests', () => {
 		const baseUrl = getInput('baseUrl');
 		const accessToken = await clients.port.getToken(baseUrl, getInput('clientId'), getInput('clientSecret'));
 
-		await ensureAction(baseUrl, accessToken, asyncActionIdentifier, {
-			identifier: asyncActionIdentifier,
-			trigger: {
-				operation: 'CREATE',
-				type: 'self-service',
-				userInputs: {
-					properties: {},
-				},
-			},
-			invocationMethod: {
-				type: 'WEBHOOK',
-				url: 'http://example.com',
-				method: 'GET',
-				synchronized: false,
-			},
-		});
-
 		const run = await clients.port.createRun(baseUrl, accessToken, {
-			action: asyncActionIdentifier,
+			action: 'gh-action-test',
 			properties: {},
 		});
 

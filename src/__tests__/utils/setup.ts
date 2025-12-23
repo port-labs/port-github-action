@@ -37,9 +37,9 @@ export const ensureBlueprint = async (
 export const ensureAction = async (
 	baseUrl: string,
 	accessToken: string,
-	actionId: string,
 	actionSchema: any,
 ): Promise<() => Promise<void>> => {
+	const actionId = actionSchema.identifier;
 	try {
 		// Check if action exists using the new endpoint
 		await axios.get(`${baseUrl}/v1/actions/${actionId}`, {
@@ -253,7 +253,7 @@ export const setupPortEnvironment = async (
 
 	// Setup actions for CREATE_RUN and PATCH_RUN tests
 	cleanupTasks.push(
-		await ensureAction(baseUrl, accessToken, 'gh-action-test', {
+		await ensureAction(baseUrl, accessToken, {
 			identifier: 'gh-action-test',
 			title: 'GH Action Test',
 			icon: 'DefaultBlueprint',
@@ -271,7 +271,7 @@ export const setupPortEnvironment = async (
 	);
 
 	cleanupTasks.push(
-		await ensureAction(baseUrl, accessToken, 'gh-action-test-entity', {
+		await ensureAction(baseUrl, accessToken, {
 			identifier: 'gh-action-test-entity',
 			title: 'GH Action Test Entity',
 			icon: 'DefaultBlueprint',
