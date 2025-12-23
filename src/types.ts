@@ -13,6 +13,10 @@ export type SearchBody = {
 	not?: boolean;
 };
 
+export type EntityQueryParameters = {
+	include?: string[];
+};
+
 export type Entity = {
 	identifier: string;
 	title?: string;
@@ -96,6 +100,7 @@ export type ActionInput = {
 	clientSecret: string;
 	operation: OperationType;
 	query?: string[];
+	include?: string;
 	identifier?: string;
 	title?: string;
 	icon?: string;
