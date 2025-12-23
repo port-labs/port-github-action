@@ -4,8 +4,10 @@ import axios from 'axios';
 import clients from '../clients';
 import { OPERATION_IS_NOT_SUPPORTED } from '../consts';
 import main from '../main';
-import { cleanupPortEnvironment, ensureAction, setupPortEnvironment } from './utils/setup';
+import { ensureAction, setupPortEnvironment } from './utils/setup';
 import { TestInputs, clearInputs, getBaseInput, getInput, setInputs } from './utils/utils';
+
+const asyncActionIdentifier = 'gh-action-async-test';
 
 describe('Upsert Integration Tests', () => {
 	jest.setTimeout(100000);
@@ -14,17 +16,18 @@ describe('Upsert Integration Tests', () => {
 	let failedMock: jest.SpyInstance;
 	let input: TestInputs = {};
 
+	let cleanup: (() => Promise<void>) | undefined;
+
 	beforeAll(async () => {
 		outputMock = jest.spyOn(core, 'setOutput');
 		failedMock = jest.spyOn(core, 'setFailed').mockImplementation(() => {});
 
 		const baseInput = getBaseInput();
-		await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
+		cleanup = await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
 	});
 
 	afterAll(async () => {
-		const baseInput = getBaseInput();
-		await cleanupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
+		await cleanup?.();
 	});
 
 	beforeEach(() => {
@@ -158,13 +161,12 @@ describe('Upsert Integration Tests', () => {
 	});
 
 	test('Should upsert entity with runId parameter and associate with run', async () => {
-		const actionIdentifier = 'gh-action-async-test';
 		const testEntityId = 'gh-action-test-bp-entity';
 		const baseUrl = getInput('baseUrl');
 		const accessToken = await clients.port.getToken(baseUrl, getInput('clientId'), getInput('clientSecret'));
 
-		await ensureAction(baseUrl, accessToken, '', actionIdentifier, {
-			identifier: actionIdentifier,
+		await ensureAction(baseUrl, accessToken, asyncActionIdentifier, {
+			identifier: asyncActionIdentifier,
 			trigger: {
 				operation: 'CREATE',
 				type: 'self-service',
@@ -174,13 +176,14 @@ describe('Upsert Integration Tests', () => {
 			},
 			invocationMethod: {
 				type: 'WEBHOOK',
-				url: 'https://dummyjson.com/test',
+				url: 'http://example.com',
+				method: 'GET',
 				synchronized: false,
 			},
 		});
 
 		const run = await clients.port.createRun(baseUrl, accessToken, {
-			action: actionIdentifier,
+			action: asyncActionIdentifier,
 			properties: {},
 		});
 
