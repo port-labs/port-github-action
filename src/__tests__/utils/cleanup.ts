@@ -81,8 +81,12 @@ const tryDeleteRun = async (baseUrl: string, accessToken: string, runId: string)
 
 const tryGetActionRuns = async (baseUrl: string, accessToken: string, actionId: string): Promise<Run[]> => {
 	try {
-		const response = await axios.get(`${baseUrl}/v1/actions/${actionId}/runs`, {
+		const response = await axios.get(`${baseUrl}/v1/actions/runs`, {
 			headers: { Authorization: `Bearer ${accessToken}` },
+			params: {
+				action: actionId,
+				version: 'v2',
+			},
 		});
 		return response.data?.runs && Array.isArray(response.data.runs) ? response.data?.runs : [];
 	} catch (error: any) {
