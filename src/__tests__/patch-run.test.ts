@@ -59,8 +59,7 @@ describe('Patch Run Integration Tests', () => {
 		input = {};
 	});
 
-	// TODO: This test is flaky
-	test.skip('Should patch run successfully', async () => {
+	test('Should patch run successfully', async () => {
 		const runId = await createFreshRun();
 
 		input = {
@@ -82,8 +81,7 @@ describe('Patch Run Integration Tests', () => {
 		expect(failedMock).toHaveBeenCalledTimes(0);
 	});
 
-	// TODO: This test is flaky
-	test.skip('Should patch run successfully - with link', async () => {
+	test('Should patch run successfully - with link', async () => {
 		const runId = await createFreshRun();
 
 		input = {

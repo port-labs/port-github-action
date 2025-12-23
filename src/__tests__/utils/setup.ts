@@ -265,8 +265,7 @@ export const setupPortEnvironment = async (
 				},
 			},
 			invocationMethod: {
-				type: 'WEBHOOK',
-				url: 'https://example.com',
+				type: 'KAFKA',
 			},
 		}),
 	);
@@ -285,8 +284,7 @@ export const setupPortEnvironment = async (
 				},
 			},
 			invocationMethod: {
-				type: 'WEBHOOK',
-				url: 'https://example.com',
+				type: 'KAFKA',
 			},
 		}),
 	);
