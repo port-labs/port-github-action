@@ -12,7 +12,7 @@ export const getBaseInput = (): TestInputs => ({
 });
 
 // When running locally (not in a GH Action), mock axios requests:
-if (!process.env['PORT_BASE_URL'] && !process.env['INPUT_CLIENTID'] && !process.env['INPUT_CLIENTSECRET']) {
+if (!process.env['PORT_BASE_URL']) {
 	const mockResponse = async (urlString: string, data?: any) => {
 		const url = new URL(urlString);
 		if (url.pathname.endsWith('/auth/token')) {

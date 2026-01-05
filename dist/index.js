@@ -551,7 +551,6 @@ const upsertEntity = async (baseUrl, accessToken, entity, options = {}) => {
                 ...(options.runId && { run_id: options.runId }),
             },
         };
-        core.info(`Run ID: ${config.params.run_id}`);
         const response = await axios_1.default.post(url, entity, config);
         return response.data.entity;
     }
@@ -791,7 +790,10 @@ class EntitiesSearchOperation {
             return searchBodySchema;
         };
         this.parseQueryParameters = () => {
-            const include = this.input.include?.split(',').map((s) => s.trim()).filter((s) => s.length > 0) || undefined;
+            const include = this.input.include
+                ?.split(',')
+                .map((s) => s.trim())
+                .filter((s) => s.length > 0) || undefined;
             return {
                 ...(include && { include }),
             };
@@ -910,7 +912,10 @@ class EntityGetterOperation {
             return { blueprint: this.input.blueprint, identifier: this.input.identifier };
         };
         this.parseQueryParameters = () => {
-            const include = this.input.include?.split(',').map((s) => s.trim()).filter((s) => s.length > 0) || undefined;
+            const include = this.input.include
+                ?.split(',')
+                .map((s) => s.trim())
+                .filter((s) => s.length > 0) || undefined;
             return {
                 ...(include && { include }),
             };
