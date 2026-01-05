@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 
 import clients from '../clients';
 import main from '../main';
-import { cleanupPortEnvironment, setupPortEnvironment } from './utils/setup';
+import { setupPortEnvironment } from './utils/setup';
 import { TestInputs, clearInputs, getBaseInput, setInputs } from './utils/utils';
 
 describe('Patch Run Integration Tests', () => {
@@ -12,6 +12,8 @@ describe('Patch Run Integration Tests', () => {
 	let failedMock: jest.SpyInstance;
 	let input: TestInputs = {};
 	let completedRunId: string;
+
+	let cleanup: (() => Promise<void>) | undefined;
 
 	const createFreshRun = async (): Promise<string> => {
 		const baseInput = getBaseInput();
@@ -32,7 +34,7 @@ describe('Patch Run Integration Tests', () => {
 		failedMock = jest.spyOn(core, 'setFailed').mockImplementation(() => {});
 
 		const baseInput = getBaseInput();
-		await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
+		cleanup = await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
 
 		const accessToken = await clients.port.getToken(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
 
@@ -48,8 +50,7 @@ describe('Patch Run Integration Tests', () => {
 	});
 
 	afterAll(async () => {
-		const baseInput = getBaseInput();
-		await cleanupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
+		await cleanup?.();
 	});
 
 	beforeEach(() => {
@@ -58,8 +59,7 @@ describe('Patch Run Integration Tests', () => {
 		input = {};
 	});
 
-	// TODO: This test is flaky
-	test.skip('Should patch run successfully', async () => {
+	test('Should patch run successfully', async () => {
 		const runId = await createFreshRun();
 
 		input = {
@@ -81,8 +81,7 @@ describe('Patch Run Integration Tests', () => {
 		expect(failedMock).toHaveBeenCalledTimes(0);
 	});
 
-	// TODO: This test is flaky
-	test.skip('Should patch run successfully - with link', async () => {
+	test('Should patch run successfully - with link', async () => {
 		const runId = await createFreshRun();
 
 		input = {

@@ -1,9 +1,10 @@
 import * as core from '@actions/core';
+import axios from 'axios';
 
 import clients from '../clients';
 import { OPERATION_IS_NOT_SUPPORTED } from '../consts';
 import main from '../main';
-import { cleanupPortEnvironment, setupPortEnvironment } from './utils/setup';
+import { setupPortEnvironment } from './utils/setup';
 import { TestInputs, clearInputs, getBaseInput, getInput, setInputs } from './utils/utils';
 
 describe('Upsert Integration Tests', () => {
@@ -13,17 +14,18 @@ describe('Upsert Integration Tests', () => {
 	let failedMock: jest.SpyInstance;
 	let input: TestInputs = {};
 
+	let cleanup: (() => Promise<void>) | undefined;
+
 	beforeAll(async () => {
 		outputMock = jest.spyOn(core, 'setOutput');
 		failedMock = jest.spyOn(core, 'setFailed').mockImplementation(() => {});
 
 		const baseInput = getBaseInput();
-		await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
+		cleanup = await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
 	});
 
 	afterAll(async () => {
-		const baseInput = getBaseInput();
-		await cleanupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
+		await cleanup?.();
 	});
 
 	beforeEach(() => {
@@ -154,5 +156,47 @@ describe('Upsert Integration Tests', () => {
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
 		expect(failedMock).toHaveBeenCalledWith(OPERATION_IS_NOT_SUPPORTED);
+	});
+
+	test('Should upsert entity with runId parameter and associate with run', async () => {
+		const testEntityId = 'gh-action-test-bp-entity';
+		const baseUrl = getInput('baseUrl');
+		const accessToken = await clients.port.getToken(baseUrl, getInput('clientId'), getInput('clientSecret'));
+
+		const run = await clients.port.createRun(baseUrl, accessToken, {
+			action: 'gh-action-test',
+			properties: {},
+		});
+
+		const createdRunId = run.id;
+		expect(createdRunId).toBeDefined();
+
+		input = {
+			...getBaseInput(),
+			...{
+				operation: 'UPSERT',
+				title: 'GH Action Test Entity with RunId',
+				icon: 'Microservice',
+				blueprint: 'gh-action-test-bp',
+				identifier: testEntityId,
+				properties: '{"text": "test", "number": 1, "boolean": true}',
+				runId: createdRunId,
+			},
+		};
+
+		setInputs(input);
+
+		await main();
+
+		expect(failedMock).toHaveBeenCalledTimes(0);
+		expect(outputMock).toHaveBeenCalledWith('identifier', expect.any(String));
+
+		const runsResponse = await axios.get(`${baseUrl}/v1/audit-log`, {
+			headers: { Authorization: `Bearer ${accessToken}` },
+			params: { resources: 'entity', run_id: createdRunId, includes: 'context' },
+		});
+
+		expect(runsResponse.data.audits).toHaveLength(1);
+		expect(runsResponse.data.audits.find((r: any) => r.context.entity === testEntityId)).toBeDefined();
 	});
 });

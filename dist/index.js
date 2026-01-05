@@ -537,7 +537,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const axios_1 = __importDefault(__nccwpck_require__(8757));
-const upsertEntity = async (baseUrl, accessToken, entity) => {
+const upsertEntity = async (baseUrl, accessToken, entity, options = {}) => {
     const url = `${baseUrl}/v1/blueprints/${entity.blueprint}/entities`;
     try {
         core.info(`Performing POST request to URL: ${url}, with body: ${JSON.stringify(entity)}`);
@@ -548,8 +548,10 @@ const upsertEntity = async (baseUrl, accessToken, entity) => {
             params: {
                 upsert: true,
                 merge: true,
+                ...(options.runId && { run_id: options.runId }),
             },
         };
+        core.info(`Run ID: ${config.params.run_id}`);
         const response = await axios_1.default.post(url, entity, config);
         return response.data.entity;
     }
@@ -836,7 +838,9 @@ class EntityBulkUpserter {
             const entitiesRes = [];
             const accessToken = await clients_1.default.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
             for (const entityToUpsert of entitiesToUpsert.entities) {
-                const entityRes = await clients_1.default.port.upsertEntity(this.input.baseUrl, accessToken, entityToUpsert);
+                const entityRes = await clients_1.default.port.upsertEntity(this.input.baseUrl, accessToken, entityToUpsert, {
+                    runId: this.input.runId,
+                });
                 entitiesRes.push(entityRes);
             }
             return { identifiers: entitiesRes.map((entity) => entity.identifier) };
@@ -975,7 +979,9 @@ class EntityUpserterOperation {
         this.execute = async () => {
             const entityToUpsert = this.parseInput();
             const accessToken = await clients_1.default.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
-            const entityRes = await clients_1.default.port.upsertEntity(this.input.baseUrl, accessToken, entityToUpsert);
+            const entityRes = await clients_1.default.port.upsertEntity(this.input.baseUrl, accessToken, entityToUpsert, {
+                runId: this.input.runId,
+            });
             return {
                 identifier: entityRes.identifier,
             };

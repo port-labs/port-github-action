@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import axios from 'axios';
 
 import main from '../main';
-import { cleanupPortEnvironment, setupPortEnvironment } from './utils/setup';
+import { setupPortEnvironment } from './utils/setup';
 import { TestInputs, clearInputs, getBaseInput, setInputs } from './utils/utils';
 
 describe('Get Integration Tests', () => {
@@ -13,17 +13,18 @@ describe('Get Integration Tests', () => {
 	let axiosGetSpy: jest.SpyInstance;
 	let input: TestInputs = {};
 
+	let cleanup: (() => Promise<void>) | undefined;
+
 	beforeAll(async () => {
 		outputMock = jest.spyOn(core, 'setOutput');
 		failedMock = jest.spyOn(core, 'setFailed').mockImplementation(() => {});
 
 		const baseInput = getBaseInput();
-		await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
+		cleanup = await setupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
 	});
 
 	afterAll(async () => {
-		const baseInput = getBaseInput();
-		await cleanupPortEnvironment(baseInput.baseUrl, baseInput.clientId, baseInput.clientSecret);
+		await cleanup?.();
 	});
 
 	beforeEach(() => {
