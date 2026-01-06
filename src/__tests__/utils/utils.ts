@@ -12,9 +12,14 @@ export const getBaseInput = (): TestInputs => ({
 });
 
 // When running locally (not in a GH Action), mock axios requests:
-if (!process.env['PORT_BASE_URL']) {
+if (!process.env['CI']) {
+	console.log('⚠️  Environment variables not supplied - using axios mocks for local testing ⚠️');
+
 	const mockResponse = async (urlString: string, data?: any) => {
-		const url = new URL(urlString);
+		const url = URL.parse(urlString);
+		if (url === null) {
+			throw new Error(`Invalid URL: ${urlString}`);
+		}
 		if (url.pathname.endsWith('/auth/token')) {
 			return { data: { accessToken: 'mock-token' } };
 		}
@@ -57,7 +62,6 @@ if (!process.env['PORT_BASE_URL']) {
 			throw { code: 422, message: 'Request failed with status code 422' };
 		});
 
-	console.log('⚠️  Environment variables not supplied - using axios mocks (all requests will return 200 OK)');
 }
 
 const getInputName = (name: string): string => `INPUT_${name.replace(/ /g, '_').toUpperCase()}`;
