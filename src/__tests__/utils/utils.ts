@@ -4,9 +4,9 @@ import { url } from 'inspector';
 export type TestInputs = Record<string, string>;
 
 export const getBaseInput = (): TestInputs => ({
-	baseUrl: process.env['PORT_BASE_URL'] ?? 'http://localhost',
-	clientId: process.env['INPUT_CLIENTID'] ?? ' ',
-	clientSecret: process.env['INPUT_CLIENTSECRET'] ?? ' ',
+	baseUrl: process.env['PORT_BASE_URL'] ?? '',
+	clientId: process.env['INPUT_CLIENTID'] ?? '',
+	clientSecret: process.env['INPUT_CLIENTSECRET'] ?? '',
 	properties: '{}',
 	relations: '{}',
 });
@@ -16,14 +16,10 @@ if (!process.env['CI']) {
 	console.log('⚠️  Environment variables not supplied - using axios mocks for local testing ⚠️');
 
 	const mockResponse = async (urlString: string, data?: any) => {
-		const url = URL.parse(urlString);
-		if (url === null) {
-			throw new Error(`Invalid URL: ${urlString}`);
-		}
-		if (url.pathname.endsWith('/auth/token')) {
+		if (urlString.endsWith('/auth/token')) {
 			return { data: { accessToken: 'mock-token' } };
 		}
-		if (url.pathname.endsWith('/gh-action-test-bp2/entities/test_entity')) {
+		if (urlString.endsWith('/gh-action-test-bp2/entities/test_entity')) {
 			return {
 				data: {
 					entity: {
@@ -37,13 +33,13 @@ if (!process.env['CI']) {
 				},
 			};
 		}
-		if (url.pathname.includes('invalid')) {
+		if (urlString.includes('invalid')) {
 			throw { code: 404, message: 'Request failed with status code 404' };
 		}
 		if (data && JSON.stringify(data).includes('invalid')) {
 			throw { code: 404, message: 'Request failed with status code 404' };
 		}
-		if (url.hostname.includes('invalidurl')) {
+		if (urlString.includes('invalidurl')) {
 			throw { code: 'ENOTFOUND', message: 'getaddrinfo ENOTFOUND invalidurl' };
 		}
 		return {
