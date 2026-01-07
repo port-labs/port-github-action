@@ -19,6 +19,7 @@ const getInput = (): ActionInput => ({
 	query: core.getMultilineInput('query', {
 		required: false,
 	}),
+	include: core.getInput('include', { required: false }),
 	team: core.getInput('team', { required: false }),
 	relations: core.getMultilineInput('relations', {
 		required: false,
