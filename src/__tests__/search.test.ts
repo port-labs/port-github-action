@@ -91,8 +91,8 @@ describe('Search Integration Tests', () => {
 		expect(failedMock).toHaveBeenCalledTimes(0);
 
 		expect(axiosPostSpy).toHaveBeenCalled();
-		const requestBody = axiosPostSpy.mock.calls[1][1];
-		expect(requestBody.include).toEqual(['identifier']);
+		const requestUrl = axiosPostSpy.mock.calls[1][0];
+		expect(requestUrl).toContain('include=identifier');
 	});
 
 	test('Should search entities with include parameter - multiple values', async () => {
@@ -114,8 +114,9 @@ describe('Search Integration Tests', () => {
 		expect(failedMock).toHaveBeenCalledTimes(0);
 
 		expect(axiosPostSpy).toHaveBeenCalled();
-		const requestBody = axiosPostSpy.mock.calls[1][1];
-		expect(requestBody.include).toEqual(['properties.str', 'identifier']);
+		const requestUrl = axiosPostSpy.mock.calls[1][0];
+		expect(requestUrl).toContain('include=properties.str');
+		expect(requestUrl).toContain('include=identifier');
 	});
 
 	test('Should search entities with include parameter - with extra whitespace', async () => {
@@ -137,7 +138,9 @@ describe('Search Integration Tests', () => {
 		expect(failedMock).toHaveBeenCalledTimes(0);
 
 		expect(axiosPostSpy).toHaveBeenCalled();
-		const requestBody = axiosPostSpy.mock.calls[1][1];
-		expect(requestBody.include).toEqual(['properties.str', 'identifier', 'blueprint']);
+		const requestUrl = axiosPostSpy.mock.calls[1][0];
+		expect(requestUrl).toContain('include=properties.str');
+		expect(requestUrl).toContain('include=identifier');
+		expect(requestUrl).toContain('include=blueprint');
 	});
 });

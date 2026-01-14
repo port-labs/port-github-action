@@ -3,15 +3,31 @@ import axios from 'axios';
 
 import { Entity, EntityQueryParameters, SearchBody } from '../../types';
 
+const toSearchParams = (params?: EntityQueryParameters): URLSearchParams => {
+	const searchParams = new URLSearchParams();
+	if (!params) return searchParams;
+
+	Object.entries(params).forEach(([key, value]) => {
+		if (Array.isArray(value)) {
+			value.forEach((v) => searchParams.append(key, v));
+		} else if (value !== undefined) {
+			searchParams.append(key, value);
+		}
+	});
+	return searchParams;
+};
+
 const searchEntities = async (
 	baseUrl: string,
 	accessToken: string,
 	searchBody: SearchBody,
 	queryParameters?: EntityQueryParameters,
 ): Promise<Entity[]> => {
-	const url = `${baseUrl}/v1/entities/search`;
+	const url = new URL(`${baseUrl}/v1/entities/search`);
+	url.search = toSearchParams(queryParameters).toString();
+
 	try {
-		core.info(`Performing POST request to URL: ${url}`);
+		core.info(`Performing POST request to URL: ${url.toString()}`);
 
 		const config = {
 			headers: {
@@ -19,12 +35,7 @@ const searchEntities = async (
 			},
 		};
 
-		const requestBody: Record<string, any> = {
-			...searchBody,
-			...queryParameters,
-		};
-
-		const response = await axios.post(url, requestBody, config);
+		const response = await axios.post(url.toString(), searchBody, config);
 
 		return response.data.entities;
 	} catch (e: any) {
