@@ -6,5 +6,6 @@ const config: Config.InitialOptions = {
 	testMatch: ['**/?(*.)+(spec|test).[jt]s'],
 	bail: 1,
 	maxWorkers: 1,
+	setupFiles: ['dotenv/config'],
 };
 export default config;
