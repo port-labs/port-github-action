@@ -71,7 +71,7 @@ if (!isCI()) {
 
 		// Audit log endpoint
 		if (url.includes('/audit-log')) {
-			return { data: { audits: [{ context: { entity: 'gh-action-test-bp-entity' } }] } };
+			return { data: { audits: [{ resourceType: 'entity', context: { entity: 'gh-action-test-bp-entity' } }] } };
 		}
 
 		// Run logs endpoint

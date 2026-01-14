@@ -193,10 +193,11 @@ describe('Upsert Integration Tests', () => {
 
 		const runsResponse = await axios.get(`${baseUrl}/v1/audit-log`, {
 			headers: { Authorization: `Bearer ${accessToken}` },
-			params: { resources: 'entity', run_id: createdRunId, includes: ['context'] },
+			params: { run_id: createdRunId },
 		});
 
-		expect(runsResponse.data.audits).toHaveLength(1);
-		expect(runsResponse.data.audits.find((r: any) => r.context.entity === testEntityId)).toBeDefined();
+		const entityAudits = runsResponse.data.audits.filter((r: any) => r.resourceType === 'entity');
+		expect(entityAudits).toHaveLength(1);
+		expect(entityAudits.find((r: any) => r.context?.entity === testEntityId)).toBeDefined();
 	});
 });
