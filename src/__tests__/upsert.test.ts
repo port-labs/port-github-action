@@ -193,7 +193,18 @@ describe('Upsert Integration Tests', () => {
 
 		const runsResponse = await axios.get(`${baseUrl}/v1/audit-log`, {
 			headers: { Authorization: `Bearer ${accessToken}` },
-			params: { resources: 'entity', run_id: createdRunId, includes: 'context' },
+			params: { resources: 'entity', run_id: createdRunId, includes: ['context'] },
+			paramsSerializer: (params) => {
+				const searchParams = new URLSearchParams();
+				Object.entries(params).forEach(([key, value]) => {
+					if (Array.isArray(value)) {
+						value.forEach((v) => searchParams.append(key, v));
+					} else {
+						searchParams.append(key, String(value));
+					}
+				});
+				return searchParams.toString();
+			},
 		});
 
 		expect(runsResponse.data.audits).toHaveLength(1);
