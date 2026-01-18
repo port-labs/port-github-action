@@ -1,12 +1,11 @@
 import axios from 'axios';
-import { url } from 'inspector';
 
 export type TestInputs = Record<string, string>;
 
 export const getBaseInput = (): TestInputs => ({
-	baseUrl: process.env['PORT_BASE_URL'] ?? '',
-	clientId: process.env['INPUT_CLIENTID'] ?? '',
-	clientSecret: process.env['INPUT_CLIENTSECRET'] ?? '',
+	baseUrl: process.env['PORT_BASE_URL'] || 'http://localhost:1234',
+	clientId: process.env['INPUT_CLIENTID'] || 'mock-client-id',
+	clientSecret: process.env['INPUT_CLIENTSECRET'] || 'mock-client-secret',
 	properties: '{}',
 	relations: '{}',
 });
@@ -19,7 +18,7 @@ if (!process.env['CI']) {
 		if (urlString.endsWith('/auth/token')) {
 			return { data: { accessToken: 'mock-token' } };
 		}
-		if (urlString.endsWith('/gh-action-test-bp2/entities/test_entity')) {
+		if (urlString.includes('/gh-action-test-bp2/entities/test_entity')) {
 			return {
 				data: {
 					entity: {
@@ -33,17 +32,35 @@ if (!process.env['CI']) {
 				},
 			};
 		}
+		if (urlString.toLowerCase().includes('invalidurl')) {
+			throw { code: 'ENOTFOUND', message: 'getaddrinfo ENOTFOUND invalidurl' };
+		}
 		if (urlString.includes('invalid')) {
 			throw { code: 404, message: 'Request failed with status code 404' };
 		}
 		if (data && JSON.stringify(data).includes('invalid')) {
 			throw { code: 404, message: 'Request failed with status code 404' };
 		}
-		if (urlString.includes('invalidurl')) {
-			throw { code: 'ENOTFOUND', message: 'getaddrinfo ENOTFOUND invalidurl' };
+		if (urlString.includes('/audit-log')) {
+			return {
+				data: {
+					audits: [
+						{
+							context: {
+								entity: 'gh-action-test-bp-entity',
+							},
+						},
+					],
+				},
+			};
 		}
 		return {
-			data: { entities: [], run: { id: 'runId' }, entity: { identifier: 'id' } },
+			data: {
+				entities: [],
+				run: { id: 'runId', status: 'IN_PROGRESS' },
+				entity: { identifier: 'id' },
+				runLog: { runId: 'runId', message: 'Test message' },
+			},
 		};
 	};
 
@@ -51,12 +68,15 @@ if (!process.env['CI']) {
 	jest.spyOn(axios, 'get').mockImplementation((url, _) => mockResponse(url));
 	jest.spyOn(axios, 'delete').mockImplementation((url, _) => mockResponse(url));
 	jest.spyOn(axios, 'put').mockImplementation((url, _, __) => mockResponse(url));
-	jest
-		.spyOn(axios, 'patch')
-		.mockImplementationOnce((url, _, __) => mockResponse(url))
-		.mockImplementation(() => {
-			throw { code: 422, message: 'Request failed with status code 422' };
-		});
+	let patchCallCount = 0;
+	jest.spyOn(axios, 'patch').mockImplementation((url, data: any, __) => {
+		patchCallCount++;
+		// First PATCH (in beforeAll to complete a run) succeeds, subsequent ones with status fail
+		if (patchCallCount > 1 && data?.status) {
+			throw { response: { status: 422 }, message: 'Request failed with status code 422' };
+		}
+		return mockResponse(url);
+	});
 
 }
 

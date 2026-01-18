@@ -16,13 +16,14 @@ export default class EntityGetterOperation implements IOperation {
 	};
 
 	private parseQueryParameters = (): EntityQueryParameters => {
-		const include =
-			this.input.include
-				?.split(',')
-				.map((s) => s.trim())
-				.filter((s) => s.length > 0) || undefined;
+		const include = this.input.include
+			? this.input.include
+					.split(',')
+					.map((s) => s.trim())
+					.filter((s) => s.length > 0)
+			: undefined;
 		return {
-			...(include && { include }),
+			...(include?.length && { include }),
 		};
 	};
 

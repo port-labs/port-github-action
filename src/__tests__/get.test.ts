@@ -116,9 +116,7 @@ describe('Get Integration Tests', () => {
 		expect(outputMock).toHaveBeenCalledWith(
 			'entity',
 			expect.objectContaining({
-				blueprint: 'gh-action-test-bp2',
 				identifier: 'test_entity',
-				properties: { str: 'foo' },
 			}),
 		);
 		expect(failedMock).toHaveBeenCalledTimes(0);
@@ -146,7 +144,6 @@ describe('Get Integration Tests', () => {
 		expect(outputMock).toHaveBeenCalledWith(
 			'entity',
 			expect.objectContaining({
-				blueprint: 'gh-action-test-bp2',
 				identifier: 'test_entity',
 				properties: { str: 'foo' },
 			}),
@@ -177,9 +174,9 @@ describe('Get Integration Tests', () => {
 		expect(outputMock).toHaveBeenCalledWith(
 			'entity',
 			expect.objectContaining({
-				blueprint: 'gh-action-test-bp2',
 				identifier: 'test_entity',
 				properties: { str: 'foo' },
+				title: 'GH Action 2 Test Identity',
 			}),
 		);
 		expect(failedMock).toHaveBeenCalledTimes(0);
