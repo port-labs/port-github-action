@@ -1,4 +1,5 @@
 import * as core from '@actions/core';
+import axios from 'axios';
 
 import main from '../main';
 import { setupPortEnvironment } from './utils/setup';
@@ -9,6 +10,7 @@ describe('Search Integration Tests', () => {
 
 	let outputMock: jest.SpyInstance;
 	let failedMock: jest.SpyInstance;
+	let axiosPostSpy: jest.SpyInstance;
 	let input: TestInputs = {};
 
 	let cleanup: (() => Promise<void>) | undefined;
@@ -29,6 +31,7 @@ describe('Search Integration Tests', () => {
 		jest.clearAllMocks();
 		clearInputs(input);
 		input = {};
+		axiosPostSpy = jest.spyOn(axios, 'post');
 	});
 
 	test('Should search entities successfully', async () => {
@@ -47,6 +50,10 @@ describe('Search Integration Tests', () => {
 
 		expect(outputMock).toHaveBeenCalledWith('entities', []);
 		expect(failedMock).toHaveBeenCalledTimes(0);
+
+		expect(axiosPostSpy).toHaveBeenCalled();
+		const requestUrl = axiosPostSpy.mock.calls[1][0];
+		expect(requestUrl).not.toContain('include=');
 	});
 
 	test('Should fail search input - missing required param query', async () => {
@@ -63,5 +70,77 @@ describe('Search Integration Tests', () => {
 
 		expect(outputMock).toHaveBeenCalledTimes(0);
 		expect(failedMock).toHaveBeenCalledWith('SEARCH Operation - query is missing from input');
+	});
+
+	test('Should search entities with include parameter - single value', async () => {
+		input = {
+			...getBaseInput(),
+			...{
+				operation: 'SEARCH',
+				query:
+					'{ "rules": [{ "operator": "=", "value": "not_exists_entity", "property": "$identifier"}], "combinator": "and" }',
+				include: 'identifier',
+			},
+		};
+
+		setInputs(input);
+
+		await main();
+
+		expect(outputMock).toHaveBeenCalledWith('entities', []);
+		expect(failedMock).toHaveBeenCalledTimes(0);
+
+		expect(axiosPostSpy).toHaveBeenCalled();
+		const requestUrl = axiosPostSpy.mock.calls[1][0];
+		expect(requestUrl).toContain('include=identifier');
+	});
+
+	test('Should search entities with include parameter - multiple values', async () => {
+		input = {
+			...getBaseInput(),
+			...{
+				operation: 'SEARCH',
+				query:
+					'{ "rules": [{ "operator": "=", "value": "not_exists_entity", "property": "$identifier"}], "combinator": "and" }',
+				include: 'properties.str,identifier',
+			},
+		};
+
+		setInputs(input);
+
+		await main();
+
+		expect(outputMock).toHaveBeenCalledWith('entities', []);
+		expect(failedMock).toHaveBeenCalledTimes(0);
+
+		expect(axiosPostSpy).toHaveBeenCalled();
+		const requestUrl = axiosPostSpy.mock.calls[1][0];
+		expect(requestUrl).toContain('include=properties.str');
+		expect(requestUrl).toContain('include=identifier');
+	});
+
+	test('Should search entities with include parameter - with extra whitespace', async () => {
+		input = {
+			...getBaseInput(),
+			...{
+				operation: 'SEARCH',
+				query:
+					'{ "rules": [{ "operator": "=", "value": "not_exists_entity", "property": "$identifier"}], "combinator": "and" }',
+				include: '  properties.str  ,  identifier  ,  blueprint  ',
+			},
+		};
+
+		setInputs(input);
+
+		await main();
+
+		expect(outputMock).toHaveBeenCalledWith('entities', []);
+		expect(failedMock).toHaveBeenCalledTimes(0);
+
+		expect(axiosPostSpy).toHaveBeenCalled();
+		const requestUrl = axiosPostSpy.mock.calls[1][0];
+		expect(requestUrl).toContain('include=properties.str');
+		expect(requestUrl).toContain('include=identifier');
+		expect(requestUrl).toContain('include=blueprint');
 	});
 });

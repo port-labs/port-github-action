@@ -1,12 +1,33 @@
 import * as core from '@actions/core';
 import axios from 'axios';
 
-import { Entity, SearchBody } from '../../types';
+import { Entity, EntityQueryParameters, SearchBody } from '../../types';
 
-const searchEntities = async (baseUrl: string, accessToken: string, searchBody: SearchBody): Promise<Entity[]> => {
-	const url = `${baseUrl}/v1/entities/search`;
+const toSearchParams = (params?: EntityQueryParameters): URLSearchParams => {
+	const searchParams = new URLSearchParams();
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (Array.isArray(value)) {
+			value.forEach((v) => searchParams.append(key, v));
+			return;
+		}
+		if (value !== undefined) {
+			searchParams.append(key, value);
+		}
+	});
+	return searchParams;
+};
+
+const searchEntities = async (
+	baseUrl: string,
+	accessToken: string,
+	searchBody: SearchBody,
+	queryParameters?: EntityQueryParameters,
+): Promise<Entity[]> => {
+	const url = new URL(`${baseUrl}/v1/entities/search`);
+	url.search = toSearchParams(queryParameters).toString();
+
 	try {
-		core.info(`Performing POST request to URL: ${url}`);
+		core.info(`Performing POST request to URL: ${url.toString()}`);
 
 		const config = {
 			headers: {
@@ -14,7 +35,7 @@ const searchEntities = async (baseUrl: string, accessToken: string, searchBody: 
 			},
 		};
 
-		const response = await axios.post(url, searchBody, config);
+		const response = await axios.post(url.toString(), searchBody, config);
 
 		return response.data.entities;
 	} catch (e: any) {

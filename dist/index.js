@@ -181,16 +181,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const axios_1 = __importDefault(__nccwpck_require__(8757));
-const getEntity = async (baseUrl, accessToken, entity) => {
-    const url = `${baseUrl}/v1/blueprints/${entity.blueprint}/entities/${encodeURIComponent(entity.identifier)}`;
+const toSearchParams = (params) => {
+    const searchParams = new URLSearchParams();
+    Object.entries(params || {}).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+            value.forEach((v) => searchParams.append(key, v));
+            return;
+        }
+        if (value !== undefined) {
+            searchParams.append(key, value);
+        }
+    });
+    return searchParams;
+};
+const getEntity = async (baseUrl, accessToken, entity, queryParameters) => {
+    const url = new URL(`${baseUrl}/v1/blueprints/${entity.blueprint}/entities/${encodeURIComponent(entity.identifier)}`);
+    url.search = toSearchParams(queryParameters).toString();
     try {
-        core.info(`Performing GET request to URL: ${url}`);
+        core.info(`Performing GET request to URL: ${url.toString()}`);
         const config = {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
         };
-        const response = await axios_1.default.get(url, config);
+        const response = await axios_1.default.get(url.toString(), config);
         return response.data.entity;
     }
     catch (e) {
@@ -397,16 +411,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const axios_1 = __importDefault(__nccwpck_require__(8757));
-const searchEntities = async (baseUrl, accessToken, searchBody) => {
-    const url = `${baseUrl}/v1/entities/search`;
+const toSearchParams = (params) => {
+    const searchParams = new URLSearchParams();
+    Object.entries(params || {}).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+            value.forEach((v) => searchParams.append(key, v));
+            return;
+        }
+        if (value !== undefined) {
+            searchParams.append(key, value);
+        }
+    });
+    return searchParams;
+};
+const searchEntities = async (baseUrl, accessToken, searchBody, queryParameters) => {
+    const url = new URL(`${baseUrl}/v1/entities/search`);
+    url.search = toSearchParams(queryParameters).toString();
     try {
-        core.info(`Performing POST request to URL: ${url}`);
+        core.info(`Performing POST request to URL: ${url.toString()}`);
         const config = {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
         };
-        const response = await axios_1.default.post(url, searchBody, config);
+        const response = await axios_1.default.post(url.toString(), searchBody, config);
         return response.data.entities;
     }
     catch (e) {
@@ -533,7 +561,6 @@ const upsertEntity = async (baseUrl, accessToken, entity, options = {}) => {
                 ...(options.runId && { run_id: options.runId }),
             },
         };
-        core.info(`Run ID: ${config.params.run_id}`);
         const response = await axios_1.default.post(url, entity, config);
         return response.data.entity;
     }
@@ -627,6 +654,7 @@ const getInput = () => ({
     query: core.getMultilineInput('query', {
         required: false,
     }),
+    include: core.getInput('include', { required: false }),
     team: core.getInput('team', { required: false }),
     relations: core.getMultilineInput('relations', {
         required: false,
@@ -771,10 +799,22 @@ class EntitiesSearchOperation {
             const searchBodySchema = this.input.query?.length ? JSON.parse(this.input.query.join('')) : {};
             return searchBodySchema;
         };
+        this.parseQueryParameters = () => {
+            const include = this.input.include
+                ? this.input.include
+                    .split(',')
+                    .map((s) => s.trim())
+                    .filter((s) => s.length > 0)
+                : undefined;
+            return {
+                ...(include?.length && { include }),
+            };
+        };
         this.execute = async () => {
             const searchBody = this.parseInput();
+            const queryParameters = this.parseQueryParameters();
             const accessToken = await clients_1.default.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
-            const entities = await clients_1.default.port.searchEntities(this.input.baseUrl, accessToken, searchBody);
+            const entities = await clients_1.default.port.searchEntities(this.input.baseUrl, accessToken, searchBody, queryParameters);
             return { entities };
         };
         this.input = input;
@@ -883,10 +923,22 @@ class EntityGetterOperation {
             (0, assert_1.default)(this.input.blueprint, 'GET Operation - blueprint is missing from input');
             return { blueprint: this.input.blueprint, identifier: this.input.identifier };
         };
+        this.parseQueryParameters = () => {
+            const include = this.input.include
+                ? this.input.include
+                    .split(',')
+                    .map((s) => s.trim())
+                    .filter((s) => s.length > 0)
+                : undefined;
+            return {
+                ...(include?.length && { include }),
+            };
+        };
         this.execute = async () => {
             const entityToGet = this.parseInput();
+            const queryParameters = this.parseQueryParameters();
             const accessToken = await clients_1.default.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
-            const entity = await clients_1.default.port.getEntity(this.input.baseUrl, accessToken, entityToGet);
+            const entity = await clients_1.default.port.getEntity(this.input.baseUrl, accessToken, entityToGet, queryParameters);
             return {
                 entity: {
                     identifier: entity.identifier,
