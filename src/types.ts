@@ -118,4 +118,5 @@ export type ActionInput = {
 	externalRunId?: string;
 	action?: string;
 	delete_dependents?: string;
+	createMissingRelatedEntities?: string;
 };

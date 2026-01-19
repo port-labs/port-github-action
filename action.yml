@@ -72,6 +72,10 @@ inputs:
     required: false
     description: 'When deleting entity, this is the flag that indicates to delete dependent entities also'
     default: 'false'
+  createMissingRelatedEntities:
+    required: false
+    description: 'When upserting entity, enables the creation of missing related entities that do not exist in the catalog yet'
+    default: 'false'
 outputs:
   identifier:
     description: 'The identifier of the created entity'

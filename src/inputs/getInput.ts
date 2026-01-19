@@ -33,6 +33,7 @@ const getInput = (): ActionInput => ({
 	entities: core.getInput('entities', { required: false }),
 	action: core.getInput('action', { required: false }),
 	delete_dependents: core.getInput('delete_dependents', { required: false }),
+	createMissingRelatedEntities: core.getInput('createMissingRelatedEntities', { required: false }),
 });
 
 export default getInput;

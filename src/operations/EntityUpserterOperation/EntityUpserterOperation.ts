@@ -38,6 +38,7 @@ export default class EntityUpserterOperation implements IOperation {
 		const accessToken = await clients.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
 		const entityRes = await clients.port.upsertEntity(this.input.baseUrl, accessToken, entityToUpsert, {
 			runId: this.input.runId,
+			createMissingRelatedEntities: this.input.createMissingRelatedEntities === 'true',
 		});
 
 		return {
