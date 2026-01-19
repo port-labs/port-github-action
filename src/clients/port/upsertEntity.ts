@@ -7,7 +7,7 @@ const upsertEntity = async (
 	baseUrl: string,
 	accessToken: string,
 	entity: EntityToUpsert,
-	options: Partial<{ runId: string }> = {},
+	options: Partial<{ runId: string; createMissingRelatedEntities: boolean }> = {},
 ): Promise<Entity> => {
 	const url = `${baseUrl}/v1/blueprints/${entity.blueprint}/entities`;
 	try {
@@ -21,6 +21,7 @@ const upsertEntity = async (
 				upsert: true,
 				merge: true,
 				...(options.runId && { run_id: options.runId }),
+				...(options.createMissingRelatedEntities && { create_missing_related_entities: true }),
 			},
 		};
 
