@@ -559,6 +559,7 @@ const upsertEntity = async (baseUrl, accessToken, entity, options = {}) => {
                 upsert: true,
                 merge: true,
                 ...(options.runId && { run_id: options.runId }),
+                ...(options.createMissingRelatedEntities && { create_missing_related_entities: true }),
             },
         };
         const response = await axios_1.default.post(url, entity, config);
@@ -668,6 +669,7 @@ const getInput = () => ({
     entities: core.getInput('entities', { required: false }),
     action: core.getInput('action', { required: false }),
     delete_dependents: core.getInput('delete_dependents', { required: false }),
+    createMissingRelatedEntities: core.getInput('createMissingRelatedEntities', { required: false }),
 });
 exports["default"] = getInput;
 
@@ -854,6 +856,7 @@ class EntityBulkUpserter {
             for (const entityToUpsert of entitiesToUpsert.entities) {
                 const entityRes = await clients_1.default.port.upsertEntity(this.input.baseUrl, accessToken, entityToUpsert, {
                     runId: this.input.runId,
+                    createMissingRelatedEntities: this.input.createMissingRelatedEntities === 'true',
                 });
                 entitiesRes.push(entityRes);
             }
@@ -1000,6 +1003,7 @@ class EntityUpserterOperation {
             const accessToken = await clients_1.default.port.getToken(this.input.baseUrl, this.input.clientId, this.input.clientSecret);
             const entityRes = await clients_1.default.port.upsertEntity(this.input.baseUrl, accessToken, entityToUpsert, {
                 runId: this.input.runId,
+                createMissingRelatedEntities: this.input.createMissingRelatedEntities === 'true',
             });
             return {
                 identifier: entityRes.identifier,
