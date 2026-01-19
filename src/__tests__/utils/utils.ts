@@ -77,7 +77,6 @@ if (!process.env['CI']) {
 		}
 		return mockResponse(url);
 	});
-
 }
 
 const getInputName = (name: string): string => `INPUT_${name.replace(/ /g, '_').toUpperCase()}`;

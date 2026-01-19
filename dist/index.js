@@ -411,20 +411,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const axios_1 = __importDefault(__nccwpck_require__(8757));
+const toSearchParams = (params) => {
+    const searchParams = new URLSearchParams();
+    Object.entries(params || {}).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+            value.forEach((v) => searchParams.append(key, v));
+            return;
+        }
+        if (value !== undefined) {
+            searchParams.append(key, value);
+        }
+    });
+    return searchParams;
+};
 const searchEntities = async (baseUrl, accessToken, searchBody, queryParameters) => {
-    const url = `${baseUrl}/v1/entities/search`;
+    const url = new URL(`${baseUrl}/v1/entities/search`);
+    url.search = toSearchParams(queryParameters).toString();
     try {
-        core.info(`Performing POST request to URL: ${url}`);
+        core.info(`Performing POST request to URL: ${url.toString()}`);
         const config = {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
         };
-        const requestBody = {
-            ...searchBody,
-            ...queryParameters,
-        };
-        const response = await axios_1.default.post(url, requestBody, config);
+        const response = await axios_1.default.post(url.toString(), searchBody, config);
         return response.data.entities;
     }
     catch (e) {
@@ -791,11 +801,13 @@ class EntitiesSearchOperation {
         };
         this.parseQueryParameters = () => {
             const include = this.input.include
-                ?.split(',')
-                .map((s) => s.trim())
-                .filter((s) => s.length > 0) || undefined;
+                ? this.input.include
+                    .split(',')
+                    .map((s) => s.trim())
+                    .filter((s) => s.length > 0)
+                : undefined;
             return {
-                ...(include && { include }),
+                ...(include?.length && { include }),
             };
         };
         this.execute = async () => {
@@ -913,11 +925,13 @@ class EntityGetterOperation {
         };
         this.parseQueryParameters = () => {
             const include = this.input.include
-                ?.split(',')
-                .map((s) => s.trim())
-                .filter((s) => s.length > 0) || undefined;
+                ? this.input.include
+                    .split(',')
+                    .map((s) => s.trim())
+                    .filter((s) => s.length > 0)
+                : undefined;
             return {
-                ...(include && { include }),
+                ...(include?.length && { include }),
             };
         };
         this.execute = async () => {
