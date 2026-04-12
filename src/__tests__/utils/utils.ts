@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { setTimeout } from 'timers/promises';
 
 export type TestInputs = Record<string, string>;
 
@@ -100,3 +101,59 @@ export const clearInputs = (inputs: TestInputs): void => {
 		}
 	});
 };
+
+export async function eventually<T>(
+	fn: (bail: (e: Error) => void, attempt: number) => Promise<T>,
+	options?: { maxTimeout?: number; backoffBaseMs?: number; backoffFactor?: number },
+) {
+	const maxTimeout = options?.maxTimeout;
+	const backoffBaseMs = options?.backoffBaseMs ?? 100;
+	const backoffFactor = options?.backoffFactor ?? 2;
+
+	let lastError: Error | null = null;
+	let attempt = 0;
+	let backoffMs = backoffBaseMs;
+
+	let bailedOut = false;
+	const bail = (e: Error) => {
+		lastError = e;
+		bailedOut = true;
+	};
+
+	const startTime = performance.now();
+
+	do {
+		attempt += 1;
+
+		if (maxTimeout && performance.now() - startTime >= maxTimeout) {
+			if (lastError !== null) {
+				throw lastError;
+			}
+			throw new Error('Max timeout reached before running fn');
+		}
+
+		try {
+			const result = await fn(bail, attempt);
+			return result;
+		} catch (error) {
+			if (bailedOut) {
+				throw lastError;
+			}
+
+			if (maxTimeout) {
+				const timeSpent = performance.now() - startTime;
+				if (timeSpent + backoffMs >= maxTimeout) {
+					throw error;
+				}
+			}
+
+			lastError = error as Error;
+			await setTimeout(backoffMs);
+			backoffMs *= backoffFactor;
+		}
+	} while (lastError !== null && !bailedOut);
+
+	if (bailedOut) {
+		throw lastError;
+	}
+}
