@@ -5,6 +5,7 @@ import clients from '../clients';
 import { OPERATION_IS_NOT_SUPPORTED } from '../consts';
 import main from '../main';
 import { setupPortEnvironment } from './utils/setup';
+import { eventually } from './utils/utils';
 import { TestInputs, clearInputs, getBaseInput, getInput, setInputs } from './utils/utils';
 
 describe('Upsert Integration Tests', () => {
@@ -191,12 +192,19 @@ describe('Upsert Integration Tests', () => {
 		expect(failedMock).toHaveBeenCalledTimes(0);
 		expect(outputMock).toHaveBeenCalledWith('identifier', expect.any(String));
 
-		const runsResponse = await axios.get(`${baseUrl}/v1/audit-log`, {
-			headers: { Authorization: `Bearer ${accessToken}` },
-			params: { resources: 'entity', run_id: createdRunId, includes: 'context' },
-		});
+		await eventually(
+			async () => {
+				const runsResponse = await axios.get(
+					`${baseUrl}/v1/audit-log?resources=entity&run_id=${createdRunId}&includes=identifier&includes=context`,
+					{
+						headers: { Authorization: `Bearer ${accessToken}` },
+					},
+				);
 
-		expect(runsResponse.data.audits).toHaveLength(1);
-		expect(runsResponse.data.audits.find((r: any) => r.context.entity === testEntityId)).toBeDefined();
+				expect(runsResponse.data.audits).toHaveLength(1);
+				expect(runsResponse.data.audits.find((r: any) => r.context.entity === testEntityId)).toBeDefined();
+			},
+			{ maxTimeout: 5000 },
+		);
 	});
 });
