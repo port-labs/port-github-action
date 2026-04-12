@@ -42,7 +42,7 @@ on:
     inputs:
       run_id:
         required: false
-        description: "Run ID"
+        description: 'Run ID'
         type: string
 
 jobs:
@@ -56,7 +56,7 @@ jobs:
           clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
           blueprint: 'test'
           identifier: '${{ inputs.run_id }}-entity'
-          runId: ${{ inputs.run_id }}
+          operation: UPSERT
 ```
 
 Replace `abc123` with your actual commit SHA. This allows you to test your changes in a real workflow environment before merging.
