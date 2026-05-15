@@ -61,7 +61,7 @@ inputs:
     description: 'The port action external run id'
   status:
     required: false
-    description: 'The port action status (success, failure)'
+    description: 'The port action status (SUCCESS, FAILURE)'
   logMessage:
     required: false
     description: 'The port action log message'
