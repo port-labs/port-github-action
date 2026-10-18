@@ -1,11 +1,11 @@
 name: 'port-github-action'
-description: 'Official Port.io GitHub Action'
+description: 'Official Port GitHub Action: create, update and query entities and report action runs in Port'
 author: 'port-labs <port-labs@getport.io>'
 inputs:
   baseUrl:
     required: true
-    description: 'Port.io API base URL'
-    default: 'https://api.getport.io'
+    description: 'Port API base URL'
+    default: 'https://api.port.io'
   clientId:
     required: true
     description: 'Client ID'
