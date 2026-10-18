@@ -4,11 +4,11 @@
 
 [![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)](https://join.slack.com/t/devex-community/shared_invite/zt-1bmf5621e-GGfuJdMPK2D8UN58qL4E_g)
 
-Port is the Developer Platform meant to supercharge your DevOps and Developers, and allow you to regain control of your environment.
+Port is the platform for building your AI software factory. Use this action to create, update and query Port entities and to report on action runs from your GitHub workflows.
 
 ### Docs
 
-- [Port Docs](https://docs.getport.io/build-your-software-catalog/custom-integration/api/ci-cd/github-workflow/)
+- [Port Docs](https://docs.port.io/context-lake/ingestion/ingest-data-into-port/api/ci-cd/github-workflow/)
 
 ## Usage
 
